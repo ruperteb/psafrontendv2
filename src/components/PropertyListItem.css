@@ -1,0 +1,8 @@
+
+#card:hover > .ms-Checkbox{
+    visibility:visible;
+}
+
+#card:hover > .ms-Button{
+    visibility:visible;
+}
