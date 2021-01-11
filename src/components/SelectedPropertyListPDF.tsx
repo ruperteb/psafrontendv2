@@ -24,6 +24,22 @@ const styles = StyleSheet.create({
         /* margin: "10px" */
 
     },
+    frontPage: {
+        flexDirection: 'column',
+        backgroundColor: '#20314b',
+        /* borderStyle: "solid",
+        borderWidth: 2, */
+        /* margin: "10px" */
+
+    },
+    contactPage: {
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        /* borderStyle: "solid",
+        borderWidth: 2, */
+        /* margin: "10px" */
+
+    },
     overallContainer: {
         fontFamily: 'SegoeUI',
         display: "flex",
@@ -60,21 +76,121 @@ const styles = StyleSheet.create({
          borderWidth: 1, */
         /*    flexGrow: 1, */
     },
-    headerSection: {
-        display: "flex",
-        flexDirection: "row",
-
-    },
-    headerImageSection: {
-        display: "flex",
-        flexDirection: "row",
-        "backgroundColor": '#20314b',
-        width: "100vw",
-        height: "auto",
-
-
-    },
     footerSection: {
+        display: "flex",
+        flexDirection: "row",
+        marginTop: "auto",
+        marginBottom: 0
+
+    },
+    headerText: {
+        margin: "auto",
+        fontSize: 20,
+        fontFamily: "SegoeUI",
+
+        color: "white",
+
+    },
+    footerImageSection: {
+        display: "flex",
+        flexDirection: "row",
+        "backgroundColor": '#1f304a',
+        width: "100vw",
+        height: "65px",
+
+
+    },
+    frontPageSection: {
+        /*  display: "flex",
+         flexDirection: "row", */
+        "backgroundColor": '#20314b',
+        /* width: "100vw",
+        height: "auto", */
+    },
+    frontPageBackground: {
+        /*  display: "flex",
+         flexDirection: "row", */
+        /*  "backgroundColor": '#20314b', */
+
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: 'auto',
+
+        /*  marginTop: "auto",
+         marginBottom: "auto", */
+        /* "backgroundColor": '#20314b', */
+
+
+    },
+    contactPageBackground: {
+        /*  display: "flex",
+         flexDirection: "row", */
+        /*  "backgroundColor": '#20314b', */
+
+        position: "absolute",
+        top: 88,
+        left: 0,
+        width: 245.7,
+        height: 441,
+
+        /*  marginTop: "auto",
+         marginBottom: "auto", */
+        /* "backgroundColor": '#20314b', */
+
+
+    },
+    frontPageText1: {
+        fontSize: 30,
+        fontFamily: "SegoeUI",
+        fontWeight: "bold",
+        color: "white",
+
+        marginLeft: "40%",
+        marginRight: "auto",
+        marginTop: "20%",
+    },
+    frontPageText2: {
+        fontSize: 30,
+        fontFamily: "SegoeUI",
+        fontWeight: "bold",
+        color: "white",
+        marginLeft: "40%",
+        marginRight: "auto",
+        marginTop: 10
+    },
+    contactPageText1: {
+        fontSize: 18,
+        fontFamily: "SegoeUI",
+        /* fontWeight: "bold", */
+        color: "black",
+
+        marginLeft: "40%",
+        marginRight: "auto",
+        marginTop: "15%",
+        marginBottom: 10
+    },
+    contactPageText2: {
+        fontSize: 24,
+        fontFamily: "SegoeUI",
+        fontWeight: "bold",
+        color: "black",
+        marginLeft: "40%",
+        marginRight: "auto",
+        marginTop: 10
+    },
+    contactPageText3: {
+        fontSize: 12,
+        fontFamily: "SegoeUI",
+        /* fontWeight: "bold", */
+        color: "black",
+        marginLeft: "30%",
+        marginRight: "10%",
+        marginBottom: 10,
+        marginTop: 100
+    },
+    headerSection: {
         /* position: 'absolute',
         bottom: 0,
         left: 0, */
@@ -83,11 +199,11 @@ const styles = StyleSheet.create({
         "backgroundColor": '#20314b',
         width: "100vw",
         height: "65px",
+        marginTop: 0,
         marginBottom: 0,
-        marginTop:"auto",
         marginLeft: 0,
     },
-    headerImageStyles: {
+    footerImageStyles: {
         display: "flex",
         flexDirection: "row",
         marginLeft: "auto",
@@ -95,10 +211,12 @@ const styles = StyleSheet.create({
 
     },
     pageNumbers: {
-        marginRight: 20,
-        marginLeft: "auto",
-        marginTop: 15,
-        fontSize: 8
+        position: "absolute",
+        top: 20,
+        right: 20,
+        fontSize: 8,
+        color: "white",
+
     },
     enquiryHeading: {
         fontFamily: 'SegoeUI',
@@ -139,7 +257,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         paddingLeft: 7,
-        paddingTop: 1.5
+        paddingTop: 1.5,
+        "backgroundColor": '#20314b',
+        color: "white",
+        fontFamily: "SegoeUI",
+        fontWeight: "bold",
     },
     propertyNumberColumn: {
         display: "flex",
@@ -176,6 +298,7 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderWidth: 1,
         /*    flexGrow: 1, */
+        "backgroundColor": '#20314b',
     },
     premisesDetails: {
         display: "flex",
@@ -205,6 +328,7 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginRight: 'auto',
         textAlign: 'center',
+        color: "white",
     },
     premisesText: {
         fontSize: 8,
@@ -214,6 +338,7 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginRight: 'auto',
         textAlign: 'center',
+
     },
     premisesHeadingSubText: {
         fontSize: 6,
@@ -221,6 +346,7 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
         textAlign: 'center',
         height: 10,
+        color: "white",
     },
     imagesContainer: {
         display: "flex",
@@ -268,16 +394,27 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
 
 
     <Document >
+
+        <Page orientation="landscape" size="A4" style={styles.frontPage}>
+
+            <Image style={styles.frontPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610358103/background_2_duzy8o.jpg"></Image>
+
+            <Text style={styles.frontPageText1} >Schedule of Accomodation:</Text>
+            <Text style={styles.frontPageText2} >Test Enquiry</Text>
+
+
+
+        </Page>
         <Page wrap orientation="landscape" size="A4" style={styles.page}>
             <View fixed style={styles.headerSection}>
-                <View style={styles.headerImageSection}>
-                    <Image style={styles.headerImageStyles} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg"></Image>
-                </View>
+
+                <Text style={styles.headerText}>Property Details</Text>
 
 
-                <Text style={styles.enquiryHeading} >Enquiry:  {/* {" " && enquiryName} */}</Text>
+
+
                 <Text style={styles.pageNumbers} render={({ pageNumber, totalPages }) => (
-                    `${pageNumber} / ${totalPages}`
+                    `${pageNumber-1} / ${totalPages-2}`
                 )} fixed />
 
             </View>
@@ -384,7 +521,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
                             </View>
                             {selectedPropertyList[index].premisesList!.map((premises, index) => (
 
-                                <View style={styles.premisesDetails}>
+                                <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={styles.premisesText} >{premises.floor}</Text>
 
@@ -474,7 +611,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
 
                     <View style={styles.imagesSection}>
 
-                        {selectedPropertyList[index].images!.slice(0,3).map((image, index) => (
+                        {selectedPropertyList[index].images!.slice(0, 3).map((image, index) => (
 
                             <View style={styles.imagesContainer} >
                                 <Image style={styles.image} src={cl.url(`${image}`, { width: 600, crop: "fit" })}></Image>
@@ -493,9 +630,34 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
 
 
             ))}
+            <View fixed style={styles.footerSection}>
+                <View style={styles.footerImageSection}>
+                    <Image style={styles.footerImageStyles} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg"></Image>
+                </View>
+            </View>
+
+
+        </Page>
+        <Page orientation="landscape" size="A4" style={styles.contactPage}>
+            <View fixed style={styles.headerSection}>
+
+                <Text style={styles.headerText}>Contact</Text>
+
+
+            </View>
+            <Image style={styles.contactPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610357459/lion_light_dptptx.jpg"></Image>
+
+            <Text style={styles.contactPageText1} >For further information, please contact:</Text>
+            <Text style={styles.contactPageText2} >Sean Ellis Brown</Text>
+            <Text style={styles.contactPageText2} >082 4555 183</Text>
+            <Text style={styles.contactPageText2} >sean@ellisbrown.co.za</Text>
+
+            <Text style={styles.contactPageText3} >Whilst every effort has been made to ensure accuracy, no liability will be accepted for any errors or omissions and the prospective tenant/ purchaser is required to verify details prior to contract</Text>
 
             <View fixed style={styles.footerSection}>
-
+                <View style={styles.footerImageSection}>
+                    <Image style={styles.footerImageStyles} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg"></Image>
+                </View>
             </View>
 
         </Page>
