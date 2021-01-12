@@ -70,6 +70,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
         showUpdatePremisesModal: false,
         showDuplicatePremisesModal: false,
         showPremisesNotesModal: false,
+        showPreviewPDFPanel: false,
         showFilterModal: false,
         showImageGalleryModal: false,
         selectedPropertyType: "all",

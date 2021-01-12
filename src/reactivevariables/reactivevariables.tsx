@@ -1,5 +1,5 @@
 import { makeVar } from '@apollo/client';
-import {NavigationState, SelectedPropertyList} from "../schematypes/schematypes"
+import {NavigationState, SelectedPropertyList, PDFVariables} from "../schematypes/schematypes"
 
 // Create the initial value
 const navigationStateInitialValues: NavigationState = 
@@ -11,6 +11,7 @@ const navigationStateInitialValues: NavigationState =
     showDuplicatePremisesModal: false,
     showPremisesNotesModal:  false,
     showImageGalleryModal: false,
+    showPreviewPDFPanel: false,
   showFilterModal: false,
   selectedPropertyType: "all",
   search: "",
@@ -27,4 +28,20 @@ export const navigationState = makeVar<NavigationState>(
 
 export const selectedPropertyList = makeVar<SelectedPropertyList>(
   []
+);
+
+const PDFVariablesInitiallState: PDFVariables = 
+  {
+    enquiryName: "",
+    agent: {
+      name: "",
+      mobile: "",
+      email: ""
+    }
+  }
+
+
+// Create the todos var and initialize it with the initial value
+export const pdfVariables = makeVar<PDFVariables>(
+  PDFVariablesInitiallState
 );

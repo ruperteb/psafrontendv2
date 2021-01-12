@@ -7,10 +7,11 @@ import SegoeUIBold from "../assets/fonts/SegoeUIBold.ttf"
 
 import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property } from "../schematypes/schematypes"
+import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
 import { Cloudinary } from "cloudinary-core"
-import { m } from 'framer-motion';
+
+
 
 var cl = new Cloudinary({ cloud_name: "drlfedqyz", secure: true });
 var image = cl.url("1567618101_fela1x", { width: 600, crop: "fit" })
@@ -379,13 +380,15 @@ Font.register({
 interface Props {
 
     selectedPropertyList: SelectedPropertyList,
+    enquiryName: string,
+    agent: Agent,
 
     /* enquiryName: string */
 
 }
 
 
-const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
+const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent }) => (
 
 
 
@@ -400,7 +403,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
             <Image style={styles.frontPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610358103/background_2_duzy8o.jpg"></Image>
 
             <Text style={styles.frontPageText1} >Schedule of Accomodation:</Text>
-            <Text style={styles.frontPageText2} >Test Enquiry</Text>
+            <Text style={styles.frontPageText2} >{enquiryName}</Text>
 
 
 
@@ -648,9 +651,9 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList }) => (
             <Image style={styles.contactPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610357459/lion_light_dptptx.jpg"></Image>
 
             <Text style={styles.contactPageText1} >For further information, please contact:</Text>
-            <Text style={styles.contactPageText2} >Sean Ellis Brown</Text>
-            <Text style={styles.contactPageText2} >082 4555 183</Text>
-            <Text style={styles.contactPageText2} >sean@ellisbrown.co.za</Text>
+            <Text style={styles.contactPageText2} >{agent !== undefined? agent.name : "" }</Text>
+            <Text style={styles.contactPageText2} >{agent !== undefined? agent.mobile : ""}</Text>
+            <Text style={styles.contactPageText2} >{agent !== undefined? agent.email : ""}</Text>
 
             <Text style={styles.contactPageText3} >Whilst every effort has been made to ensure accuracy, no liability will be accepted for any errors or omissions and the prospective tenant/ purchaser is required to verify details prior to contract</Text>
 

@@ -8,7 +8,7 @@ import {
   IComboBox,
   SelectableOptionMenuItemType,
 } from 'office-ui-fabric-react';
-import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES } from "./gql/gql"
+import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES} from "./gql/gql"
 import { Query, NavigationState, SelectedPropertyList } from "./schematypes/schematypes"
 import { gql, useQuery, useApolloClient } from '@apollo/client';
 import Loading from "./components/Loading"
@@ -17,7 +17,7 @@ import PropertyList from "./components/PropertyList"
 import NewProperyModal from "./components/NewPropertyModal"
 import SelectedPropertyPanel from "./components/SelectedPropertyPanel"
 import SelectedPropertyListPanel from "./components/SelectedPropertyListPanel"
-import SelectedPropertyListPDF from "./components/SelectedPropertyListPDF"
+import PreviewPDFPanel from "./components/PreviewPDFPanel"
 import {Cloudinary} from "cloudinary-core"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
@@ -54,6 +54,12 @@ function App() {
     loading: navigationLoading,
     error: navigationError
   } = useQuery<Query>(GET_NAV_STATE);
+
+  const {
+    data: pdfVariables,
+    loading: pdfLoading,
+    error: pdfError
+  } = useQuery<Query>(GET_PDF_VARIABLES);
 
   const {
     data: propertyListData,
@@ -186,6 +192,7 @@ var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPrope
     showUpdatePremisesModal:  false,
     showDuplicatePremisesModal: false,
     showPremisesNotesModal: false,
+    showPreviewPDFPanel: false,
     showFilterModal: false,
     showImageGalleryModal: false,
     selectedPropertyType: "all",
@@ -228,13 +235,8 @@ var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPrope
       <NewProperyModal showNewPropertyModal={navigationState.showNewPropertyModal} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></NewProperyModal>
       <SelectedPropertyPanel distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></SelectedPropertyPanel>
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel}></SelectedPropertyListPanel>
-    
-      { <div style={{width: "100vw", height: "100vh"}}> 
-      <PDFViewer width="100%" height="100%">
-    <SelectedPropertyListPDF  selectedPropertyList={selectedPropertyList} />
-  </PDFViewer>
-
-      </div>}
+      <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!}></PreviewPDFPanel>
+      
     
     
     </Stack>

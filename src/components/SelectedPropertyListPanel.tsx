@@ -5,19 +5,13 @@ import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
-import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../gql/gql"
+import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, GET_PDF_VARIABLES } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property } from "../schematypes/schematypes"
-import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
+import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
+import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar, pdfVariables as pdfVariablesVar } from "../reactivevariables/reactivevariables"
+import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
 import { Icon } from '@fluentui/react/lib/Icon';
-import Map from "./Map"
-import ImageGalleryModal from "./ImageGalleryModal"
-import PremisesList from "./PremisesList"
-import NewPremisesModal from "./NewPremisesModal"
-import PremisesNotesModal from "./PremisesNotesModal"
-import UpdatePremisesModal from "./UpdatePremisesModal"
-import DuplicatePremisesModal from "./DuplicatePremisesModal"
-import UpdatePropertyModal from "./UpdatePropertyModal"
+import PreviewPDFPanel from "./PreviewPDFPanel"
 
 
 
@@ -30,6 +24,7 @@ import {
     Toggle,
     IToggleStyles,
     DefaultButton,
+    PrimaryButton,
     Modal,
     IDragOptions,
     IconButton,
@@ -44,9 +39,13 @@ import {
     IComboBoxStyles,
     Stack,
     Text,
-    IStackStyles
+    IStackStyles,
+    TextField,
+    ITextFieldStyles,
+    IDropdownStyles
 
 } from 'office-ui-fabric-react';
+import SelectedPropertyListPDF from './SelectedPropertyListPDF';
 
 
 interface Props {
@@ -63,8 +62,46 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         error: propertyError
     } = useQuery<Query>(GET_SELECTED_PROPERTIES);
 
+    const {
+        data: pdfVariables,
+        loading: pdfLoading,
+        error: pdfError
+    } = useQuery<Query>(GET_PDF_VARIABLES);
 
 
+    const [enquiryName, setEnquiryName] = React.useState('');
+
+    const onChangeEnquiryName = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setEnquiryName(newValue || '');
+            /* pdfVariablesVar({ ...pdfVariablesVar(), enquiryName: (newValue || '') }) */
+        },
+        [],
+    );
+
+    const [selectedAgent, setSelectedAgent] = React.useState<IDropdownOption>();
+    /* const [selectedAgentDetails, setSelectedAgentDetails] = React.useState<Agent>(); */
+
+    const agentOptions = [
+
+        { key: 'Sean Ellis Brown', text: 'Sean Ellis Brown' },
+        { key: 'Mark Ellis Brown', text: 'Mark Ellis Brown' },
+
+    ]
+
+
+    const onChangeAgent = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
+        if (item !== undefined && item.key === 'Sean Ellis Brown') {
+            setSelectedAgent(item)
+            /*  setSelectedAgentDetails({name: "Sean Ellis Brown", mobile: "082 4555 183", email: "sean@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), agent: { name: "Sean Ellis Brown", mobile: "082 4555 183", email: "sean@ellisbrown.co.za" } })
+        }
+        if (item !== undefined && item.key === 'Mark Ellis Brown') {
+            setSelectedAgent(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), agent: { name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" } })
+        }
+    };
 
 
     const handlePanelDismiss = () => {
@@ -79,6 +116,19 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         selectedPropertyListVar(updatedPropertyList)
 
     }
+
+    const handlePreviewPDF = () => {
+        pdfVariablesVar({ ...pdfVariablesVar(), enquiryName: (enquiryName || '') })
+        navigationStateVar({ ...navigationStateVar(), showPreviewPDFPanel: true })
+
+    }
+
+    const handlePDFDDownload = () => {
+        pdfVariablesVar({ ...pdfVariablesVar(), enquiryName: (enquiryName || '') })
+        navigationStateVar({ ...navigationStateVar(), showSelectedPropertyListPanel: false })
+
+    }
+
 
 
 
@@ -154,11 +204,11 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "20px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 }
     const propertyNotesStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: "15px", marginTop: 0 }
 
+    const buttonStyles = { root: { marginRight: 8 } };
 
+    const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 170, marginRight: 20, marginBottom: 20, } };
 
-
-
-
+    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 125, marginRight: 20 } };
 
     const onRenderNavigationContent: IRenderFunction<IPanelProps> = React.useCallback(
         (props, defaultRender) => (
@@ -181,6 +231,43 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
             </>
         ),
         [],
+    );
+
+    const onRenderFooterContent = React.useCallback(
+        () => (
+            <div>
+                <TextField
+                    label="Enquiry Name"
+                    value={enquiryName}
+                    onChange={onChangeEnquiryName}
+
+                    styles={textFieldStyles}
+                />
+                <Dropdown
+                    label="Agent"
+                    selectedKey={selectedAgent ? selectedAgent.key : undefined}
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onChange={onChangeAgent}
+                    placeholder="Select type"
+                    options={agentOptions}
+                    styles={dropdownStyles}
+                />
+                <PrimaryButton onClick={handlePreviewPDF} styles={buttonStyles}>
+                    Preview
+            </PrimaryButton>
+                {<PDFDownloadLink document={<SelectedPropertyListPDF enquiryName={enquiryName} agent={pdfVariables?.pdfVariables?.agent!} selectedPropertyList={selectedPropertyList} />} fileName={`Schedule of Accomodation:${enquiryName}.pdf`}>
+                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <PrimaryButton onClick={handlePDFDDownload} styles={buttonStyles}>
+                        PDF
+        </PrimaryButton>)}
+                </PDFDownloadLink>}
+                
+
+
+
+                {/*  <DefaultButton onClick={handlePanelDismiss}>Save</DefaultButton> */}
+            </div>
+        ),
+        [enquiryName],
     );
 
 
@@ -219,6 +306,8 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
                 styles={panelStyles}
                 layerProps={layerProps}
                 isBlocking={false}
+                onRenderFooterContent={onRenderFooterContent}
+                isFooterAtBottom={true}
             >
 
                 <Stack verticalFill styles={{

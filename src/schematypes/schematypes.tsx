@@ -21,6 +21,7 @@ export type Query = {
   selectedPropertyList?: SelectedPropertyList;
   distinctSuburbs?: [Suburb];
   distinctRegions?: [Region];
+  pdfVariables?: PDFVariables;
 
 };
 
@@ -246,6 +247,7 @@ export type NavigationState = {
     showDuplicatePremisesModal: boolean,
     showImageGalleryModal: boolean,
     showPremisesNotesModal: boolean,
+    showPreviewPDFPanel: boolean,
   showFilterModal: boolean,
   selectedPropertyType: string | undefined,
   search: string | undefined,
@@ -271,5 +273,16 @@ propertyIds: Scalars['Int'][]
     region: string
     province: string
    }
+
+   export type Agent = {
+     name: string,
+     mobile: string,
+     email: string,
+   }
+
+   export type PDFVariables = {
+    enquiryName: string,
+    agent: Agent
+  }
   
   

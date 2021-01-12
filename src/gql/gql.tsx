@@ -123,6 +123,7 @@ export const GET_NAV_STATE = gql`
         showDuplicatePremisesModal
         showPremisesNotesModal
         showImageGalleryModal
+        showPreviewPDFPanel
   showFilterModal
   selectedPropertyType
   search
@@ -588,3 +589,16 @@ export const UPDATE_PREMISES = gql`
 }
   }
 `;
+
+export const GET_PDF_VARIABLES = gql`
+  query GetPDFVariables {
+    pdfVariables @client { 
+        enquiryName
+        agent{
+          name
+          mobile
+          email
+        }
+    }
+  }
+  `
