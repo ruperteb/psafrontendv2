@@ -204,11 +204,11 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "20px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 }
     const propertyNotesStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: "15px", marginTop: 0 }
 
-    const buttonStyles = { root: { marginRight: 8 } };
+    const buttonStyles = { root: {width: 100 ,marginRight: 8, marginBottom: 0, marginTop: "auto !important", marginLeft: 10 } };
 
-    const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 170, marginRight: 20, marginBottom: 20, } };
+    const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: {  marginRight: 20, marginBottom: 10, }, root: {width: "100%",} };
 
-    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 125, marginRight: 20 } };
+    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 150, marginRight: 10 } };
 
     const onRenderNavigationContent: IRenderFunction<IPanelProps> = React.useCallback(
         (props, defaultRender) => (
@@ -235,7 +235,13 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
     const onRenderFooterContent = React.useCallback(
         () => (
-            <div>
+            <Stack   styles={{
+                root:{
+flexFlow: "row wrap",
+marginBottom: 20
+                }
+            }
+            }>
                 <TextField
                     label="Enquiry Name"
                     value={enquiryName}
@@ -253,19 +259,19 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
                     styles={dropdownStyles}
                 />
                 <PrimaryButton onClick={handlePreviewPDF} styles={buttonStyles}>
-                    Preview
+                    Preview PDF
             </PrimaryButton>
-                {<PDFDownloadLink document={<SelectedPropertyListPDF enquiryName={enquiryName} agent={pdfVariables?.pdfVariables?.agent!} selectedPropertyList={selectedPropertyList} />} fileName={`Schedule of Accomodation:${enquiryName}.pdf`}>
+               {/*  {<PDFDownloadLink document={<SelectedPropertyListPDF enquiryName={enquiryName} agent={pdfVariables?.pdfVariables?.agent!} selectedPropertyList={selectedPropertyList} />} fileName={`Schedule of Accomodation:${enquiryName}.pdf`}>
                     {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <PrimaryButton onClick={handlePDFDDownload} styles={buttonStyles}>
                         PDF
         </PrimaryButton>)}
-                </PDFDownloadLink>}
+                </PDFDownloadLink>} */}
                 
 
 
 
                 {/*  <DefaultButton onClick={handlePanelDismiss}>Save</DefaultButton> */}
-            </div>
+            </Stack>
         ),
         [enquiryName],
     );
