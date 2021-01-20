@@ -2,13 +2,13 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
 
 import { Font } from '@react-pdf/renderer'
-import SegoeUI from "../assets/fonts/SegoeUI.ttf"
-import SegoeUIBold from "../assets/fonts/SegoeUIBold.ttf"
+import SegoeUI from "../../assets/fonts/SegoeUI.ttf"
+import SegoeUIBold from "../../assets/fonts/SegoeUIBold.ttf"
 
-import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../gql/gql"
+import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
-import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
+import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../../schematypes/schematypes"
+import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../../reactivevariables/reactivevariables"
 import { Cloudinary } from "cloudinary-core"
 
 

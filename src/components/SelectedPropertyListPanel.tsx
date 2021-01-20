@@ -45,7 +45,7 @@ import {
     IDropdownStyles
 
 } from 'office-ui-fabric-react';
-import SelectedPropertyListPDF from './SelectedPropertyListPDF';
+import SelectedPropertyListPDF from './PDFOutput/SelectedPropertyListPDF';
 
 
 interface Props {

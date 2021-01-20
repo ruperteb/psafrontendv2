@@ -12,7 +12,8 @@ import { navigationState as navigationStateVar, selectedPropertyList as selected
 import { Icon } from '@fluentui/react/lib/Icon';
 
 
-import SelectedPropertyListPDF from "./SelectedPropertyListPDF"
+import SelectedPropertyListPDF from "./PDFOutput/SelectedPropertyListPDF"
+import PropertyListLargeImagesPDF from "./PDFOutput/PropertyListLargeImagesPDF"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
 
@@ -200,7 +201,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
 { <div style={{height: '85vh'}}> 
       <PDFViewer width="100%" height="100%">
-    <SelectedPropertyListPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={selectedPropertyList} />
+    <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={selectedPropertyList} />
   </PDFViewer>
 
       </div>}

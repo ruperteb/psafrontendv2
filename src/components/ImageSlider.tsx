@@ -107,7 +107,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
                     });
             }
         })
-        toggleIsDeleteCalloutVisible()
+        /* toggleIsDeleteCalloutVisible() */
     }
 
     const onChange = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement> | undefined, item?: IContextualMenuItem | undefined) => {
