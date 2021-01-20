@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     },
     primaryImage: {
         width: 600,
+        height: 400,
         marginTop: 25,
         marginBottom: "auto"
     },
@@ -84,6 +85,13 @@ const styles = StyleSheet.create({
          width: "100%",
          
      }, */
+    premisesInfo: {
+        fontFamily: 'SegoeUI',
+        display: "flex",
+        flexDirection: "row",
+
+        marginLeft: 10,
+    },
     imagesSection: {
         fontFamily: 'SegoeUI',
         display: "flex",
@@ -252,7 +260,7 @@ const styles = StyleSheet.create({
         fontFamily: "SegoeUI",
         fontWeight: "bold",
         color: "black",
-        width: 125,
+        /*  width: 125, */
         /*  height: "20px", */
         paddingLeft: 10,
         paddingRight: 10,
@@ -290,8 +298,8 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        marginLeft: 10,
-        paddingTop: 4,
+        /*  marginLeft: 10,
+         paddingTop: 4, */
         /* width: "10%", */
         /* borderStyle: "solid",
         borderWidth: 1, */
@@ -413,6 +421,7 @@ interface Props {
 }
 
 
+
 const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent }) => (
 
 
@@ -460,10 +469,30 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                     <View style={styles.initialPageContainer}>
 
                         <View style={styles.primaryImageContainer} >
-                            <Image style={styles.primaryImage} src={cl.url(`${selectedPropertyList[index].images![0]}`, /* { width: 600, crop: "fit" } */)}></Image>
+                            {selectedPropertyList[index].images!.length !== 0 ? <Image style={styles.primaryImage} src={cl.url(`${selectedPropertyList[index].images![0]}`, /* { width: 600, crop: "fit" } */)}></Image> : <Text></Text>}
                         </View>
 
                         <View style={styles.premisesDetailsContainer}>
+                            <View>
+
+                                <View style={styles.propertyNumberColumn}>
+                                    <Text style={styles.propertyNumber}>{index + 1}</Text>
+                                    <Text style={styles.propertyHeading}>{property.propertyName}</Text>
+                                </View>
+
+                                <View style={styles.propertyDetails}>
+
+
+
+                                    <Text style={[styles.propertyText, { marginLeft: 20 }]}>{`${property.address}, ${property.suburb} `}</Text>
+
+
+
+                                </View>
+
+                            </View>
+
+
                             <View style={styles.premisesHeadings}>
                                 <View style={[styles.premisesContainer, { width: 80 }]}>
                                     <Text style={[styles.premisesHeadingText, { width: 80, textAlign: "left" }]} >Floor/ Unit</Text>
@@ -489,11 +518,11 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         <Text style={styles.premisesText} >{premises.floor}</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                      <Text style={[styles.premisesText, { width: 40 }]} >{premises.area}</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 50 }]}>
-                                      <Text style={[styles.premisesText, { width: 50 }]} >{premises.grossRental}</Text>    
-                                  </View>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.area}</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 50 }]}>
+                                        <Text style={[styles.premisesText, { width: 50 }]} >{premises.grossRental}</Text>
+                                    </View>
 
 
                                 </View>
@@ -501,8 +530,34 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             ))}
 
+                            <View style={selectedPropertyList.length % 2 === 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                                <View style={[styles.premisesContainer, { width: 80 }]}>
+                                    {/*  <Text style={styles.premisesText} >{premises.floor}</Text> */}
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={[styles.premisesText, { width: 40 }]} > {selectedPropertyList[index].premisesList!.length !== 0 ?
+                                        selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                            return acc + premises.area!
+                                        }, 0) : 0
+                                    } </Text>
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 50 }]}>
+                                    {/*  <Text style={[styles.premisesText, { width: 50 }]} >{premises.grossRental}</Text> */}
+                                </View>
 
 
+                            </View>
+
+
+                            <View>
+
+                                <View style={styles.premisesInfo}>
+                                    <Text>Occupation:</Text>
+                                    <Text>sdadadaw</Text>
+
+                                </View>
+
+                            </View>
 
 
                         </View>
