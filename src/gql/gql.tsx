@@ -113,6 +113,64 @@ export const GET_SINGLE_PROPERTY = gql`
   }
 `;
 
+export const GET_MULTI_PROPERTY = gql`
+  query MultiProperty (
+  $propertyIdList: [Int],
+      ) {
+        multiProperty (
+  propertyIdList: $propertyIdList,
+) {
+  propertyId
+    propertyName
+    address
+      suburb
+    coordinates
+      earliestOccupation
+      earliestExpiry
+      erfExtent
+      totalGLA
+      vacantArea
+      buildingType
+      province
+      region
+      notes
+      images
+    premisesList{
+      premisesId
+      floor
+      area
+      vacant
+      type
+      premisesIndex
+      occupation
+      premisesNotes
+      netRental
+      opCosts
+      other
+      grossRental
+      esc
+      openBays
+      openRate
+      coveredBays
+      coveredRate
+      shadedBays
+      shadedRate
+      parkingRatio
+      tenantName
+      leaseExpiry
+      tenantNotes
+      yard
+      height
+      doors
+      loading
+      sprinklered
+      canopies
+      power
+    }
+}
+  }
+`;
+
 export const GET_NAV_STATE = gql`
   query GetNavigationState {
     navigationState @client { 

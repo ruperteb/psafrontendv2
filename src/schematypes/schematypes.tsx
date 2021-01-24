@@ -17,6 +17,7 @@ export type Query = {
   properties?: Maybe<Array<Maybe<Property>>>;
   premisesList?: Maybe<Array<Maybe<Premises>>>;
   singleProperty?: Property;
+  multiProperty?: Maybe<Array<Maybe<Property>>>;
   navigationState?: NavigationState;
   selectedPropertyList?: SelectedPropertyList;
   distinctSuburbs?: [Suburb];
@@ -28,6 +29,10 @@ export type Query = {
 
 export type QuerySinglePropertyArgs = {
   propertyId: Scalars['Int'];
+};
+
+export type QueryMultiPropertyArgs = {
+  propertyIdList?: Maybe<Array<Maybe<Scalars['Int']>>>;
 };
 
 export type Property = {

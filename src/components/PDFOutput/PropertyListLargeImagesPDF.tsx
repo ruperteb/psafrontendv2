@@ -14,8 +14,8 @@ import { Cloudinary } from "cloudinary-core"
 
 
 var cl = new Cloudinary({ cloud_name: "drlfedqyz", secure: true });
-var image = cl.url("1567618101_fela1x", { width: 600, crop: "fit" })
-console.log(image)
+
+
 const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         fontFamily: 'SegoeUI',
         display: "flex",
         flexDirection: "row",
-        margin: 5,
+        /*  margin: 5, */
         marginLeft: "auto",
         marginRight: "auto",
         width: "100%",
@@ -64,13 +64,59 @@ const styles = StyleSheet.create({
         /*  marginLeft: 20, */
         marginRight: 0,
         marginLeft: 20,
-        marginTop: "auto",
+        marginTop: 0,
         marginBottom: "auto",
     },
     primaryImage: {
         width: 600,
         height: 400,
-        marginTop: 25,
+        marginTop: 30,
+        marginBottom: "auto"
+    },
+    premisesDetailsContainer: {
+        display: "flex",
+        flexDirection: "column",
+        marginTop: 30,
+        marginBottom: "auto",
+        marginLeft: 20
+        /*  height: 500 */
+        /* width: 120 */
+    },
+    propertyNumberColumn: {
+        display: "flex",
+        flexDirection: "row",
+
+        /*  marginTop: 0,
+         marginBottom: "auto", */
+        /*  marginLeft: 10,
+         paddingTop: 4, */
+        /* width: "10%", */
+        /* borderStyle: "solid",
+        borderWidth: 1, */
+        /*    flexGrow: 1, */
+    },
+    secondaryPageContainer: {
+        fontFamily: 'SegoeUI',
+        display: "flex",
+        flexDirection: "row",
+        margin: 5,
+        marginLeft: "auto",
+        marginRight: "auto",
+        width: "100%",
+    },
+    secondaryImageContainers: {
+        display: "flex",
+        flexDirection: "row",
+        /*  marginLeft: 20, */
+        marginRight: "auto",
+        marginLeft: "auto",
+        marginTop: "auto",
+        marginBottom: "auto",
+    },
+    secondaryImage: {
+        width: 660,
+        height: 440,
+        marginTop: 13,
         marginBottom: "auto"
     },
     /*  detailsSection: {
@@ -107,7 +153,7 @@ const styles = StyleSheet.create({
         fontFamily: "SegoeUI",
         color: "black",
         paddingTop: 2
-        
+
     },
     imagesSection: {
         fontFamily: 'SegoeUI',
@@ -311,34 +357,19 @@ const styles = StyleSheet.create({
         fontFamily: "SegoeUI",
         fontWeight: "bold",
     },
-    propertyNumberColumn: {
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        /*  marginLeft: 10,
-         paddingTop: 4, */
-        /* width: "10%", */
-        /* borderStyle: "solid",
-        borderWidth: 1, */
-        /*    flexGrow: 1, */
-    },
+
     propertyDetails: {
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
         width: 125,
-        marginBottom: 10
+        marginBottom: 10,
+        marginTop: 5,
         /* borderStyle: "solid",
         borderWidth: 1, */
         /*    flexGrow: 1, */
     },
-    premisesDetailsContainer: {
-        display: "flex",
-        flexDirection: "column",
-        marginTop: 25,
-        marginLeft: 15,
-        /* width: 120 */
-    },
+
     premisesDetailsHeading: {
         marginLeft: "auto",
         marginRight: "auto",
@@ -477,7 +508,7 @@ const getLowestHighestEsc = (premises: Premises[]) => {
 
 
     var premisesByEsc: Premises[] = []
-    var escPair:number[] = []
+    var escPair: number[] = []
     if (premises !== undefined) {
         premisesByEsc = premises.slice().sort((a, b) => {
             return a.esc! - b.esc!
@@ -485,7 +516,7 @@ const getLowestHighestEsc = (premises: Premises[]) => {
     }
 
     if (premisesByEsc[0] !== undefined) {
-        escPair = [premisesByEsc[0].esc!, premisesByEsc[premisesByEsc.length-1].esc! ]
+        escPair = [premisesByEsc[0].esc!, premisesByEsc[premisesByEsc.length - 1].esc!]
     }
     return escPair
 }
@@ -544,33 +575,29 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
             {selectedPropertyList.map((property, index) => (
 
 
-                <View /* minPresenceAhead={50} */ wrap={false} key={property.propertyId} style={styles.overallContainer}>
+                <View /* minPresenceAhead={50} */ /* wrap={false} */ key={property.propertyId} style={styles.overallContainer}>
 
                     <View style={styles.initialPageContainer}>
 
                         <View style={styles.primaryImageContainer} >
-                            {selectedPropertyList[index].images!.length !== 0 ? <Image style={styles.primaryImage} src={cl.url(`${selectedPropertyList[index].images![0]}`, /* { width: 600, crop: "fit" } */)}></Image> : <Text></Text>}
+                            {selectedPropertyList[index].images!.length !== 0 ? <Image style={styles.primaryImage} src={cl.url(`${property.images![0]}`)}></Image> : <Image style={styles.primaryImage} src={cl.url("https://res.cloudinary.com/drlfedqyz/image/upload/v1610357447/background_eocbnx.jpg")}></Image>}
                         </View>
 
-                        <View style={styles.premisesDetailsContainer}>
-                            <View>
-
-                                <View style={styles.propertyNumberColumn}>
-                                    <Text style={styles.propertyNumber}>{index + 1}</Text>
-                                    <Text style={styles.propertyHeading}>{property.propertyName}</Text>
-                                </View>
-
-                                <View style={styles.propertyDetails}>
+                        <View wrap={false} style={styles.premisesDetailsContainer}>
 
 
-
-                                    <Text style={[styles.propertyText, { marginLeft: 20 }]}>{`${property.address}, ${property.suburb} `}</Text>
-
-
-
-                                </View>
-
+                            <View style={styles.propertyNumberColumn}>
+                                <Text style={styles.propertyNumber}>{index + 1}</Text>
+                                <Text style={styles.propertyHeading}>{property.propertyName}</Text>
                             </View>
+
+
+
+                            <Text style={[styles.propertyText, { marginLeft: 20 }]}>{`${property.address}, ${property.suburb} `}</Text>
+
+
+
+
 
 
 
@@ -612,7 +639,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             ))}
 
-                            <View style={(index + 1) % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                            <View style={(selectedPropertyList[index].premisesList!.length) % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                 <View style={[styles.premisesContainer, { width: 80 }]}>
                                     {/*  <Text style={styles.premisesText} >{premises.floor}</Text> */}
                                 </View>
@@ -652,99 +679,144 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             </View>
 
-
+                            {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                return acc + premises.coveredRate!
+                            }, 0) > 0 ?
                             <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
                                     <Text style={[styles.premisesText, { textAlign: "left" }]} >Covered</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.coveredBays!
+                                            }, 0)> 0?
                                         selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.coveredBays!
-                                        }, 0) : 0
+                                        }, 0) : "-"
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.coveredBays!
+                                            }, 0)> 0?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.coveredBays!
                                         }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.area!
-                                        }, 0) * 100).toFixed(1) : 0
+                                        }, 0) * 100).toFixed(1) : "-"
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
                                     <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + (premises.coveredRate! * premises.coveredBays!)
+                                            if (premises.coveredBays! === 0) {
+                                                return acc + premises.coveredRate!
+                                            } else {
+                                                return acc + (premises.coveredRate! * premises.coveredBays!)
+                                            }
                                         }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.coveredBays!
+                                            if (premises.coveredBays! === 0) {
+                                                return acc + 1
+                                            } else {
+                                                return acc + premises.coveredBays!
+                                            }
                                         }, 0)).toFixed(2) : 0
                                     }</Text>
                                 </View>
-                            </View>
+                            </View>: <Text></Text>}
 
+                            {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                return acc + premises.shadedRate!
+                            }, 0) > 0 ?
                             <View style={[styles.premisesDetails]}>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
                                     <Text style={[styles.premisesText, { textAlign: "left" }]} >Shaded</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.shadedBays!
+                                            }, 0)> 0?
                                         selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.shadedBays!
-                                        }, 0) : 0
+                                        }, 0) : "-"
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.shadedBays!
+                                            }, 0)> 0?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.shadedBays!
                                         }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.area!
-                                        }, 0) * 100).toFixed(1) : 0
+                                        }, 0) * 100).toFixed(1) : "-"
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
                                     <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + (premises.shadedRate! * premises.shadedBays!)
+                                            if (premises.shadedBays! === 0) {
+                                                return acc + premises.shadedRate!
+                                            } else {
+                                                return acc + (premises.shadedRate! * premises.shadedBays!)
+                                            }
                                         }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.shadedBays!
+                                            if (premises.shadedBays! === 0) {
+                                                return acc + 1
+                                            } else {
+                                                return acc + premises.shadedBays!
+                                            }
                                         }, 0)).toFixed(2) : 0
                                     }</Text>
                                 </View>
-                            </View>
+                            </View>: <Text></Text>}
 
-                            <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { textAlign: "left" }]} >Open</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
-                                        selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.openBays!
-                                        }, 0) : 0
-                                    }</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
-                                        (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.openBays!
-                                        }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.area!
-                                        }, 0) * 100).toFixed(1) : 0
-                                    }</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 50 }]}>
-                                    <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
-                                        (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + (premises.openRate! * premises.openBays!)
-                                        }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.openBays!
-                                        }, 0)).toFixed(2) : 0
-                                    }</Text>
-                                </View>
-                            </View>
+                            {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                return acc + premises.openRate!
+                            }, 0) > 0 ?
+                                <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { textAlign: "left" }]} >Open</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >
+                                            {selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.openBays!
+                                            }, 0)> 0?
+                                            selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.openBays!
+                                            }, 0) : "-"
+                                        }</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.openBays!
+                                            }, 0)> 0?
+                                            (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.openBays!
+                                            }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.area!
+                                            }, 0) * 100).toFixed(1) : "-"
+                                        }</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 50 }]}>
+                                        <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                            (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                if (premises.openBays! === 0) {
+                                                    return acc + premises.openRate!
+                                                } else {
+                                                    return acc + (premises.openRate! * premises.openBays!)
+                                                }
+                                            }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                if (premises.openBays! === 0) {
+                                                    return acc + 1
+                                                } else {
+                                                    return acc + premises.openBays!
+                                                }
+                                            }, 0)).toFixed(2) : 0
+                                        }</Text>
+                                    </View>
+                                </View> : <Text></Text>}
 
                             <View style={[styles.premisesDetails]}>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -753,26 +825,38 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
                                     <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                         selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+                                            if (premises.openBays! === 0 && premises.shadedBays! === 0 && premises.coveredBays! === 0) {
+                                                return acc + premises.parkingRatio! * (premises.area! / 100)
+                                            } else {
+                                                return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+                                            }
                                         }, 0) : 0
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
                                     <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+                                            if (premises.openBays! === 0 && premises.shadedBays! === 0 && premises.coveredBays! === 0) {
+                                                return acc + premises.parkingRatio! * (premises.area! / 100)
+                                            } else {
+                                                return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+                                            }
+
                                         }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.area!
                                         }, 0) * 100).toFixed(1) : 0
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
-                                    <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                            return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+                                        }, 0) > 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+
                                             return acc + (premises.openRate! * premises.openBays!) + (premises.shadedRate! * premises.shadedBays!) + (premises.coveredRate! * premises.coveredBays!)
                                         }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
-                                        }, 0)).toFixed(2) : 0
+                                        }, 0)).toFixed(2) : "-"
                                     }</Text>
                                 </View>
                             </View>
@@ -783,17 +867,17 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             <View>
 
-                                <View style={[styles.premisesInfo, {marginTop:20}]}>
-                                    <Text style={[styles.premisesInfoHeadings, {width: 75}]}>Occupation:</Text>
-                                    <Text style={styles.premisesInfoText}>{`from ${getEarliestOccDate(selectedPropertyList[index].premisesList!)}`}
+                                <View style={[styles.premisesInfo, { marginTop: 20 }]}>
+                                    <Text style={[styles.premisesInfoHeadings, { width: 75 }]}>Occupation:</Text>
+                                    <Text style={styles.premisesInfoText}>{`${getEarliestOccDate(selectedPropertyList[index].premisesList!)} +`}
                                     </Text>
 
                                 </View>
 
                                 <View style={styles.premisesInfo}>
-                                    <Text style={[styles.premisesInfoHeadings, {width: 75}]}>Escalation:</Text>
-                                    <Text style={styles.premisesInfoText}>{`${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `}
-                                    </Text>
+                                    <Text style={[styles.premisesInfoHeadings, { width: 75 }]}>Escalation:</Text>
+                                    {getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== undefined ? <Text style={styles.premisesInfoText}>{`${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `}
+                                    </Text> : <Text></Text>}
 
                                 </View>
 
@@ -805,230 +889,19 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                     </View>
 
+                    {property.images?.slice(1).map((image) => (
 
+                        <View style={styles.secondaryImageContainers} >
+                            {selectedPropertyList[index].images!.length !== 0 ? <Image style={styles.secondaryImage} src={cl.url(`${image}`, /* { width: 600, crop: "fit" } */)}></Image> : <Text></Text>}
+                        </View>
 
-
-
-
-
-
-
+                    ))}
 
                 </View>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                /*   <View minPresenceAhead={50} wrap={false} key={property.propertyId} style={styles.overallContainer}>
-  
-                      <View style={styles.detailsSection}>
-  
-                          <View style={styles.propertyNumberColumn}>
-                              <Text style={styles.propertyNumber}>{index + 1}</Text>
-                          </View>
-  
-                          <View style={styles.propertyDetails}>
-  
-  
-                              <Text style={styles.propertyHeading}>{property.propertyName}</Text>
-                              <Text style={styles.propertyText}>{property.address}</Text>
-                              <Text style={styles.propertyText}>{property.suburb}</Text>
-                        
-  
-  
-  
-                          </View>
-  
-                          <View style={styles.premisesDetailsContainer}>
-  
-                              <View style={styles.premisesHeadings}>
-                                  <View style={[styles.premisesContainer, { width: 40 }]}>
-                                      <Text style={styles.premisesHeadingText} >Floor/ Unit</Text>
-                                      <Text style={styles.premisesHeadingSubText} ></Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 40 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 40 }]} >Area</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 40 }]}>m²</Text>
-                                  </View>
-                                
-                                  <View style={[styles.premisesContainer, { width: 30 }]}>
-                                      <Text style={styles.premisesHeadingText} >Type</Text>
-                                      <Text style={styles.premisesHeadingSubText} ></Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 55 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 55 }]} >Occupation Date</Text>
-                                      <Text style={styles.premisesHeadingSubText} ></Text>
-                                  </View>
-  
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Net Rental</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/m²/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Op Costs</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/m²/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Other</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/m²/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Gross Rental</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/m²/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 30 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 30 }]} >Esc</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 30 }]}>%</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 40 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 40 }]} >Open Bays</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 40 }]}></Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Open Rate</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/bay/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 40 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 40 }]} >Covered Bays</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 40 }]}></Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Covered Rate</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/bay/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 40 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 40 }]} >Shaded Bays</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 40 }]}></Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 45 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 45 }]} >Shaded Rate</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 45 }]}>R/bay/month</Text>
-                                  </View>
-                                  <View style={[styles.premisesContainer, { width: 50 }]}>
-                                      <Text style={[styles.premisesHeadingText, { width: 50 }]} >Parking Ratio</Text>
-                                      <Text style={[styles.premisesHeadingSubText, { width: 50 }]}>bays/100m²</Text>
-                                  </View>
-                              </View>
-                              {selectedPropertyList[index].premisesList!.map((premises, index) => (
-  
-                                  <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
-                                      <View style={[styles.premisesContainer, { width: 40 }]}>
-                                          <Text style={styles.premisesText} >{premises.floor}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 40 }]}>
-                                          <Text style={[styles.premisesText, { width: 40 }]} >{premises.area}</Text>
-  
-                                      </View>
-                                    
-                                      <View style={[styles.premisesContainer, { width: 30 }]}>
-                                          <Text style={styles.premisesText} >{premises.type === "Warehouse" ? "W/H" : premises.type}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 55 }]}>
-                                          <Text style={[styles.premisesText, { width: 55 }]} >
-                                              {new Date(premises.occupation).toLocaleDateString(
-                                                  'en-gb',
-                                                  {
-                                                      year: 'numeric',
-                                                      month: 'numeric',
-                                                      day: 'numeric'
-                                                  }
-                                              )}</Text>
-  
-                                      </View>
-  
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.netRental}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.opCosts}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.other}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.grossRental}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 30 }]}>
-                                          <Text style={[styles.premisesText, { width: 30 }]} >{premises.esc}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 40 }]}>
-                                          <Text style={[styles.premisesText, { width: 40 }]} >{premises.openBays}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.openRate}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 40 }]}>
-                                          <Text style={[styles.premisesText, { width: 40 }]} >{premises.coveredBays}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.coveredRate}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 40 }]}>
-                                          <Text style={[styles.premisesText, { width: 40 }]} >{premises.shadedBays}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 45 }]}>
-                                          <Text style={[styles.premisesText, { width: 45 }]} >{premises.shadedRate}</Text>
-  
-                                      </View>
-                                      <View style={[styles.premisesContainer, { width: 50 }]}>
-                                          <Text style={[styles.premisesText, { width: 50 }]} >{premises.parkingRatio}</Text>
-  
-                                      </View>
-                                  </View>
-  
-                              ))}
-  
-                          </View>
-  
-  
-  
-                      </View>
-  
-                      <View style={styles.imagesSection}>
-  
-                          {selectedPropertyList[index].images!.slice(0, 3).map((image, index) => (
-  
-                              <View style={styles.imagesContainer} >
-                                  <Image style={styles.image} src={cl.url(`${image}`, { width: 600, crop: "fit" })}></Image>
-                              </View>
-  
-                          ))}
-  
-  
-  
-                      </View>
-  
-  
-  
-  
-                  </View> */
-
-
             ))}
+
             <View fixed style={styles.footerSection}>
                 <View style={styles.footerImageSection}>
                     <Image style={styles.footerImageStyles} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg"></Image>

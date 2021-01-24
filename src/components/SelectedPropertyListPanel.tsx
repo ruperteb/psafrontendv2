@@ -5,9 +5,9 @@ import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
-import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, GET_PDF_VARIABLES } from "../gql/gql"
+import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, GET_PDF_VARIABLES, GET_MULTI_PROPERTY } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
+import { Mutation, QueryMultiPropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar, pdfVariables as pdfVariablesVar } from "../reactivevariables/reactivevariables"
 import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
 import { Icon } from '@fluentui/react/lib/Icon';
@@ -50,17 +50,24 @@ import SelectedPropertyListPDF from './PDFOutput/SelectedPropertyListPDF';
 
 interface Props {
     showSelectedPropertyListPanel: boolean
+    propertyIdList: number[]
 
 }
 
-const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelectedPropertyListPanel, }) => {
+const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelectedPropertyListPanel, propertyIdList=[] }) => {
 
 
-    const {
-        data: propertyListData,
-        loading: propertyLoading,
-        error: propertyError
+    /* const {
+        data: propertyIdListData,
+        loading: propertyIdListLoading,
+        error: propertyIdListError
     } = useQuery<Query>(GET_SELECTED_PROPERTIES);
+
+    var propertyIdList = propertyIdListData?.selectedPropertyList?.map((property) => {
+        return property.propertyId
+    })
+
+    console.log(propertyIdList) */
 
     const {
         data: pdfVariables,
@@ -68,6 +75,15 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         error: pdfError
     } = useQuery<Query>(GET_PDF_VARIABLES);
 
+    const {
+        data: propertyListData,
+        loading: propertyListDataLoading,
+        error: propertyListDataError
+    } = useQuery<Query>(GET_MULTI_PROPERTY, {
+        variables: { propertyIdList: propertyIdList  },
+    });
+
+console.log(propertyListData)
 
     const [enquiryName, setEnquiryName] = React.useState('');
 
@@ -110,7 +126,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     }
 
     const handleRemoveProperty = (propertyId: number) => {
-        var updatedPropertyList = propertyListData!.selectedPropertyList!.filter(property => {
+        var updatedPropertyList = propertyListData!.multiProperty!.filter(property => {
             return property.propertyId !== propertyId
         })
         selectedPropertyListVar(updatedPropertyList)
@@ -277,27 +293,60 @@ marginBottom: 20
     );
 
 
-    var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPropertyList!
+    var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
+
+    
 
     console.log(selectedPropertyList)
 
-    const propertyList = selectedPropertyList.map(property => {
-        return (
-            <Stack styles={{ root: { marginLeft: 10, marginTop: "10px !important", alignItems: "center" } }} horizontal>
-                {property.propertyName}
-                <IconButton
-                    styles={deleteIconStyles}
-                    iconProps={deleteIcon}
-                    ariaLabel="Remove Property"
-                    onClick={() => handleRemoveProperty(property.propertyId)}
-                />
+    /* const propertyList = () =>  {
 
-            </Stack>
-        )
-    })
+       
+
+           var list=  selectedPropertyList.map(property => {
+                return (
+                    <Stack styles={{ root: { marginLeft: 10, marginTop: "10px !important", alignItems: "center" } }} horizontal>
+                        {property.propertyName}
+                        <IconButton
+                            styles={deleteIconStyles}
+                            iconProps={deleteIcon}
+                            ariaLabel="Remove Property"
+                            onClick={() => handleRemoveProperty(property.propertyId)}
+                        />
+        
+                    </Stack>
+                )
+            })
+            
+       return list
+    } */
+
+   
+
+    const propertyList =  selectedPropertyList?.map(property => {
+             return (
+                 <Stack styles={{ root: { marginLeft: 10, marginTop: "10px !important", alignItems: "center" } }} horizontal>
+                     {property.propertyName}
+                     <IconButton
+                         styles={deleteIconStyles}
+                         iconProps={deleteIcon}
+                         ariaLabel="Remove Property"
+                         onClick={() => handleRemoveProperty(property.propertyId)}
+                     />
+     
+                 </Stack>
+             )
+         })
+         
+   
+         /* if (propertyListDataLoading) return <div>Loading</div>; */
+        
+        
+      
+    
 
 
-    if (propertyLoading) return <div>Loading</div>;
+    
 
     return (
         <div>
@@ -327,7 +376,7 @@ marginBottom: 20
                 }}>
 
 
-                    {propertyList}
+                    {selectedPropertyList !== undefined? propertyList : <div>loading</div>}
 
 
                 </Stack>

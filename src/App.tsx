@@ -67,6 +67,10 @@ function App() {
     error: propertyListError
 } = useQuery<Query>(GET_SELECTED_PROPERTIES);
 
+var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
+  return property.propertyId
+})
+
 var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPropertyList!
 
 
@@ -234,8 +238,8 @@ var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPrope
       <PropertyList propertyData={propertyData}></PropertyList>
       <NewProperyModal showNewPropertyModal={navigationState.showNewPropertyModal} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></NewProperyModal>
       <SelectedPropertyPanel distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></SelectedPropertyPanel>
-      <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel}></SelectedPropertyListPanel>
-      <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!}></PreviewPDFPanel>
+      <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
+      <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
       
     
     

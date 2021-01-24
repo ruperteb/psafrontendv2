@@ -5,7 +5,7 @@ import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
-import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../gql/gql"
+import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES , GET_MULTI_PROPERTY} from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
 import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
@@ -51,19 +51,25 @@ interface Props {
     showPreviewPDFPanel: boolean
     enquiryName: string,
     agent: Agent
-
+    propertyIdList: number[]
 }
 
-const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, enquiryName , agent}) => {
+const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, enquiryName , agent,  propertyIdList=[]}) => {
 
-
+/* 
     const {
         data: propertyListData,
         loading: propertyLoading,
         error: propertyError
     } = useQuery<Query>(GET_SELECTED_PROPERTIES);
-
-
+ */
+    const {
+        data: propertyListData,
+        loading: propertyListDataLoading,
+        error: propertyListDataError
+    } = useQuery<Query>(GET_MULTI_PROPERTY, {
+        variables: { propertyIdList: propertyIdList  }, fetchPolicy: "network-only"
+    });
 
 
 
@@ -164,12 +170,12 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
     );
 
 
-    var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPropertyList!
+    var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
 
-    
+    console.log(selectedPropertyList)
 
 
-    if (propertyLoading) return <div>Loading</div>;
+    if (propertyListDataLoading) return <div>Loading</div>;
 
     return (
         <div>
