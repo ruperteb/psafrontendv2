@@ -137,7 +137,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         marginTop: 10,
         marginLeft: 5,
-        alignItems: "center"
+        marginRight: 0,
+        alignItems: "flex-start",
+        width: 175
     },
     premisesInfoHeadings: {
 
@@ -306,9 +308,9 @@ const styles = StyleSheet.create({
     },
     pageNumbers: {
         position: "absolute",
-        top: 20,
-        right: 20,
-        fontSize: 8,
+        top: 10,
+        right: 30,
+        fontSize: 10,
         color: "white",
 
     },
@@ -876,10 +878,21 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                                 <View style={styles.premisesInfo}>
                                     <Text style={[styles.premisesInfoHeadings, { width: 75 }]}>Escalation:</Text>
-                                    {getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== undefined ? <Text style={styles.premisesInfoText}>{`${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `}
+                                    {getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== undefined ? 
+                                    <Text style={styles.premisesInfoText}>{getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1] ?
+                                     `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `
+                                     : `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}`}
                                     </Text> : <Text></Text>}
 
                                 </View>
+
+                                {property.notes !== "" ? <View  style={[styles.premisesInfo, {flexDirection:"column"}]}>
+                                    <Text style={[styles.premisesInfoHeadings, { width: 75, marginLeft: 0 }]}>Notes:</Text>
+                                   
+                                    <Text style={[styles.premisesInfoText, {marginLeft: 0, fontSize: 8}]}>{property.notes}</Text> 
+                                    
+
+                                </View>: <Text></Text>}
 
                             </View>
 

@@ -139,6 +139,27 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
             var remaining = rest.slice(2)
             imagesArray = [...firstTwo, tertiary, ...remaining]
         }
+        if (item?.key === "Penultimate") {
+            var penultimate = imagesArray[imageIndex]
+            
+            var rest = imagesArray.filter(image => {
+                return image !== penultimate 
+            })
+            var final = rest[rest.length - 1]
+var restLessFinal = rest.slice(0, rest.length - 1)
+
+            imagesArray = [...restLessFinal, penultimate  ,final]
+        }
+        if (item?.key === "Final") {
+            var final = imagesArray[imageIndex]
+
+            var rest = imagesArray.filter(image => {
+                return image !== final
+            })
+
+
+            imagesArray = [...rest, final]
+        }
         saveUpdatedImages()
     };
 
@@ -170,6 +191,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
                     });
             }
         })
+        toggleIsDeleteCalloutVisible()
     }
 
     const dropdownMenuStyles: IStyleFunctionOrObject<IContextualMenuStyleProps, IContextualMenuStyles> = { container: { width: 125 } };
@@ -197,6 +219,16 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
             {
                 key: 'Tertiary',
                 text: 'Tertiary',
+                onClick: onChange
+            },
+            {
+                key: 'Penultimate',
+                text: 'Penultimate',
+                onClick: onChange
+            },
+            {
+                key: 'Final',
+                text: 'Final',
                 onClick: onChange
             },
         ],
@@ -409,12 +441,12 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
                                     setInitialFocus
                                 >
                                     <div className={styles.header}>
-                                        <Text className={styles.title}>Delete Property</Text>
+                                        <Text className={styles.title}>Delete Image</Text>
                                     </div>
                                     <div className={styles.inner}>
                                         <div>
                                             <Text className={styles.subtext}>
-                                                Are you sure you want to delete this property?
+                                                Are you sure you want to delete this image?
                 </Text>
                                         </div>
                                     </div>
