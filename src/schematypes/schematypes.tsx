@@ -23,6 +23,9 @@ export type Query = {
   distinctSuburbs?: [Suburb];
   distinctRegions?: [Region];
   pdfVariables?: PDFVariables;
+  landlords?: Maybe<Array<Maybe<Landlord>>>;
+  landlordContacts?: Maybe<Array<Maybe<LandlordContact>>>;
+  contactsByLandlord?: Maybe<Array<Maybe<LandlordContact>>>;
 
 };
 
@@ -53,6 +56,8 @@ export type Property = {
   notes?: Maybe<Scalars['String']>;
   premisesList?: Maybe<Array<Maybe<Premises>>>;
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
+
+  contact?: Maybe<LandlordContact>;
 };
 
 export type Premises = {
@@ -101,10 +106,26 @@ export type Mutation = {
   updatePremises: Premises;
   login?: Maybe<AuthPayload>;
   signup?: Maybe<AuthPayload>;
+  postLandlord: Landlord;
+  postLandlordContact: LandlordContact;
+};
+
+export type MutationPostLandlordArgs = {
+  landlordName?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationPostLandlordContactArgs = {
+  landlordId: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  officeNo?: Maybe<Scalars['String']>;
+  mobileNo?: Maybe<Scalars['String']>;
 };
 
 
 export type MutationPostPropertyArgs = {
+  contactId?: Maybe<Scalars['Int']>;
   propertyName: Scalars['String'];
   address?: Maybe<Scalars['String']>;
   suburb?: Maybe<Scalars['String']>;
@@ -289,5 +310,23 @@ propertyIds: Scalars['Int'][]
     enquiryName: string,
     agent: Agent
   }
+
+  export type Landlord = {
+    __typename?: 'Landlord';
+    landlordId: Scalars['Int'];
+    landlordName?: Maybe<Scalars['String']>;
+    contactsList?: Maybe<Array<Maybe<LandlordContact>>>;
+  };
+  
+  export type LandlordContact = {
+    __typename?: 'LandlordContact';
+    contactId: Scalars['Int'];
+    name?: Maybe<Scalars['String']>;
+    email?: Maybe<Scalars['String']>;
+    officeNo?: Maybe<Scalars['String']>;
+    mobileNo?: Maybe<Scalars['String']>;
+    landlordName?: Maybe<Landlord>;
+    propertyList?: Maybe<Array<Maybe<Property>>>;
+  };
   
   

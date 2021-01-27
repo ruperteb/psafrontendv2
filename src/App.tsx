@@ -8,8 +8,8 @@ import {
   IComboBox,
   SelectableOptionMenuItemType,
 } from 'office-ui-fabric-react';
-import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES} from "./gql/gql"
-import { Query, NavigationState, SelectedPropertyList } from "./schematypes/schematypes"
+import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES, GET_LANDLORDS} from "./gql/gql"
+import { Query, NavigationState, SelectedPropertyList, Landlord } from "./schematypes/schematypes"
 import { gql, useQuery, useApolloClient } from '@apollo/client';
 import Loading from "./components/Loading"
 import Navigation from "./components/Navigation"
@@ -179,10 +179,27 @@ var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPrope
     ]
   }
 
-
-
-
   console.log(distinctRegionsOptions)
+
+  const {
+    data: landlordData,
+    loading: landlordLoading,
+    error: landlordError
+} = useQuery<Query>(GET_LANDLORDS);
+
+var landLordsList: Landlord[] = landlordData?.landlords!
+
+const landlordsFormatted = landLordsList?.map((landlord) => {
+  return { key: landlord.landlordName!, text: landlord.landlordName!, data: landlord }
+})
+var landlordsOptions: IComboBoxOption[] = []
+
+if(landlordsFormatted !== undefined) {
+  landlordsOptions = [...landlordsFormatted]
+}
+
+
+  
 
 
   if (propertyLoading) return <Loading></Loading>;
@@ -236,7 +253,7 @@ var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPrope
     >
       <Navigation selectedPropertyType={navigationState.selectedPropertyType} setSearch={setSearch} showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel}  > </Navigation>
       <PropertyList propertyData={propertyData}></PropertyList>
-      <NewProperyModal showNewPropertyModal={navigationState.showNewPropertyModal} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></NewProperyModal>
+      <NewProperyModal showNewPropertyModal={navigationState.showNewPropertyModal} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></NewProperyModal>
       <SelectedPropertyPanel distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></SelectedPropertyPanel>
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>

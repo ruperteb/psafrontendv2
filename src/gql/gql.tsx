@@ -51,6 +51,15 @@ export const GET_PROPERTIES = gql`
       canopies
       power
     }
+    contact{
+      name
+      email
+      mobileNo
+      officeNo
+      landlordName{
+        landlordName
+      }
+    }
   }
 }
     `
@@ -109,6 +118,15 @@ export const GET_SINGLE_PROPERTY = gql`
       canopies
       power
     }
+    contact{
+      name
+      email
+      mobileNo
+      officeNo
+      landlordName{
+        landlordName
+      }
+    }
 }
   }
 `;
@@ -166,6 +184,15 @@ export const GET_MULTI_PROPERTY = gql`
       sprinklered
       canopies
       power
+    }
+    contact{
+      name
+      email
+      mobileNo
+      officeNo
+      landlordName{
+        landlordName
+      }
     }
 }
   }
@@ -262,6 +289,8 @@ export const NEW_PROPERTY = gql`
   $province: String,
   $region: String,
   $notes: String,
+
+  $contactId: Int,
       ) {
 
     postProperty (
@@ -279,6 +308,8 @@ export const NEW_PROPERTY = gql`
   province: $province,
   region: $region,
   notes: $notes,
+
+  contactId: $contactId,
 
 ) {
   propertyId
@@ -660,3 +691,28 @@ export const GET_PDF_VARIABLES = gql`
     }
   }
   `
+
+export const GET_LANDLORDS = gql`
+    
+query{
+
+landlords{
+  landlordId
+    landlordName
+    contactsList{
+      contactId
+      name
+      email
+      officeNo
+      mobileNo
+      landlordName{
+        landlordName
+      }
+      propertyList{
+        propertyId
+      }
+    }
+}
+}
+
+`

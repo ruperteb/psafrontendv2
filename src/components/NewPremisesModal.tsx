@@ -494,33 +494,6 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
     );
 
 
-
-
-    /* const onChangeCoordinates = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setNewProperty({ ...newProperty, coordinates: newValue || '' });
-        },
-        [newProperty],
-    );
-    const onChangeErfExtent = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setNewProperty({ ...newProperty, erfExtent: parseInt(newValue!) || 0 });
-        },
-        [newProperty],
-    );
-    const onChangeTotalGLA = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setNewProperty({ ...newProperty, totalGLA: parseInt(newValue!) || 0 });
-        },
-        [newProperty],
-    );
-    const onChangeNotes = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setNewProperty({ ...newProperty, notes: newValue || '' });
-        },
-        [newProperty],
-    ); */
-
     const [selectedKey, setSelectedKey] = React.useState('Premises Details');
 
     const handleLinkClick = (item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) => {
@@ -532,7 +505,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
         return `NewPremisesPivot_${itemKey}`;
     };
 
-    const titleId = useId('title');
+    const titleId = useId('New Premises');
 
 
     const newPremisesTab = () => {

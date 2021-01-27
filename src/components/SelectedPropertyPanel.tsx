@@ -179,6 +179,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
     const boldStyle = { root: { fontWeight: FontWeights.semibold } };
     const propertyDetailsStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: "15px" }
+    const propertyDetailsLandlordStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: "15px" , width: 125}
 
     const boldStyle2 = { root: { fontWeight: FontWeights.bold } };
     const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "20px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 }
@@ -366,7 +367,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                             /*   display: "flex",
                               flexFlow: "row", */
                             maxWidth: "fit-content",
-                            marginLeft: 50,
+                            marginLeft: 25,
                             marginTop: 20
                             /*  marginTop: "0 !important" */
                         }
@@ -653,11 +654,11 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                                             },
                                         }}
                                             gap={15}>
-                                            <Text style={propertyDetailsStyles}>Placeholder</Text>
-                                            <Text style={propertyDetailsStyles}>Placeholder</Text>
-                                            <Text style={propertyDetailsStyles}>Placeholder</Text>
-                                            <Text style={propertyDetailsStyles}>Placeholder</Text>
-                                            <Text style={propertyDetailsStyles}>Placeholder</Text>
+                                            <Text style={propertyDetailsLandlordStyles}>{propertyData?.singleProperty?.contact?.landlordName?.landlordName !== "" ? propertyData?.singleProperty?.contact?.landlordName?.landlordName : "-"}</Text>
+                                            <Text style={propertyDetailsLandlordStyles}>{propertyData?.singleProperty?.contact?.name !== "" ? propertyData?.singleProperty?.contact?.name : "-"}</Text>
+                                            <Text style={propertyDetailsLandlordStyles}>{propertyData?.singleProperty?.contact?.email !== "" ? propertyData?.singleProperty?.contact?.email : "-"}</Text>
+                                            <Text style={propertyDetailsLandlordStyles}>{propertyData?.singleProperty?.contact?.mobileNo !== "" ? propertyData?.singleProperty?.contact?.mobileNo : "-"}</Text>
+                                            <Text style={propertyDetailsLandlordStyles}>{propertyData?.singleProperty?.contact?.officeNo !== "" ? propertyData?.singleProperty?.contact?.officeNo : "-"}</Text>
                                         </Stack>
 
                                     </Stack>

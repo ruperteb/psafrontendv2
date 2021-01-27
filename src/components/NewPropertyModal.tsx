@@ -25,9 +25,10 @@ import {
     SelectableOptionMenuItemType,
     IComboBoxStyles,
 } from 'office-ui-fabric-react';
+import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { GET_PROPERTIES, NEW_PROPERTY, GET_NAV_STATE } from "../gql/gql"
-import { Mutation, MutationPostPropertyArgs, Query } from "../schematypes/schematypes"
+import { GET_PROPERTIES, NEW_PROPERTY, GET_NAV_STATE, GET_LANDLORDS } from "../gql/gql"
+import { Mutation, MutationPostPropertyArgs, Query, Landlord, LandlordContact } from "../schematypes/schematypes"
 import { navigationState } from "../reactivevariables/reactivevariables"
 import "./NewPremisesModal.css"
 
@@ -46,14 +47,55 @@ interface Props {
     showNewPropertyModal: boolean;
     distinctSuburbsOptions: IComboBoxOption[];
     distinctRegionsOptions: IComboBoxOption[];
+    landlordsOptions: IComboBoxOption[];
 }
 
-export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distinctSuburbsOptions, distinctRegionsOptions }) => {
+export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distinctSuburbsOptions, distinctRegionsOptions, landlordsOptions }) => {
 
     const hideNewPropertyModal = () => {
         navigationState({ ...navigationState(), showNewPropertyModal: false })
     }
 
+    interface SelectedLandlord {
+        landlordId: number
+        landlordName: string
+        landlordData: Landlord
+    }
+
+    const [selectedLandlord, setSelectedLandlord] = React.useState<SelectedLandlord>(
+        {
+            landlordId: 0,
+            landlordName: "",
+            landlordData: { landlordId: 0 }
+
+        });
+
+
+        interface SelectedContact {
+            contactId: number
+            contactName: string
+            contactData: LandlordContact
+        }
+
+
+    const [selectedContact, setSelectedContact] = React.useState<SelectedContact>(
+        {
+            contactId: 0,
+            contactName: "",
+            contactData: { contactId: 0 }
+
+        });
+
+
+
+    /*  var contactsByLandlord: Landlord[] = landlordData!.landlords!.filter((landlord) => {
+         var contacts: LandlordContact[] = []
+         if (landlord.landlordId === selectedLandlord.landlordId) {
+             contacts = landlord.contactsList!
+ 
+         }
+         return contacts
+     }) */
 
     const [newProperty, setNewProperty] = React.useState(
         {
@@ -70,6 +112,8 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
             province: "",
             region: "",
             notes: "",
+
+           
 
         });
 
@@ -95,6 +139,8 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
                 province: newProperty.province,
                 region: newProperty.region,
                 notes: newProperty.notes,
+
+                contactId: selectedContact.contactId
             },
 
             update(cache, { data }) {
@@ -131,11 +177,13 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
             province: "",
             region: "",
             notes: "",
+
+            
         })
         hideNewPropertyModal()
     }
 
-    
+
 
     /* const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
     const [isDraggable, { toggle: toggleIsDraggable }] = useBoolean(false); */
@@ -156,7 +204,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
 
 
-    const modalStyles: Partial<IModalStyles> = { main: { transform: "translate(0px, -80px) " }, };
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
 
 
 
@@ -183,7 +231,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         }
     };
 
-    
+
 
     const propertyProvinceOptions = [
 
@@ -252,8 +300,49 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         [newProperty],
     );
 
+    const landlordComboOptions: IComboBoxOption[] = landlordsOptions
 
+    const onChangeLandlord = React.useCallback(
+        (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) => {
+            setSelectedLandlord({
+                landlordName: option?.text!,
+                landlordId: option?.data.landlordId,
+                landlordData: option?.data
+            });
+            setSelectedContact({
+                contactName: "",
+                contactId: 0,
+                contactData: {contactId:0}
+            });
 
+        },
+        [selectedLandlord],
+    );
+
+    console.log(selectedLandlord)
+
+    const contactsFormatted = selectedLandlord.landlordData?.contactsList?.map((contact) => {
+        return { key: contact.name!, text: contact.name!, data: contact }
+    })
+    var contactsOptions: IComboBoxOption[] = []
+
+    if (contactsFormatted !== undefined) {
+        contactsOptions = [...contactsFormatted]
+    }
+
+    const contactComboOptions: IComboBoxOption[] = contactsOptions
+
+    const onChangeContact = React.useCallback(
+        (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) => {
+            setSelectedContact({
+                contactName: option?.text!,
+                contactId: option?.data.contactId,
+                contactData: option?.data
+            });
+
+        },
+        [selectedLandlord],
+    );
 
     const stackTokens = { childrenGap: 15 };
 
@@ -297,47 +386,26 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         [newProperty],
     );
 
-    const titleId = useId('title');
+    const [selectedKey, setSelectedKey] = React.useState('Property Details');
 
-    return (
-        <div>
+    const handleLinkClick = (item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) => {
+
+        setSelectedKey(item!.props.itemKey!);
+    };
+
+    const getTabId = (itemKey: string | undefined) => {
+        return `NewPropertyPivot_${itemKey}`;
+    };
+
+    const titleId = useId('New Property');
 
 
-            <Modal
-                styles={modalStyles}
+    const newPropertyTab = () => {
 
-                titleAriaId={titleId}
-                isOpen={showNewPropertyModal}
-                onDismiss={hideNewPropertyModal}
-                isBlocking={false}
-                containerClassName={contentStyles.container}
-                /* dragOptions={dragOptions} */
-            >
-                <div className={contentStyles.header}>
-                    <span id={titleId}>New Property</span>
-                    <Stack horizontal
-                        styles={headerIconStackStyles}
-                    >
-
-                        <IconButton
-                            styles={iconButtonStyles}
-                            iconProps={saveIcon}
-                            ariaLabel="Save Investor"
-                            onClick={saveNewProperty}
-                        />
-                        <IconButton
-                            styles={iconButtonStyles}
-                            iconProps={cancelIcon}
-                            ariaLabel="Close popup modal"
-                            onClick={hideNewPropertyModal}
-                        />
-
-                    </Stack>
-
-                </div>
-                <div className={contentStyles.body} >
-
-                    <Stack tokens={stackTokens}>
+        switch (selectedKey) {
+            case "Property Details":
+                return (
+                    <>
                         <Stack horizontal
                             styles={{
                                 root: {
@@ -352,6 +420,8 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
                                 }
                             }}>
+
+
                             <TextField
                                 label="Property Name"
                                 value={newProperty.propertyName}
@@ -434,7 +504,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
                             <TextField
                                 label="Erf Extent"
-                                type= "number"
+                                type="number"
                                 value={String(newProperty.erfExtent)}
                                 onChange={onChangeErfExtent}
                                 styles={textFieldErfStyles}
@@ -442,7 +512,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
                             />
                             <TextField
                                 label="Total GLA"
-                                type= "number"
+                                type="number"
                                 value={String(newProperty.totalGLA)}
                                 onChange={onChangeTotalGLA}
                                 styles={textFieldErfStyles}
@@ -453,6 +523,66 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
 
 
+
+                    </>
+                )
+
+            case "Landlord Details":
+
+                return (
+                    <>
+                        <Stack verticalFill>
+
+                            <ComboBox
+                                label="Landlord"
+                                allowFreeform={true}
+                                autoComplete={"on"}
+                                options={landlordComboOptions}
+                                selectedKey={selectedLandlord.landlordId}
+                                onChange={onChangeLandlord}
+                                styles={comboBoxStyles}
+                                text={selectedLandlord.landlordName}
+                            />
+
+                            <ComboBox
+                                label="Contact"
+                                allowFreeform={true}
+                                autoComplete={"on"}
+                                options={contactComboOptions}
+                                selectedKey={selectedContact !== undefined? selectedContact.contactId : ""}
+                                onChange={onChangeContact}
+                                styles={comboBoxStyles}
+                                text={selectedContact.contactName}
+                            />
+                            <TextField
+                                label="Email"
+                                value={selectedContact.contactData !== undefined? selectedContact.contactData.email: ""}
+                                onChange={onChangeAddress}
+                                styles={textFieldAddressStyles}
+                            />
+                            <TextField
+                                label="Mobile No"
+                                value={selectedContact.contactData !== undefined? selectedContact.contactData.mobileNo: ""}
+                                onChange={onChangeAddress}
+                                styles={textFieldAddressStyles}
+                            />
+                            <TextField
+                                label="Office No"
+                                value={selectedContact.contactData !== undefined? selectedContact.contactData.officeNo: ""}
+                                onChange={onChangeAddress}
+                                styles={textFieldAddressStyles}
+                            />
+
+
+
+                        </Stack>
+                    </>
+                )
+
+            case "Property Notes":
+
+                return (
+                    <>
                         <Stack horizontal>
 
                             <TextField
@@ -460,11 +590,79 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
                                 value={newProperty.notes}
                                 onChange={onChangeNotes}
                                 styles={textFieldNotesStyles}
-                                multiline 
+                                multiline
                                 autoAdjustHeight
                             />
 
                         </Stack>
+                    </>
+                )
+
+
+
+
+
+            default:
+            // code block
+        }
+
+    }
+
+    return (
+        <div>
+
+
+            <Modal
+                styles={modalStyles}
+
+                titleAriaId={titleId}
+                isOpen={showNewPropertyModal}
+                onDismiss={hideNewPropertyModal}
+                isBlocking={false}
+                containerClassName={contentStyles.container}
+            /* dragOptions={dragOptions} */
+            >
+                <div className={contentStyles.header}>
+                    <span id={titleId}>New Property</span>
+                    <Stack horizontal
+                        styles={headerIconStackStyles}
+                    >
+
+                        <IconButton
+                            styles={iconButtonStyles}
+                            iconProps={saveIcon}
+                            ariaLabel="Save Investor"
+                            onClick={saveNewProperty}
+                        />
+                        <IconButton
+                            styles={iconButtonStyles}
+                            iconProps={cancelIcon}
+                            ariaLabel="Close popup modal"
+                            onClick={hideNewPropertyModal}
+                        />
+
+                    </Stack>
+
+                </div>
+                <div className={contentStyles.body} >
+
+                    <Stack tokens={stackTokens}>
+
+                        <Pivot
+                            aria-label="Separately Rendered Content Pivot Example"
+                            selectedKey={selectedKey}
+                            // eslint-disable-next-line react/jsx-no-bind
+                            onLinkClick={handleLinkClick}
+                            headersOnly={true}
+                            getTabId={getTabId}
+                        >
+                            <PivotItem headerText="Property Details" itemKey="Property Details" />
+                            <PivotItem headerText="Landlord Details" itemKey="Landlord Details" />
+                            <PivotItem headerText="Property Notes" itemKey="Property Notes" />
+
+                        </Pivot>
+
+                        {newPropertyTab()}
 
 
 

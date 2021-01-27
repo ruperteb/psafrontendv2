@@ -150,7 +150,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
 
 
-    const modalStyles: Partial<IModalStyles> = { main: { transform: "translate(0px, -80px) " }, };
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
 
 
 
