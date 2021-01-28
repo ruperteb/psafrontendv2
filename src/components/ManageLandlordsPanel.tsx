@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CommandBarButton, IButtonStyles, ILayerStyleProps, ILayerStyles, ILayerProps } from 'office-ui-fabric-react';
+import { CommandBarButton, IButtonStyles, ILayerStyleProps, ILayerStyles, ILayerProps, FocusTrapCallout, FocusZone, PrimaryButton, TextField, ITextFieldStyles  } from 'office-ui-fabric-react';
 import { Panel, PanelType, IPanelProps, IPanelStyles, IPanelStyleProps, } from 'office-ui-fabric-react/lib/Panel';
 import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/lib/Utilities';
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
@@ -53,16 +53,28 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
 
    console.log(landLordsList)
 
-    
+   const [isAddCalloutVisible, { toggle: toggleIsAddCalloutVisible }] = useBoolean(false);
 
-    
+   const [addLandlordName, setAddLandlordName] = React.useState("")
+
+    console.log(isAddCalloutVisible)
 
     const handlePanelDismiss = () => {
         navigationStateVar({ ...navigationStateVar(), showManageLandlordsPanel: false })
        
     }
 
-    
+    const handleAddLandlord = () => {
+        toggleIsAddCalloutVisible()
+       
+    }
+
+    const onChangeLandlordName = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setAddLandlordName(newValue!);
+        },
+        [addLandlordName],
+    ); 
 
 
 
@@ -86,7 +98,7 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
         }
     };
 
-    const editIconStyles = {
+    const addIconStyles = {
         root: {
             color: theme.palette.neutralPrimary,
             marginLeft: 20
@@ -114,8 +126,8 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
             paddingRight: 24,
             paddingTop: 20
         },
-        header: {},
-        headerText: { fontSize: 24, marginLeft: 75 },
+        header: {marginBottom:10},
+        headerText: { fontSize: 24, marginLeft: 15 },
 
     }
 
@@ -136,8 +148,44 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
     const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "20px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 }
     const propertyNotesStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: "15px", marginTop: 0 }
 
-    
+    const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300} };
 
+    const styles = mergeStyleSets({
+    
+        callout: {
+          maxWidth: 600,
+        },
+        header: {
+          padding: '18px 24px 12px',
+        },
+        title: [
+          {
+            margin: 0,
+            fontWeight: FontWeights.bold,
+          },
+        ],
+        inner: {
+          height: '100%',
+          padding: '0 24px 20px',
+        },
+        actions: {
+          position: 'relative',
+          marginTop: 20,
+          width: '100%',
+          whiteSpace: 'nowrap',
+        },
+        buttons: {
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '0 24px 24px',
+        },
+        subtext: [
+          {
+            margin: 0,
+            fontWeight: FontWeights.semilight,
+          },
+        ],
+      });
     
 
    
@@ -151,12 +199,14 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
                     ariaLabel="Close panel"
                     onClick={handlePanelDismiss}
                 />
-               {/*  <IconButton
-                    styles={editIconStyles}
-                    iconProps={editIcon}
-                    ariaLabel="Edit Property Details"
-                    onClick={handleEditProperty}
-                /> */}
+               <IconButton
+                    styles={addIconStyles}
+                    iconProps={addIcon}
+                    ariaLabel="Add Landlord"
+                    onClick={toggleIsAddCalloutVisible}
+                    id="addLandlordButton"
+                />
+                
 
 
 
@@ -186,7 +236,7 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
             <Panel
                 isOpen={showManageLandlordsPanel}
                 onDismiss={handlePanelDismiss}
-                type={PanelType.extraLarge}
+                type={PanelType.medium}
                 onRenderNavigationContent={onRenderNavigationContent}
                 /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
                 closeButtonAriaLabel="Close"
@@ -199,6 +249,7 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
                     root: {
                         display: "flex",
                         flexFlow: "column",
+                        marginLeft: 10
                         /* maxWidth: "fit-content" */
                         /*  marginTop: "0 !important" */
                     }
@@ -219,9 +270,43 @@ return <LandlordListItem landlord={landlord} key={landlord.landlordId} expanded=
                 </Stack>
 
                 
+                {isAddCalloutVisible ? (
+          <div>
+            <FocusTrapCallout
+              role="alertdialog"
+              className={styles.callout}
+              gapSpace={0}
+              target={`#addLandlordButton`}
+              onDismiss={toggleIsAddCalloutVisible}
+              setInitialFocus
+            >
+              <div className={styles.header}>
+                <Text className={styles.title}>Add Landlord</Text>
+              </div>
+              <div className={styles.inner}>
+                <div>
 
+                  <TextField 
+                  styles={textFieldStyles} 
+                  label="Landlord Name"
+                   
+                    value={addLandlordName}
+                    onChange={onChangeLandlordName}></TextField>
+                </div>
+              </div>
+              <FocusZone>
+                <Stack className={styles.buttons} gap={8} horizontal>
+                  <PrimaryButton /* onClick={deletePropertyButton} */>Confirm</PrimaryButton>
+                  <DefaultButton onClick={toggleIsAddCalloutVisible}>Cancel</DefaultButton>
+                </Stack>
+              </FocusZone>
+            </FocusTrapCallout>
+          </div>
+        ) : null}
 
             </Panel>
+
+            
 
 
         </div>
