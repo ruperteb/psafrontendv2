@@ -18,6 +18,7 @@ import NewProperyModal from "./components/NewPropertyModal"
 import SelectedPropertyPanel from "./components/SelectedPropertyPanel"
 import SelectedPropertyListPanel from "./components/SelectedPropertyListPanel"
 import PreviewPDFPanel from "./components/PreviewPDFPanel"
+import ManageLandlordsPanel from "./components/ManageLandlordsPanel"
 import {Cloudinary} from "cloudinary-core"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
@@ -219,6 +220,7 @@ if(landlordsFormatted !== undefined) {
     selectedPropertyType: "all",
     search: "",
     showSelectedPropertyListPanel: false,
+    showManageLandlordsPanel: false,
     selectedPropertyId: 0,
     selectedPremisesId: 0,
   }
@@ -257,7 +259,7 @@ if(landlordsFormatted !== undefined) {
       <SelectedPropertyPanel distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions}></SelectedPropertyPanel>
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
-      
+      <ManageLandlordsPanel showManageLandlordsPanel={navigationState.showManageLandlordsPanel} landLordsList={landLordsList}></ManageLandlordsPanel>
     
     
     </Stack>

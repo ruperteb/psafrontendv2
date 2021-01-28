@@ -78,6 +78,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
         showSelectedPropertyListPanel: false,
         selectedPropertyId: 0,
         selectedPremisesId: 0,
+        showManageLandlordsPanel: false,
     }
 
     if (navigationStateData !== undefined) {
@@ -384,7 +385,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
                             <Stack id="Property Details" styles={{
                                 root: {
-                                    /* width: 700, */
+                                    width: "70%",
                                     marginTop: "20 !important",
                                     marginBottom: 10,
                                     marginRight: 20,

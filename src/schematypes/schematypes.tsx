@@ -274,6 +274,7 @@ export type NavigationState = {
     showImageGalleryModal: boolean,
     showPremisesNotesModal: boolean,
     showPreviewPDFPanel: boolean,
+    showManageLandlordsPanel: boolean,
   showFilterModal: boolean,
   selectedPropertyType: string | undefined,
   search: string | undefined,

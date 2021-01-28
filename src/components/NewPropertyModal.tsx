@@ -24,6 +24,7 @@ import {
     IComboBox,
     SelectableOptionMenuItemType,
     IComboBoxStyles,
+    PrimaryButton,
 } from 'office-ui-fabric-react';
 import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import { gql, useMutation, useQuery } from '@apollo/client';
@@ -71,11 +72,11 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         });
 
 
-        interface SelectedContact {
-            contactId: number
-            contactName: string
-            contactData: LandlordContact
-        }
+    interface SelectedContact {
+        contactId: number
+        contactName: string
+        contactData: LandlordContact
+    }
 
 
     const [selectedContact, setSelectedContact] = React.useState<SelectedContact>(
@@ -113,7 +114,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
             region: "",
             notes: "",
 
-           
+
 
         });
 
@@ -178,7 +179,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
             region: "",
             notes: "",
 
-            
+
         })
         hideNewPropertyModal()
     }
@@ -197,16 +198,20 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
     const textFieldAddressStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300, marginRight: 20 } };
     const textFieldCoordinatesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
     const textFieldErfStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
-    const textFieldNotesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 500, marginRight: 20 } };
+    const textFieldNotesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 470, marginRight: 20 } };
     const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 150, marginRight: 20 } };
     const dropdownSectorStyles: Partial<IDropdownStyles> = { dropdown: { width: 420, marginRight: 20 } };
     const dropdownProvinceStyles: Partial<IDropdownStyles> = { dropdown: { width: 140, marginRight: 20 } };
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
 
+    const comboBoxLandlordStyles: Partial<IComboBoxStyles> = { root: { width: 220, marginRight: 20 } }
+    const textFieldLandlordStyles: Partial<ITextFieldStyles> = { root: { width: 220, marginRight: 20, marginTop: "20px !important" } };
 
-    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
+    const textFieldLandlordEmailStyles: Partial<ITextFieldStyles> = { root: { width: 300, marginRight: 20, marginTop: "20px !important" } };
 
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: { zIndex: 5000 } };
 
+    const buttonStyles = { root: { width: 100, marginRight: "auto !important", marginBottom: 0, marginTop: "20px !important", marginLeft: "auto !important" , height: 40} };
 
     const headerIconStackStyles: Partial<IStackStyles> = { root: { marginRight: 0, marginLeft: "auto", } }
 
@@ -312,7 +317,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
             setSelectedContact({
                 contactName: "",
                 contactId: 0,
-                contactData: {contactId:0}
+                contactData: { contactId: 0 }
             });
 
         },
@@ -385,6 +390,13 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         },
         [newProperty],
     );
+
+
+    const handleManageLandlords = () => {
+
+        navigationState({ ...navigationState(), showManageLandlordsPanel: true })
+
+    }
 
     const [selectedKey, setSelectedKey] = React.useState('Property Details');
 
@@ -533,45 +545,76 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
                     <>
                         <Stack verticalFill>
 
-                            <ComboBox
-                                label="Landlord"
-                                allowFreeform={true}
-                                autoComplete={"on"}
-                                options={landlordComboOptions}
-                                selectedKey={selectedLandlord.landlordId}
-                                onChange={onChangeLandlord}
-                                styles={comboBoxStyles}
-                                text={selectedLandlord.landlordName}
-                            />
+                            <Stack horizontal>
 
-                            <ComboBox
-                                label="Contact"
-                                allowFreeform={true}
-                                autoComplete={"on"}
-                                options={contactComboOptions}
-                                selectedKey={selectedContact !== undefined? selectedContact.contactId : ""}
-                                onChange={onChangeContact}
-                                styles={comboBoxStyles}
-                                text={selectedContact.contactName}
-                            />
-                            <TextField
-                                label="Email"
-                                value={selectedContact.contactData !== undefined? selectedContact.contactData.email: ""}
-                                onChange={onChangeAddress}
-                                styles={textFieldAddressStyles}
-                            />
-                            <TextField
-                                label="Mobile No"
-                                value={selectedContact.contactData !== undefined? selectedContact.contactData.mobileNo: ""}
-                                onChange={onChangeAddress}
-                                styles={textFieldAddressStyles}
-                            />
-                            <TextField
-                                label="Office No"
-                                value={selectedContact.contactData !== undefined? selectedContact.contactData.officeNo: ""}
-                                onChange={onChangeAddress}
-                                styles={textFieldAddressStyles}
-                            />
+                                <ComboBox
+                                    label="Landlord"
+                                    allowFreeform={true}
+                                    autoComplete={"on"}
+                                    options={landlordComboOptions}
+                                    selectedKey={selectedLandlord.landlordId}
+                                    onChange={onChangeLandlord}
+                                    styles={comboBoxLandlordStyles}
+                                    text={selectedLandlord.landlordName}
+                                />
+
+                                <ComboBox
+                                    label="Contact"
+                                    allowFreeform={true}
+                                    autoComplete={"on"}
+                                    options={contactComboOptions}
+                                    selectedKey={selectedContact !== undefined ? selectedContact.contactId : ""}
+                                    onChange={onChangeContact}
+                                    styles={comboBoxLandlordStyles}
+                                    text={selectedContact.contactName}
+                                />
+
+                            </Stack>
+
+
+
+
+                            <Stack horizontal>
+
+                                <TextField
+                                    underlined
+                                    label="Mobile No"
+                                    value={selectedContact.contactData !== undefined ? selectedContact.contactData.mobileNo : ""}
+                                    onChange={onChangeAddress}
+                                    styles={textFieldLandlordStyles}
+                                />
+                                <TextField
+                                    underlined
+                                    label="Office No"
+                                    value={selectedContact.contactData !== undefined ? selectedContact.contactData.officeNo : ""}
+                                    onChange={onChangeAddress}
+                                    styles={textFieldLandlordStyles}
+                                />
+
+                            </Stack>
+
+                            <Stack horizontal>
+
+                                <TextField
+                                    underlined
+                                    label="Email"
+                                    value={selectedContact.contactData !== undefined ? selectedContact.contactData.email : ""}
+                                    onChange={onChangeAddress}
+                                    styles={textFieldLandlordEmailStyles}
+                                    
+                                />
+
+                                <PrimaryButton onClick={handleManageLandlords} styles={buttonStyles}>
+                                    Manage Landlords
+                                </PrimaryButton>
+
+                            </Stack>
+
+
+
+
+
+
 
 
 
@@ -646,7 +689,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
                 </div>
                 <div className={contentStyles.body} >
 
-                    <Stack tokens={stackTokens}>
+                    <Stack style={{ width: 486 }} tokens={stackTokens}>
 
                         <Pivot
                             aria-label="Separately Rendered Content Pivot Example"
@@ -683,7 +726,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        width: 600,
+        /* width: 600, */
 
     },
 
