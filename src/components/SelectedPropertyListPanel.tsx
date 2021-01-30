@@ -12,6 +12,7 @@ import { navigationState as navigationStateVar, selectedPropertyList as selected
 import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
 import { Icon } from '@fluentui/react/lib/Icon';
 import PreviewPDFPanel from "./PreviewPDFPanel"
+import "./SelectedPropertyListPanel.css"
 
 
 
@@ -349,7 +350,7 @@ marginBottom: 20
     
 
     return (
-        <div>
+        <div style={{marginTop: "0 !important"}}>
             <Panel
                 isOpen={showSelectedPropertyListPanel}
                 onDismiss={handlePanelDismiss}
@@ -363,6 +364,7 @@ marginBottom: 20
                 isBlocking={false}
                 onRenderFooterContent={onRenderFooterContent}
                 isFooterAtBottom={true}
+                id="SelectedPropertyListPanel"
             >
 
                 <Stack verticalFill styles={{

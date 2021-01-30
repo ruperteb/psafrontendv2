@@ -13,6 +13,7 @@ const navigationStateInitialValues: NavigationState =
     showImageGalleryModal: false,
     showPreviewPDFPanel: false,
     showManageLandlordsPanel: false,
+    showSelectedPropertyPanel: false,
   showFilterModal: false,
   selectedPropertyType: "all",
   search: "",

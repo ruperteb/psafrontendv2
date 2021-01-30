@@ -175,10 +175,10 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
     console.log(selectedPropertyList)
 
 
-    if (propertyListDataLoading) return <div>Loading</div>;
+    
 
     return (
-        <div>
+        <div >
             <Panel
                 isOpen={showPreviewPDFPanel}
                 onDismiss={handlePanelDismiss}

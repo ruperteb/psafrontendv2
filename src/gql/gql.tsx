@@ -119,12 +119,22 @@ export const GET_SINGLE_PROPERTY = gql`
       power
     }
     contact{
+      contactId
       name
       email
       mobileNo
       officeNo
       landlordName{
         landlordName
+        landlordId
+        contactsList{
+          contactId
+          name
+          email
+          mobileNo
+          officeNo
+        }
+
       }
     }
 }
@@ -210,6 +220,7 @@ export const GET_NAV_STATE = gql`
         showImageGalleryModal
         showPreviewPDFPanel
         showManageLandlordsPanel
+        showSelectedPropertyPanel
   showFilterModal
   selectedPropertyType
   search
@@ -277,6 +288,8 @@ query GetSelectedProperties {
 export const NEW_PROPERTY = gql`
   mutation PostProperty (
 
+ 
+
   $propertyName: String!,
   $address: String,
   $suburb: String,
@@ -295,6 +308,8 @@ export const NEW_PROPERTY = gql`
       ) {
 
     postProperty (
+
+  
 
   propertyName: $propertyName,
   address: $address,
@@ -320,7 +335,9 @@ export const NEW_PROPERTY = gql`
 
 export const UPDATE_PROPERTY = gql`
   mutation UpdateProperty (
-$propertyId: Int!,
+  $contactId: Int,
+
+  $propertyId: Int!,
   $propertyName: String,
   $address: String,
   $suburb: String,
@@ -337,7 +354,9 @@ $propertyId: Int!,
       ) {
 
     updateProperty (
-propertyId: $propertyId,
+  contactId: $contactId,
+
+  propertyId: $propertyId,
   propertyName: $propertyName,
   address: $address,
   suburb: $suburb,
@@ -717,3 +736,122 @@ landlords{
 }
 
 `
+
+export const NEW_LANDLORD = gql`
+  mutation PostLandlord (
+
+  $landlordName: String,
+  
+      ) {
+
+    postLandlord (
+
+  landlordName: $landlordName,
+  
+) {
+ 
+  landlordId
+  landlordName
+}
+  }
+`;
+
+export const UPDATE_LANDLORD = gql`
+  mutation UpdateLandlord (
+  $landlordId: Int!,
+  $landlordName: String,
+  
+      ) {
+
+    updateLandlord (
+  landlordId: $landlordId,
+  landlordName: $landlordName,
+  
+) {
+ 
+  landlordId
+  landlordName
+}
+  }
+`;
+
+
+export const NEW_LANDLORD_CONTACT = gql`
+  mutation PostLandlordContact (
+  $landlordId: Int!,
+  $name: String,
+  $email: String,
+  $mobileNo: String,
+  $officeNo: String,
+  
+      ) {
+
+    postLandlordContact (
+  landlordId: $landlordId
+  name: $name,
+  email: $email,
+  mobileNo: $mobileNo,
+  officeNo: $officeNo,
+  
+) {
+ 
+  contactId
+  name 
+  email
+  mobileNo
+  officeNo
+}
+  }
+`;
+
+export const UPDATE_LANDLORD_CONTACT = gql`
+  mutation UpdateLandlordContact (
+    $contactId: Int!,
+  $name: String,
+  $email: String,
+  $mobileNo: String,
+  $officeNo: String,
+  
+      ) {
+
+    updateLandlordContact (
+      contactId: $contactId
+  name: $name,
+  email: $email,
+  mobileNo: $mobileNo,
+  officeNo: $officeNo,
+  
+) {
+ 
+  contactId
+  name 
+  email
+  mobileNo
+  officeNo
+}
+  }
+`;
+
+export const DELETE_LANDLORD = gql`
+  mutation DeleteLandlord (
+  $landlordId: Int!,
+      ) {
+    deleteLandlord (
+      landlordId: $landlordId,
+) {
+  landlordId
+}
+  }
+`;
+
+export const DELETE_LANDLORD_CONTACT = gql`
+  mutation DeleteLandlordContact (
+  $contactId: Int!,
+      ) {
+    deleteLandlordContact (
+      contactId: $contactId,
+) {
+  contactId
+}
+  }
+`;

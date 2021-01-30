@@ -5,9 +5,9 @@ import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
-import { GET_SINGLE_PROPERTY, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../gql/gql"
+import { GET_SINGLE_PROPERTY, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, NEW_LANDLORD, GET_LANDLORDS } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, Landlord } from "../schematypes/schematypes"
+import { Mutation, MutationPostLandlordArgs, Query, NavigationState, Premises, Landlord } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar } from "../reactivevariables/reactivevariables"
 import { Icon } from '@fluentui/react/lib/Icon';
 
@@ -64,10 +64,43 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
        
     }
 
-    const handleAddLandlord = () => {
+
+    const [postLandlord, { data }] = useMutation<Mutation, MutationPostLandlordArgs>(NEW_LANDLORD);
+
+    const saveNewLandlord = () => {
+
+        postLandlord({
+            variables: {
+
+                landlordName: addLandlordName
+                
+            },
+
+            update(cache, { data }) {
+
+                if (!data) {
+                    return null;
+                }
+
+                const getExistingLandlords = cache.readQuery<Query>({ query: GET_LANDLORDS });
+                // Add the new todo to the cache
+                const existingLandlords = getExistingLandlords ? getExistingLandlords.landlords : [];
+                const newLandlord = data.postLandlord!/* .returning[0] */;
+                if (existingLandlords)
+                    cache.writeQuery<Query>({
+                        query: GET_LANDLORDS,
+                        data: { landlords: [newLandlord, ...existingLandlords] }
+                    });
+            }
+
+
+        })
+
+        setAddLandlordName("")
         toggleIsAddCalloutVisible()
-       
     }
+
+
 
     const onChangeLandlordName = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -132,7 +165,7 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
     }
 
     const layerStyles: IStyleFunctionOrObject<ILayerStyleProps, ILayerStyles> = {
-        root: { zIndex: 60000 },
+        root: { zIndex: 100000 },
     }
 
     const layerProps: ILayerProps = {
@@ -236,6 +269,7 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({showManageLandlor
             <Panel
                 isOpen={showManageLandlordsPanel}
                 onDismiss={handlePanelDismiss}
+                
                 type={PanelType.medium}
                 onRenderNavigationContent={onRenderNavigationContent}
                 /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
@@ -296,7 +330,7 @@ return <LandlordListItem landlord={landlord} key={landlord.landlordId} expanded=
               </div>
               <FocusZone>
                 <Stack className={styles.buttons} gap={8} horizontal>
-                  <PrimaryButton /* onClick={deletePropertyButton} */>Confirm</PrimaryButton>
+                  <PrimaryButton onClick={saveNewLandlord}>Confirm</PrimaryButton>
                   <DefaultButton onClick={toggleIsAddCalloutVisible}>Cancel</DefaultButton>
                 </Stack>
               </FocusZone>

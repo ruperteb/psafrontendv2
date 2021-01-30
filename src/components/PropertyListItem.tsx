@@ -134,7 +134,7 @@ export const PropertyListItem: React.FunctionComponent<Props> = ({ property }) =
   }
 
   const handleSelectedPropertyClick = () => {
-    navigationState ( {...navigationState(), selectedPropertyId: property.propertyId})
+    navigationState ( {...navigationState(), selectedPropertyId: property.propertyId, showSelectedPropertyPanel: true})
   }
 
 

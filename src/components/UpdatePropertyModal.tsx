@@ -24,10 +24,12 @@ import {
     IComboBox,
     SelectableOptionMenuItemType,
     IComboBoxStyles,
+    PrimaryButton,
 } from 'office-ui-fabric-react';
+import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { GET_PROPERTIES, NEW_PROPERTY, GET_NAV_STATE, UPDATE_PROPERTY, GET_SINGLE_PROPERTY } from "../gql/gql"
-import { Mutation, MutationUpdatePropertyArgs, Query, Property } from "../schematypes/schematypes"
+import { Mutation, MutationUpdatePropertyArgs, Query, Property, Landlord, LandlordContact } from "../schematypes/schematypes"
 import { navigationState } from "../reactivevariables/reactivevariables"
 import "./NewPremisesModal.css"
 
@@ -48,19 +50,62 @@ interface Props {
     distinctRegionsOptions: IComboBoxOption[];
     propertyId: number
     propertyData: Property
+    landlordsOptions: IComboBoxOption[];
 }
 
-export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, distinctSuburbsOptions, distinctRegionsOptions, propertyId, propertyData }) => {
+export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, distinctSuburbsOptions, distinctRegionsOptions, propertyId, propertyData, landlordsOptions }) => {
 
     const hideUpdatePropertyModal = () => {
         navigationState({ ...navigationState(), showUpdatePropertyModal: false })
     }
 
-
+    
 
 
     const [updatedProperty, setUpdateProperty] = React.useState(propertyData);
 
+    interface SelectedLandlord {
+        landlordId: number
+        landlordName: string
+        landlordData: Landlord
+    }
+
+    const [selectedLandlord, setSelectedLandlord] = React.useState<SelectedLandlord>(
+        {
+            landlordId: propertyData.contact?.landlordName?.landlordId!,
+            landlordName: propertyData.contact?.landlordName?.landlordName!,
+            landlordData: { 
+                landlordId: propertyData.contact?.landlordName?.landlordId!,
+                landlordName: propertyData.contact?.landlordName?.landlordName!,
+                contactsList: propertyData.contact?.landlordName?.contactsList!
+            }
+
+        });
+
+console.log(selectedLandlord)
+
+    interface SelectedContact {
+        contactId: number
+        contactName: string
+        contactData: LandlordContact
+    }
+
+
+    const [selectedContact, setSelectedContact] = React.useState<SelectedContact>(
+        {
+            contactId: propertyData.contact?.contactId! | 0,
+            contactName: propertyData.contact?.name!,
+            contactData: { 
+                contactId: propertyData.contact?.contactId!,
+                name: propertyData.contact?.name!, 
+                email: propertyData.contact?.email!,
+                mobileNo: propertyData.contact?.mobileNo!,
+                officeNo: propertyData.contact?.officeNo!,
+            }
+
+        });
+
+    console.log(selectedContact)
 
     console.log(updatedProperty)
 
@@ -70,6 +115,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
         updateProperty({
             variables: {
+                contactId: selectedContact.contactId,
                 propertyId: propertyId,
                 propertyName: updatedProperty.propertyName,
                 address: updatedProperty.address,
@@ -108,7 +154,8 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                     buildingType: data.updateProperty.buildingType,
                     province: data.updateProperty.province,
                     region: data.updateProperty.region,
-                    notes: data.updateProperty.notes
+                    notes: data.updateProperty.notes,
+                    contact:  data.updateProperty.contact
                 }
 
 
@@ -149,10 +196,14 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
     const dropdownProvinceStyles: Partial<IDropdownStyles> = { dropdown: { width: 140, marginRight: 20 } };
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
 
+    const comboBoxLandlordStyles: Partial<IComboBoxStyles> = { root: { width: 220, marginRight: 20 } }
+    const textFieldLandlordStyles: Partial<ITextFieldStyles> = { root: { width: "100%", marginRight: 20, marginTop: "20px !important" } };
 
-    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
+    const textFieldLandlordEmailStyles: Partial<ITextFieldStyles> = { root: { width: "100%", marginRight: 20, marginTop: "20px !important" } };
 
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: {zIndex: 55000} };
 
+    const buttonStyles = { root: { width: 100, marginRight: "auto !important", marginBottom: "auto", marginTop: "60px !important", marginLeft: "auto !important", height: 40 } };
 
     const headerIconStackStyles: Partial<IStackStyles> = { root: { marginRight: 0, marginLeft: "auto", } }
 
@@ -246,7 +297,49 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
         [updatedProperty],
     );
 
+    const landlordComboOptions: IComboBoxOption[] = landlordsOptions
 
+    const onChangeLandlord = React.useCallback(
+        (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) => {
+            setSelectedLandlord({
+                landlordName: option?.text!,
+                landlordId: option?.data.landlordId,
+                landlordData: option?.data
+            });
+            setSelectedContact({
+                contactName: "",
+                contactId: 0,
+                contactData: { contactId: 0 }
+            });
+
+        },
+        [selectedLandlord],
+    );
+
+    console.log(selectedLandlord)
+
+    const contactsFormatted = selectedLandlord.landlordData?.contactsList?.map((contact) => {
+        return { key: contact.name!, text: contact.name!, data: contact }
+    })
+    var contactsOptions: IComboBoxOption[] = []
+
+    if (contactsFormatted !== undefined) {
+        contactsOptions = [...contactsFormatted]
+    }
+
+    const contactComboOptions: IComboBoxOption[] = contactsOptions
+
+    const onChangeContact = React.useCallback(
+        (event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) => {
+            setSelectedContact({
+                contactName: option?.text!,
+                contactId: option?.data.contactId,
+                contactData: option?.data
+            });
+           
+        },
+        [selectedLandlord],
+    );
 
 
     const stackTokens = { childrenGap: 15 };
@@ -291,47 +384,32 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
         [updatedProperty],
     );
 
-    const titleId = useId('title');
+    const handleManageLandlords = () => {
 
-    return (
-        <div>
+        navigationState({ ...navigationState(), showManageLandlordsPanel: true })
+
+    }
+
+    const [selectedKey, setSelectedKey] = React.useState('Property Details');
+
+    const handleLinkClick = (item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) => {
+
+        setSelectedKey(item!.props.itemKey!);
+    };
+
+    const getTabId = (itemKey: string | undefined) => {
+        return `NewPropertyPivot_${itemKey}`;
+    };
+
+    const titleId = useId('New Property');
 
 
-            <Modal
-                styles={modalStyles}
+    const newPropertyTab = () => {
 
-                titleAriaId={titleId}
-                isOpen={showUpdatePropertyModal}
-                onDismiss={hideUpdatePropertyModal}
-                isBlocking={false}
-                containerClassName={contentStyles.container}
-            /* dragOptions={dragOptions} */
-            >
-                <div className={contentStyles.header}>
-                    <span id={titleId}>Update Property</span>
-                    <Stack horizontal
-                        styles={headerIconStackStyles}
-                    >
-
-                        <IconButton
-                            styles={iconButtonStyles}
-                            iconProps={saveIcon}
-                            ariaLabel="Save Investor"
-                            onClick={saveUpdateProperty}
-                        />
-                        <IconButton
-                            styles={iconButtonStyles}
-                            iconProps={cancelIcon}
-                            ariaLabel="Close popup modal"
-                            onClick={hideUpdatePropertyModal}
-                        />
-
-                    </Stack>
-
-                </div>
-                <div className={contentStyles.body} >
-
-                    <Stack tokens={stackTokens}>
+        switch (selectedKey) {
+            case "Property Details":
+                return (
+                    <>
                         <Stack horizontal
                             styles={{
                                 root: {
@@ -346,6 +424,8 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
                                 }
                             }}>
+
+
                             <TextField
                                 label="Property Name"
                                 value={updatedProperty.propertyName}
@@ -355,7 +435,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                             />
 
                             <Dropdown
-                                label="Building Type"
+                                label="Buidling Type"
                                 selectedKey={selectedItem ? selectedItem.key : undefined}
                                 // eslint-disable-next-line react/jsx-no-bind
                                 onChange={onChangeBuildingType}
@@ -389,7 +469,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
                             <ComboBox
                                 label="Suburb"
-                                allowFreeform
+                                allowFreeform={true}
                                 autoComplete={"on"}
                                 options={suburbComboOptions}
                                 selectedKey={selectedSuburb}
@@ -447,6 +527,100 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
 
 
+
+                    </>
+                )
+
+            case "Landlord Details":
+
+                return (
+                    <>
+                        <Stack verticalFill>
+
+                            <Stack horizontal>
+
+                                <ComboBox
+                                    label="Landlord"
+                                    allowFreeform={true}
+                                    autoComplete={"on"}
+                                    options={landlordComboOptions}
+                                    selectedKey={selectedLandlord.landlordId}
+                                    onChange={onChangeLandlord}
+                                    styles={comboBoxLandlordStyles}
+                                    text={selectedLandlord.landlordName}
+                                />
+
+                                <ComboBox
+                                    label="Contact"
+                                    allowFreeform={true}
+                                    autoComplete={"on"}
+                                    options={contactComboOptions}
+                                    selectedKey={selectedContact !== undefined ? selectedContact.contactId : ""}
+                                    onChange={onChangeContact}
+                                    styles={comboBoxLandlordStyles}
+                                    text={selectedContact.contactName}
+                                />
+
+                            </Stack>
+
+
+
+
+
+
+                            <Stack horizontal>
+
+                                <Stack styles={{root: {width: "70%"}}} verticalFill>
+
+                                    <TextField
+                                        underlined
+                                        label="Email"
+                                        value={selectedContact.contactData !== undefined ? selectedContact.contactData.email : ""}
+
+                                        styles={textFieldLandlordEmailStyles}
+
+                                    />
+
+                                    <TextField
+                                        underlined
+                                        label="Mobile No"
+                                        value={selectedContact.contactData !== undefined ? selectedContact.contactData.mobileNo : ""}
+
+                                        styles={textFieldLandlordStyles}
+                                    />
+                                    <TextField
+                                        underlined
+                                        label="Office No"
+                                        value={selectedContact.contactData !== undefined ? selectedContact.contactData.officeNo : ""}
+
+                                        styles={textFieldLandlordStyles}
+                                    />
+
+                                </Stack>
+
+
+                                <PrimaryButton onClick={handleManageLandlords} styles={buttonStyles}>
+                                    Manage Landlords
+                                </PrimaryButton>
+
+                            </Stack>
+
+
+
+
+
+
+
+
+
+                        </Stack>
+                    </>
+                )
+
+            case "Property Notes":
+
+                return (
+                    <>
                         <Stack horizontal>
 
                             <TextField
@@ -459,6 +633,74 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                             />
 
                         </Stack>
+                    </>
+                )
+
+
+
+
+
+            default:
+            // code block
+        }
+
+    }
+
+    return (
+        <div>
+
+
+            <Modal
+                styles={modalStyles}
+
+                titleAriaId={titleId}
+                isOpen={showUpdatePropertyModal}
+                onDismiss={hideUpdatePropertyModal}
+               /*  isBlocking={true} */
+                containerClassName={contentStyles.container}
+            /* dragOptions={dragOptions} */
+            >
+                <div className={contentStyles.header}>
+                    <span id={titleId}>Update Property</span>
+                    <Stack horizontal
+                        styles={headerIconStackStyles}
+                    >
+
+                        <IconButton
+                            styles={iconButtonStyles}
+                            iconProps={saveIcon}
+                            ariaLabel="Save Investor"
+                            onClick={saveUpdateProperty}
+                        />
+                        <IconButton
+                            styles={iconButtonStyles}
+                            iconProps={cancelIcon}
+                            ariaLabel="Close popup modal"
+                            onClick={hideUpdatePropertyModal}
+                        />
+
+                    </Stack>
+
+                </div>
+                <div className={contentStyles.body} >
+
+                    <Stack style={{ width: 486 }} tokens={stackTokens}>
+
+                        <Pivot
+                            aria-label="Separately Rendered Content Pivot Example"
+                            selectedKey={selectedKey}
+                            // eslint-disable-next-line react/jsx-no-bind
+                            onLinkClick={handleLinkClick}
+                            headersOnly={true}
+                            getTabId={getTabId}
+                        >
+                            <PivotItem headerText="Property Details" itemKey="Property Details" />
+                            <PivotItem headerText="Landlord Details" itemKey="Landlord Details" />
+                            <PivotItem headerText="Property Notes" itemKey="Property Notes" />
+
+                        </Pivot>
+
+                        {newPropertyTab()}
 
 
 
@@ -479,7 +721,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        width: 600,
+        
 
     },
 

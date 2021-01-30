@@ -108,6 +108,10 @@ export type Mutation = {
   signup?: Maybe<AuthPayload>;
   postLandlord: Landlord;
   postLandlordContact: LandlordContact;
+  updateLandlord: Landlord;
+  updateLandlordContact: LandlordContact;
+  deleteLandlord: Landlord;
+  deleteLandlordContact: LandlordContact;
 };
 
 export type MutationPostLandlordArgs = {
@@ -185,8 +189,18 @@ export type MutationDeletePremisesArgs = {
   premisesId?: Maybe<Scalars['Int']>;
 };
 
+export type MutationDeleteLandlordArgs = {
+  landlordId?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationDeleteLandlordContactArgs = {
+  contactId?: Maybe<Scalars['Int']>;
+};
+
 
 export type MutationUpdatePropertyArgs = {
+  contactId?: Maybe<Scalars['Int']>;
   propertyId: Scalars['Int'];
   propertyName?: Scalars['String'];
   address?: Maybe<Scalars['String']>;
@@ -238,6 +252,18 @@ export type MutationUpdatePremisesArgs = {
   power?: Maybe<Scalars['String']>;
 };
 
+export type MutationUpdateLandlordArgs = {
+  landlordId: Scalars['Int'];
+  landlordName?: Scalars['String'];
+};
+
+export type MutationUpdateLandlordContactArgs = {
+  contactId: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  officeNo?: Maybe<Scalars['String']>;
+  mobileNo?: Maybe<Scalars['String']>;
+};
 
 export type MutationLoginArgs = {
   email: Scalars['String'];
@@ -275,6 +301,7 @@ export type NavigationState = {
     showPremisesNotesModal: boolean,
     showPreviewPDFPanel: boolean,
     showManageLandlordsPanel: boolean,
+    showSelectedPropertyPanel: boolean,
   showFilterModal: boolean,
   selectedPropertyType: string | undefined,
   search: string | undefined,

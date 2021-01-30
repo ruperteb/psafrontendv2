@@ -1,22 +1,13 @@
 import * as React from 'react';
 import { getTheme } from '@fluentui/react';
-import { Image, ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
-import { Checkbox, ICheckboxProps } from 'office-ui-fabric-react/lib/Checkbox';
-import { Query, Property, Mutation, MutationDeletePropertyArgs, Landlord } from "../schematypes/schematypes"
-import { GET_SELECTED_PROPERTIES, GET_PROPERTIES, DELETE_PROPERTY } from "../gql/gql"
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { selectedPropertyList } from "../reactivevariables/reactivevariables"
-import { mergeStyles, registerIcons } from 'office-ui-fabric-react/lib/Styling';
-import { CommandBarButton, IContextualMenuProps, Stack, Text, FontWeights, IconButton, IIconProps, IStackStyles, initializeIcons, DefaultButton, FocusTrapCallout, FocusZone, PrimaryButton, mergeStyleSets, TextField, ITextFieldStyles } from 'office-ui-fabric-react';
+import { Query, Mutation, MutationDeleteLandlordArgs, MutationUpdateLandlordArgs, MutationPostLandlordContactArgs, Landlord } from "../schematypes/schematypes"
+import { DELETE_LANDLORD, GET_LANDLORDS, UPDATE_LANDLORD, NEW_LANDLORD_CONTACT } from "../gql/gql"
+import { useMutation, } from '@apollo/client';
+import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
+import {IContextualMenuProps, Stack, Text, FontWeights, IconButton, IIconProps, DefaultButton, FocusTrapCallout, FocusZone, PrimaryButton, mergeStyleSets, TextField, ITextFieldStyles } from 'office-ui-fabric-react';
 import { useBoolean } from '@uifabric/react-hooks';
-import { IndustrialIcon, RetailIcon, OfficeIcon, MixedUseIcon } from "../assets/svgIcons.js"
-import { FontIcon } from 'office-ui-fabric-react/lib/Icon';
-import { navigationState } from "../reactivevariables/reactivevariables"
-import "./PropertyListItem.css"
-
 import { motion, AnimatePresence } from "framer-motion";
-
 import ContactListItem from "./ContactListItem"
 
 
@@ -27,14 +18,19 @@ interface Props {
   setExpanded: React.Dispatch<React.SetStateAction<number | false>>
 }
 
-export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, expanded, setExpanded, key }) => {
+export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, expanded, setExpanded }) => {
 
-  var isOpen = false
+  const [isOpen, setIsOpen] = React.useState(false)
 
-  if (expanded === landlord.landlordId) {
-    isOpen = true
-  }
 
+
+  React.useEffect(() => {
+
+    if (expanded === landlord.landlordId) {
+      setIsOpen(true)
+    } else { setIsOpen(false) }
+
+  }, [expanded, landlord.landlordId])
 
   const [isDeleteCalloutVisible, { toggle: toggleIsDeleteCalloutVisible }] = useBoolean(false);
   const [isEditCalloutVisible, { toggle: toggleIsEditCalloutVisible }] = useBoolean(false);
@@ -49,10 +45,6 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
     officeNo: ""
   })
 
-  console.log(expanded)
-
-
-
   const handleExpand = (landlordId: number) => {
     if (isOpen === false) {
       setExpanded(landlordId)
@@ -62,18 +54,13 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
 
   }
 
+  const [deleteLandlord, { data: deleteLandlordData }] = useMutation<Mutation, MutationDeleteLandlordArgs>(DELETE_LANDLORD);
 
+  const deleteLandlordButton = () => {
 
-
-
-
-  /* const [deleteProperty, { data: deletePropertyData }] = useMutation<Mutation, MutationDeletePropertyArgs>(DELETE_PROPERTY);
-
-  const deletePropertyButton = () => {
-
-    deleteProperty({
+    deleteLandlord({
       variables: {
-        propertyId: property.propertyId
+        landlordId: landlord.landlordId
       },
       update(cache, { data }) {
 
@@ -81,25 +68,111 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
           return null;
         }
 
-        const getExistingProperties = cache.readQuery<Query>({ query: GET_PROPERTIES });
-        
-        const existingProperties = getExistingProperties ? getExistingProperties.properties : [];
-        const newProperties = existingProperties!.filter(t => {
-          if (t)
-            return (t.propertyId !== property.propertyId)
-        });  
-        if (existingProperties)
+        const getExistingLandlords = cache.readQuery<Query>({ query: GET_LANDLORDS });
+
+        const existingLandlords = getExistingLandlords ? getExistingLandlords.landlords : [];
+        const newLandlords = existingLandlords!.filter(t => {
+
+          return (t.landlordId !== landlord.landlordId)
+        });
+        if (existingLandlords)
           cache.writeQuery<Query>({
-            query: GET_PROPERTIES,
-            data: { properties: newProperties }
+            query: GET_LANDLORDS,
+            data: { landlords: newLandlords }
           });
       }
 
     })
+    toggleIsDeleteCalloutVisible()
+  }
 
-  } */
+  const [updateLandlord, { data: updateLandlordData }] = useMutation<Mutation, MutationUpdateLandlordArgs>(UPDATE_LANDLORD);
+
+  const updateLandlordButton = () => {
+
+    updateLandlord({
+      variables: {
+        landlordId: landlord.landlordId,
+        landlordName: editLandlordName
+
+      },
+
+      update(cache, { data }) {
+
+        if (!data) {
+          return null;
+        }
+
+        const getExistingLandlords = cache.readQuery<Query>({ query: GET_LANDLORDS });
+
+        const existingLandlords = getExistingLandlords ? getExistingLandlords.landlords : [];
+        const updatedLandlord = data.updateLandlord!/* .returning[0] */;
+        const otherLandlords = existingLandlords!.filter(t => {
+          return t.landlordId !== landlord.landlordId
+        })
+        if (existingLandlords)
+          cache.writeQuery<Query>({
+            query: GET_LANDLORDS,
+            data: { landlords: [updatedLandlord, ...otherLandlords] }
+          });
+      }
+
+    })
+    setEditLandlordName("")
+    toggleIsEditCalloutVisible()
+  }
+
+  const [postContact, { data }] = useMutation<Mutation, MutationPostLandlordContactArgs>(NEW_LANDLORD_CONTACT);
+
+  const saveNewContactButton = () => {
+
+    postContact({
+      variables: {
+        landlordId: landlord.landlordId,
+        name: addContact.name,
+        email: addContact.email,
+        mobileNo: addContact.mobileNo,
+        officeNo: addContact.officeNo,
+
+      },
+
+      update(cache, { data }) {
+
+        if (!data) {
+          return null;
+        }
+
+        const getExistingLandlords = cache.readQuery<Query>({ query: GET_LANDLORDS });
+        // Add the new todo to the cache
+        const existingLandlords = getExistingLandlords ? getExistingLandlords.landlords : [];
+        const selectedLandlord = existingLandlords!.find(t =>
+          t.landlordId === landlord.landlordId
+        )
+        const otherLandlords = existingLandlords!.filter(t => {
+          return t.landlordId !== landlord.landlordId
+        })
+        const existingContacts = selectedLandlord?.contactsList
+        const newContact = data.postLandlordContact!/* .returning[0] */;
+        const updatedLandlord = { landlordId: selectedLandlord!.landlordId, landlordName: selectedLandlord!.landlordName, contactsList: [...existingContacts!, newContact] }
+        if (existingLandlords)
+          cache.writeQuery<Query>({
+            query: GET_LANDLORDS,
+            data: { landlords: [updatedLandlord!, ...otherLandlords] }
+          });
+      }
 
 
+    })
+
+    setAddContact({
+      name: "",
+      email: "",
+      mobileNo: "",
+      officeNo: ""
+    })
+    toggleIsAddContactCalloutVisible()
+    setIsOpen(true)
+  }
 
 
 
@@ -161,20 +234,7 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
 
   });
 
-  const iconClass = mergeStyles({
-    fontSize: 50,
-    height: 50,
-    width: 50,
-
-
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: "-10px !important",
-    padding: "5px",
-
-
-
-  });
+  
 
   const chevronIconDiv = mergeStyles({
     /* fontSize: 50, */
@@ -182,9 +242,10 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
     width: 40,
     lineHeight: 40,
     textAlign: "center",
-    marginLeft: 15,
-    marginRight: 15,
+    /* marginLeft: "auto !important",
+    marginRight: 15, */
     marginTop: "0px !important",
+    marginBottom: "0px !important",
     /* padding: "5px", */
     selectors: {
       '&:hover': { backgroundColor: "rgb(0 13 255 / 14%)", borderRadius: 30, "transition": "all .2s ease-in-out", transform: "scale(1.2)" },
@@ -195,30 +256,58 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
   const chevronDiv = mergeStyles({
 
     marginTop: "0px !important",
-
-
+    marginRight: 15,
+    marginLeft: "auto !important",
   });
 
   const boldStyle = { root: { fontWeight: FontWeights.semibold } };
   const propertyHeadingStyles = { alignSelf: "start", fontSize: "23px", padding: 5, paddingLeft: "25px" }
-  const propertyAddressStyles = { alignSelf: "start", fontSize: "14px", padding: 5, paddingLeft: "25px" }
+  
   const theme = getTheme();
-  const iconButtonEditStyles = {
+ 
+  
+
+  const menuProps: IContextualMenuProps = {
+    items: [
+      {
+        key: 'Delete Landlord',
+        text: 'Delete Landlord',
+        iconProps: { iconName: 'Delete' },
+        onClick: toggleIsDeleteCalloutVisible
+      },
+      {
+        key: 'Edit Landlord',
+        text: 'Edit Landlord',
+        iconProps: { iconName: 'Edit' },
+        onClick: toggleIsEditCalloutVisible
+      },
+      {
+        key: 'Add Contact',
+        text: 'Add Contact',
+        iconProps: { iconName: 'Add' },
+        onClick: toggleIsAddContactCalloutVisible
+      },
+    ],
+    directionalHintFixed: false,
+    styles: {container: {width: 150}}
+  };
+
+  const iconButtonStyles = {
     root: {
       color: theme.palette.neutralPrimary,
-      marginLeft: "5px !important",
+      marginLeft: 5,
       marginTop: '0px !important',
       marginRight: 5,
-      width: 40,
-      height: 40,
-      /* visibility: isChecked() ? "visible" : "hidden", */
+      width: 35,
+      height: 35,
+      /*  visibility: isChecked() ? "visible" : "hidden", */
 
     },
     rootHovered: {
       color: theme.palette.neutralDark,
-      backgroundColor: "rgb(255 0 0 / 14%)",
-      borderRadius: 30,
-      "transition": "all .2s ease-in-out", transform: "scale(1.2)"
+      backgroundColor: "rgb(3 122 212 / 16%);",
+      /* borderRadius: 30, */
+      "transition": "all .2s ease-in-out", transform: "scale(1.1)"
 
     },
     icon: {
@@ -227,35 +316,9 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
 
     }
   };
-  const iconButtonDeleteStyles = {
-    root: {
-      color: theme.palette.neutralPrimary,
-      marginLeft: "auto",
-      marginTop: '0px !important',
-      marginRight: 5,
-      width: 40,
-      height: 40,
-      /* visibility: isChecked() ? "visible" : "hidden", */
 
-    },
-    rootHovered: {
-      color: theme.palette.neutralDark,
-      backgroundColor: "rgb(255 0 0 / 14%)",
-      borderRadius: 30,
-      "transition": "all .2s ease-in-out", transform: "scale(1.2)"
-
-    },
-    icon: {
-      fontSize: "24px",
-      marginLeft: 6
-
-    }
-  };
-
-  const deleteIcon: IIconProps = { iconName: 'Delete' };
-  const editIcon: IIconProps = { iconName: 'Edit' };
-  const addIcon: IIconProps = { iconName: 'Add' };
-
+  
+  const menuIcon: IIconProps = { iconName: 'SingleColumnEdit' };
 
   const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300 } };
   const textFieldContactStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 250 } };
@@ -330,7 +393,13 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
 
 
 
-
+        <IconButton
+          styles={iconButtonStyles}
+          id={`comboButton${landlord.landlordId}`}
+          menuProps={menuProps}
+          iconProps={menuIcon}
+          ariaLabel="Combo Button"
+        />
 
         <Stack styles={{ root: { paddingTop: 0, marginTop: "0 !important", marginBottom: "auto" } }} verticalFill>
           <Text styles={boldStyle} style={propertyHeadingStyles}>{landlord.landlordName}</Text>
@@ -338,20 +407,15 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
 
 
         </Stack>
-        <IconButton
-          styles={iconButtonDeleteStyles}
-          id={`deleteButton${landlord.landlordId}`}
-          iconProps={deleteIcon}
-          ariaLabel="Delete Landlord"
-          onClick={toggleIsDeleteCalloutVisible}
-        />
+
+
         {isDeleteCalloutVisible ? (
           <div>
             <FocusTrapCallout
               role="alertdialog"
               className={styles.callout}
               gapSpace={0}
-              target={`#deleteButton${landlord.landlordId}`}
+              target={`#comboButton${landlord.landlordId}`}
               onDismiss={toggleIsDeleteCalloutVisible}
               setInitialFocus
             >
@@ -367,27 +431,21 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
               </div>
               <FocusZone>
                 <Stack className={styles.buttons} gap={8} horizontal>
-                  <PrimaryButton /* onClick={deletePropertyButton} */>Confirm</PrimaryButton>
+                  <PrimaryButton onClick={deleteLandlordButton}>Confirm</PrimaryButton>
                   <DefaultButton onClick={toggleIsDeleteCalloutVisible}>Cancel</DefaultButton>
                 </Stack>
               </FocusZone>
             </FocusTrapCallout>
           </div>
         ) : null}
-        <IconButton
-          styles={iconButtonEditStyles}
-          id={`editButton${landlord.landlordId}`}
-          iconProps={editIcon}
-          ariaLabel="Edit Landlord"
-          onClick={toggleIsEditCalloutVisible}
-        />
+       
         {isEditCalloutVisible ? (
           <div>
             <FocusTrapCallout
               role="alertdialog"
               className={styles.callout}
               gapSpace={0}
-              target={`#editButton${landlord.landlordId}`}
+              target={`#comboButton${landlord.landlordId}`}
               onDismiss={toggleIsEditCalloutVisible}
               setInitialFocus
             >
@@ -407,7 +465,7 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
               </div>
               <FocusZone>
                 <Stack className={styles.buttons} gap={8} horizontal>
-                  <PrimaryButton /* onClick={deletePropertyButton} */>Confirm</PrimaryButton>
+                  <PrimaryButton onClick={updateLandlordButton}>Confirm</PrimaryButton>
                   <DefaultButton onClick={toggleIsEditCalloutVisible}>Cancel</DefaultButton>
                 </Stack>
               </FocusZone>
@@ -415,20 +473,13 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
           </div>
         ) : null}
 
-        <IconButton
-          styles={iconButtonEditStyles}
-          id={`addButton${landlord.landlordId}`}
-          iconProps={addIcon}
-          ariaLabel="Add Contact"
-          onClick={toggleIsAddContactCalloutVisible}
-        />
         {isAddContactCalloutVisible ? (
           <div>
             <FocusTrapCallout
               role="alertdialog"
               className={styles.callout}
               gapSpace={0}
-              target={`#addButton${landlord.landlordId}`}
+              target={`#comboButton${landlord.landlordId}`}
               onDismiss={toggleIsAddContactCalloutVisible}
               setInitialFocus
             >
@@ -466,7 +517,7 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
               </div>
               <FocusZone>
                 <Stack className={styles.buttons} gap={8} horizontal>
-                  <PrimaryButton /* onClick={deletePropertyButton} */>Confirm</PrimaryButton>
+                  <PrimaryButton onClick={saveNewContactButton}>Confirm</PrimaryButton>
                   <DefaultButton onClick={toggleIsAddContactCalloutVisible}>Cancel</DefaultButton>
                 </Stack>
               </FocusZone>
@@ -520,7 +571,7 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
             }} >
 
               {landlord.contactsList?.map((contact) => {
-                return <ContactListItem contact={contact} key={contact.contactId}></ContactListItem>
+                return <ContactListItem landlordId={landlord.landlordId} contact={contact} key={contact.contactId}></ContactListItem>
 
               })}
 

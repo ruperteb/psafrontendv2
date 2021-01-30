@@ -52,10 +52,11 @@ import {
 interface Props {
     distinctSuburbsOptions: IComboBoxOption[];
     distinctRegionsOptions: IComboBoxOption[];
+    landlordsOptions: IComboBoxOption[];
 
 }
 
-const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsOptions, distinctRegionsOptions}) => {
+const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsOptions, distinctRegionsOptions, landlordsOptions}) => {
 
     const {
         data: navigationStateData,
@@ -63,7 +64,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
         error: navigationError
     } = useQuery<Query>(GET_NAV_STATE);
 
-    var navigationState: NavigationState = {
+    /* var navigationState: NavigationState = {
         showNewPropertyModal: false,
         showUpdatePropertyModal: false,
         showNewPremisesModal: false,
@@ -79,11 +80,11 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
         selectedPropertyId: 0,
         selectedPremisesId: 0,
         showManageLandlordsPanel: false,
-    }
+    } */
 
-    if (navigationStateData !== undefined) {
-        navigationState = navigationStateData!.navigationState!
-    }
+    /* if (navigationStateData !== undefined) { */
+       var navigationState = navigationStateData!.navigationState!
+    /* } */
 
     const {
         data: propertyData,
@@ -95,18 +96,11 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
     console.log(propertyData)
 
-    React.useEffect(() => {
-        if (navigationState.selectedPropertyId !== 0) {
-            openPanel()
-        } else {
-            dismissPanel()
-        }
-
-    }, [navigationState])
+    
 
     const handlePanelDismiss = () => {
-        navigationStateVar({ ...navigationStateVar(), selectedPropertyId: 0 })
-        dismissPanel()
+        navigationStateVar({ ...navigationStateVar(), showSelectedPropertyPanel: false })
+        /* dismissPanel() */
     }
 
     const handleEditProperty = () => {
@@ -343,8 +337,8 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
     return (
         <div>
             <Panel
-                isOpen={isOpen}
-                onDismiss={handlePanelDismiss}
+                isOpen={navigationState.showSelectedPropertyPanel}
+               /*  onDismiss={handlePanelDismiss} */
                 type={PanelType.extraLarge}
                 onRenderNavigationContent={onRenderNavigationContent}
                 /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
@@ -730,7 +724,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
                 <PremisesList singleProperty={propertyData?.singleProperty!}></PremisesList>
 
-                <UpdatePropertyModal showUpdatePropertyModal={navigationStateData?.navigationState?.showUpdatePropertyModal!} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} propertyId={navigationStateData?.navigationState?.selectedPropertyId!} propertyData={propertyData?.singleProperty!} ></UpdatePropertyModal>
+                <UpdatePropertyModal showUpdatePropertyModal={navigationStateData?.navigationState?.showUpdatePropertyModal!} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} propertyId={navigationStateData?.navigationState?.selectedPropertyId!} propertyData={propertyData?.singleProperty!} landlordsOptions={landlordsOptions} ></UpdatePropertyModal>
 
                 <NewPremisesModal showNewPremisesModal={navigationStateData?.navigationState?.showNewPremisesModal!} propertyId={navigationStateData?.navigationState?.selectedPropertyId!}></NewPremisesModal>
 

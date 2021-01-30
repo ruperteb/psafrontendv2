@@ -205,13 +205,13 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
 
     const comboBoxLandlordStyles: Partial<IComboBoxStyles> = { root: { width: 220, marginRight: 20 } }
-    const textFieldLandlordStyles: Partial<ITextFieldStyles> = { root: { width: 220, marginRight: 20, marginTop: "20px !important" } };
+    const textFieldLandlordStyles: Partial<ITextFieldStyles> = { root: { width: "100%", marginRight: 20, marginTop: "20px !important" } };
 
-    const textFieldLandlordEmailStyles: Partial<ITextFieldStyles> = { root: { width: 300, marginRight: 20, marginTop: "20px !important" } };
+    const textFieldLandlordEmailStyles: Partial<ITextFieldStyles> = { root: { width: "100%", marginRight: 20, marginTop: "20px !important" } };
 
     const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: { zIndex: 5000 } };
 
-    const buttonStyles = { root: { width: 100, marginRight: "auto !important", marginBottom: 0, marginTop: "20px !important", marginLeft: "auto !important" , height: 40} };
+    const buttonStyles = { root: { width: 100, marginRight: "auto !important", marginBottom: "auto", marginTop: "60px !important", marginLeft: "auto !important", height: 40 } };
 
     const headerIconStackStyles: Partial<IStackStyles> = { root: { marginRight: 0, marginLeft: "auto", } }
 
@@ -574,35 +574,38 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
 
 
-                            <Stack horizontal>
 
-                                <TextField
-                                    underlined
-                                    label="Mobile No"
-                                    value={selectedContact.contactData !== undefined ? selectedContact.contactData.mobileNo : ""}
-                                    onChange={onChangeAddress}
-                                    styles={textFieldLandlordStyles}
-                                />
-                                <TextField
-                                    underlined
-                                    label="Office No"
-                                    value={selectedContact.contactData !== undefined ? selectedContact.contactData.officeNo : ""}
-                                    onChange={onChangeAddress}
-                                    styles={textFieldLandlordStyles}
-                                />
-
-                            </Stack>
 
                             <Stack horizontal>
 
-                                <TextField
-                                    underlined
-                                    label="Email"
-                                    value={selectedContact.contactData !== undefined ? selectedContact.contactData.email : ""}
-                                    onChange={onChangeAddress}
-                                    styles={textFieldLandlordEmailStyles}
-                                    
-                                />
+                                <Stack styles={{root: {width: "70%"}}} verticalFill>
+
+                                    <TextField
+                                        underlined
+                                        label="Email"
+                                        value={selectedContact.contactData !== undefined ? selectedContact.contactData.email : ""}
+
+                                        styles={textFieldLandlordEmailStyles}
+
+                                    />
+
+                                    <TextField
+                                        underlined
+                                        label="Mobile No"
+                                        value={selectedContact.contactData !== undefined ? selectedContact.contactData.mobileNo : ""}
+
+                                        styles={textFieldLandlordStyles}
+                                    />
+                                    <TextField
+                                        underlined
+                                        label="Office No"
+                                        value={selectedContact.contactData !== undefined ? selectedContact.contactData.officeNo : ""}
+
+                                        styles={textFieldLandlordStyles}
+                                    />
+
+                                </Stack>
+
 
                                 <PrimaryButton onClick={handleManageLandlords} styles={buttonStyles}>
                                     Manage Landlords
