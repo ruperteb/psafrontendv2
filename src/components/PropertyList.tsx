@@ -3,32 +3,48 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Image, ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { Checkbox, ICheckboxProps } from 'office-ui-fabric-react/lib/Checkbox';
-import {Query, Property} from "../schematypes/schematypes"
-import {useQuery  } from '@apollo/client';
-import {selectedPropertyList} from "../reactivevariables/reactivevariables"
+import { Query, Property } from "../schematypes/schematypes"
+import { useQuery } from '@apollo/client';
+import { selectedPropertyList } from "../reactivevariables/reactivevariables"
 import PropertyListItem from "./PropertyListItem"
 
 
 
 
 
-  
-    
+
+
 
 interface Props {
-propertyData: Query | undefined
+  propertyData: Query | undefined
+  search: string | undefined
 }
 
-export const PropertyList: React.FunctionComponent<Props> = ({  propertyData }) => {
+export const PropertyList: React.FunctionComponent<Props> = ({ propertyData, search }) => {
 
-   
+
 
 
 
   var originalPropertyData = propertyData
   var originalProperties = originalPropertyData!.properties!
 
-  var nameSortedProperties = originalProperties.slice().sort((a, b) => {
+  const searchSortedProperties = originalProperties?.filter(property => {
+    if (property !== null && property !== undefined) {
+      if (property?.address !== null && property?.address !== undefined) {
+        if (property?.suburb !== null && property?.suburb !== undefined) {
+          if (property?.region !== null && property?.region !== undefined) {
+            if (property?.province !== null && property?.province !== undefined) {
+              return property?.propertyName.toLowerCase().includes(search!.toLowerCase()) || property?.address.toLowerCase().includes(search!.toLowerCase()) || property?.suburb.toLowerCase().includes(search!.toLowerCase()) || property?.region.toLowerCase().includes(search!.toLowerCase()) || property?.province.toLowerCase().includes(search!.toLowerCase())
+            }
+          }
+        }
+      }
+    }
+  })
+
+
+  /* var nameSortedProperties = searchSortedProperties.slice().sort((a, b) => {
     var nameA = a.propertyName!.toUpperCase();
     var nameB = b.propertyName!.toUpperCase();
     if (nameA < nameB) {
@@ -38,17 +54,8 @@ export const PropertyList: React.FunctionComponent<Props> = ({  propertyData }) 
         return 1;
     }
     return 0;
-});
+}); */
 
-  var selectedMap = originalProperties.map(property => {
-return ({...property, isSelected: false})
-  })
-
-  var selectedMap2 = selectedMap
-  /* if(propertyData!.properties! !== null && propertyData!.properties !== undefined) {
-    originalProperties = propertyData!.properties!
-  } */
-  const [properties, setProperties] = React.useState(originalProperties!);
 
 
 
@@ -57,17 +64,17 @@ return ({...property, isSelected: false})
   }; */
 
   return (
-      <div>
-{nameSortedProperties.map(property => {
+    <div>
+      {searchSortedProperties.map(property => {
 
-    return (  
-        <PropertyListItem key={property?.propertyId} property={property!}> </PropertyListItem>
-    )
+        return (
+          <PropertyListItem key={property?.propertyId} property={property!}> </PropertyListItem>
+        )
 
-})}
+      })}
 
-      </div>
-   
+    </div>
+
   );
 };
 

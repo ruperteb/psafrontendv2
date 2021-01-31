@@ -81,9 +81,9 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
     const [selectedContact, setSelectedContact] = React.useState<SelectedContact>(
         {
-            contactId: 0,
+            contactId: 45,
             contactName: "",
-            contactData: { contactId: 0 }
+            contactData: { contactId: 45 }
 
         });
 
@@ -118,7 +118,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
         });
 
-    console.log(newProperty)
+    
 
     const [postProperty, { data }] = useMutation<Mutation, MutationPostPropertyArgs>(NEW_PROPERTY);
 
@@ -324,7 +324,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         [selectedLandlord],
     );
 
-    console.log(selectedLandlord)
+   
 
     const contactsFormatted = selectedLandlord.landlordData?.contactsList?.map((contact) => {
         return { key: contact.name!, text: contact.name!, data: contact }

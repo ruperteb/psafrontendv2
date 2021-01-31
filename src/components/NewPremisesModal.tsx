@@ -140,7 +140,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
 
         });
 
-    console.log(newPremises)
+    
 
     const [postPremises, { data }] = useMutation<Mutation, MutationPostPremisesArgs>(NEW_PREMISES);
 

@@ -127,7 +127,7 @@ export const Map: React.FC<Props> = ({ coordinatesArray, propertyId }) => {
         longitude: longitude
     });
 
-    console.log(marker)
+
 
     const handleDragEnd: any | undefined = (event: any) => {
 

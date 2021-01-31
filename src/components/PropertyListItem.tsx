@@ -49,15 +49,14 @@ export const PropertyListItem: React.FunctionComponent<Props> = ({ property }) =
 
  var selectedProperties = data!.selectedPropertyList!
 
-   console.log(selectedProperties)
+  
 
 
   const onCheckProperty = React.useCallback((): void => {
 
     const found = !!selectedPropertyList().find((t) => t.propertyId === property.propertyId);
 
-    console.log(found)
-    console.log(selectedPropertyList())
+    
     if (found) {
       selectedPropertyList(
         selectedProperties.filter((t) => t.propertyId !== property.propertyId)
@@ -72,7 +71,7 @@ export const PropertyListItem: React.FunctionComponent<Props> = ({ property }) =
 
   var isChecked = () => {
     const found = !!selectedProperties.find((t) => t.propertyId === property.propertyId);
-    console.log(found)
+    
     if (found) {
       return true
     } else {

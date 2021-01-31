@@ -84,7 +84,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         variables: { propertyIdList: propertyIdList  },
     });
 
-console.log(propertyListData)
+
 
     const [enquiryName, setEnquiryName] = React.useState('');
 
@@ -298,7 +298,7 @@ marginBottom: 20
 
     
 
-    console.log(selectedPropertyList)
+   
 
     /* const propertyList = () =>  {
 
@@ -350,7 +350,7 @@ marginBottom: 20
     
 
     return (
-        <div style={{marginTop: "0 !important"}}>
+        <div >
             <Panel
                 isOpen={showSelectedPropertyListPanel}
                 onDismiss={handlePanelDismiss}

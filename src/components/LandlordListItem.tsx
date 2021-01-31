@@ -36,7 +36,7 @@ export const LandlordListItem: React.FunctionComponent<Props> = ({ landlord, exp
   const [isEditCalloutVisible, { toggle: toggleIsEditCalloutVisible }] = useBoolean(false);
   const [isAddContactCalloutVisible, { toggle: toggleIsAddContactCalloutVisible }] = useBoolean(false);
 
-  const [editLandlordName, setEditLandlordName] = React.useState("")
+  const [editLandlordName, setEditLandlordName] = React.useState(landlord.landlordName)
 
   const [addContact, setAddContact] = React.useState({
     name: "",

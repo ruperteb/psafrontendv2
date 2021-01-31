@@ -56,7 +56,21 @@ interface Props {
 
 }
 
-const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsOptions, distinctRegionsOptions, landlordsOptions}) => {
+const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbsOptions, distinctRegionsOptions, landlordsOptions }) => {
+
+    /* var containerRef = React.useRef<HTMLDivElement>(null); */
+
+    
+
+
+    const [containerWidth, setContainerWidth] = React.useState<number>(0);
+
+
+    const containerRef = React.useCallback(node => {
+        if (node !== null) {
+            setContainerWidth(node.offsetWidth);
+        }
+      }, []);
 
     const {
         data: navigationStateData,
@@ -83,7 +97,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
     } */
 
     /* if (navigationStateData !== undefined) { */
-       var navigationState = navigationStateData!.navigationState!
+    var navigationState = navigationStateData!.navigationState!
     /* } */
 
     const {
@@ -94,9 +108,9 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
         variables: { propertyId: navigationState.selectedPropertyId },
     });
 
-    console.log(propertyData)
-
     
+
+
 
     const handlePanelDismiss = () => {
         navigationStateVar({ ...navigationStateVar(), showSelectedPropertyPanel: false })
@@ -105,7 +119,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
     const handleEditProperty = () => {
         navigationStateVar({ ...navigationStateVar(), showUpdatePropertyModal: true })
-        
+
     }
 
 
@@ -149,7 +163,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
     const addIcon: IIconProps = { iconName: 'Add' };
     const editIcon: IIconProps = { iconName: 'Edit' };
     const photoCollectionIcon: IIconProps = { iconName: 'PhotoCollection' };
-    const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);", padding: 10 } };
+    const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);", padding: 10, width: "fit-content", marginLeft: "auto", marginRight: "auto", } };
     const panelStyles: IStyleFunctionOrObject<IPanelStyleProps, IPanelStyles> = {
         /*   root: {}, */
         navigation: {
@@ -173,12 +187,16 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
 
     const boldStyle = { root: { fontWeight: FontWeights.semibold } };
-    const propertyDetailsStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: "15px" }
-    const propertyDetailsLandlordStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: "15px" , width: 125}
+    const propertyDetailsStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: 10, paddingRight: 10, "white-space": "nowrap" }
+    const propertyDetailsLandlordStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: 10, paddingRight: 10 , "white-space": "nowrap"}
 
     const boldStyle2 = { root: { fontWeight: FontWeights.bold } };
-    const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "20px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 }
-    const propertyNotesStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: "15px", marginTop: 0 }
+    const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "18px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 , "white-space": "nowrap"}
+    const propertyDetailsLandlordHeadingStyles = { /* alignSelf: "start", */ fontSize: "18px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10, paddingLeft: 20, paddingRight: 20 , "white-space": "nowrap"}
+    const propertyNotesStyles = { alignSelf: "start", fontSize: "14px", paddingLeft: "15px", marginTop: 0 }
+
+
+    
 
     const getEarliestOccDate = () => {
 
@@ -338,7 +356,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
         <div>
             <Panel
                 isOpen={navigationState.showSelectedPropertyPanel}
-               /*  onDismiss={handlePanelDismiss} */
+                /*  onDismiss={handlePanelDismiss} */
                 type={PanelType.extraLarge}
                 onRenderNavigationContent={onRenderNavigationContent}
                 /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
@@ -361,8 +379,8 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                         root: {
                             /*   display: "flex",
                               flexFlow: "row", */
-                            maxWidth: "fit-content",
-                            marginLeft: 25,
+                           /*  maxWidth: "fit-content", */
+                            marginLeft: 10,
                             marginTop: 20
                             /*  marginTop: "0 !important" */
                         }
@@ -379,10 +397,10 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
                             <Stack id="Property Details" styles={{
                                 root: {
-                                    width: "70%",
+                                    /* width: "fit-content", */
                                     marginTop: "20 !important",
                                     marginBottom: 10,
-                                    marginRight: 20,
+                                    marginRight: 10,
                                     padding: '10px',
                                     textAlign: 'left',
                                     color: '#605e5c',
@@ -402,128 +420,134 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                                 }
                             }}
                                 gap={15}>
-                                <div style={{ display: "flex", borderTop: "3px solid rgb(204 171 124 / 42%)" }}>
+                                <div style={{ display: "flex", /* borderTop: "3px solid rgb(204 171 124 / 42%)" */  backgroundColor: "#faebd775", transform: "translate(-2px,0px)", boxShadow: "rgb(0 0 0 / 30%) 1px 3px 6px 0px", width: containerWidth }}>
                                     <Text styles={boldStyle2} style={propertyDetailsHeadingStyles}>Property Details:</Text>
                                 </div>
 
-
-                                <Stack styles={{
-                                    root: {
-                                        /* width: 700, */
-                                        /*  marginTop: 20,
-                                         marginBottom: 10, */
-                                        /*   padding: '10px', */
-                                        textAlign: 'left',
-                                        color: '#605e5c',
-                                        alignItems: "left",
-                                        display: "flex",
-                                        flexFlow: "row",
-                                        /*  borderTop: "4px solid #2557a2;",
-                                         borderBottom: "4px solid #2557a2;", */
-                                        backgroundColor: "white",
-                                        /*  background: isChecked() ? "rgb(104 113 140 / 14%)" : "white", */
-                                        /*  boxShadow: "-1px 1px 7px 2px #d4cece",
-                                         selectors: {
-                                             '&:hover': { background: "rgb(104 113 140 / 14%)" },
-                                         }, */
-                                        marginTop: "0 !important",
-                                        borderBottom: "3px solid rgb(204 171 124 / 42%)"
-
-
-                                    }
-                                }}
-                                    gap={15}>
+                                <div  ref={containerRef} style={{marginTop: 0, width: "fit-content"}}>
 
                                     <Stack styles={{
                                         root: {
-                                            padding: '10px',
+                                            /* width: 700, */
+                                            /*  marginTop: 20,
+                                             marginBottom: 10, */
+                                            /*   padding: '10px', */
                                             textAlign: 'left',
+                                            color: '#605e5c',
                                             alignItems: "left",
                                             display: "flex",
                                             flexFlow: "row",
+                                            /*  borderTop: "4px solid #2557a2;",
+                                             borderBottom: "4px solid #2557a2;", */
+                                            backgroundColor: "#d7e0e024",
+                                            boxShadow: "rgb(0 0 0 / 24%) 1px 3px 6px 0px",
+                                            /*  background: isChecked() ? "rgb(104 113 140 / 14%)" : "white", */
+                                            /*  boxShadow: "-1px 1px 7px 2px #d4cece",
+                                             selectors: {
+                                                 '&:hover': { background: "rgb(104 113 140 / 14%)" },
+                                             }, */
+                                            marginTop: "0 !important",
+                                            /*  borderBottom: "3px solid rgb(204 171 124 / 42%)", */
+
+
 
                                         }
-                                    }}>
+                                    }}
+                                        gap={15}>
 
-                                        <Stack verticalFill styles={{
+                                        <Stack styles={{
                                             root: {
-                                                marginTop: "0 !important"
-                                            },
-                                        }}
-                                            gap={15}>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Address:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Suburb:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Region:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Province:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Building Type:</Text>
+                                                padding: '10px',
+                                                textAlign: 'left',
+                                                alignItems: "left",
+                                                display: "flex",
+                                                flexFlow: "row",
+
+                                            }
+                                        }}>
+
+                                            <Stack verticalFill styles={{
+                                                root: {
+                                                    marginTop: "0 !important"
+                                                },
+                                            }}
+                                                gap={15}>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Address:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Suburb:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Region:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Province:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Building Type:</Text>
+
+                                            </Stack>
+
+
+                                            <Stack verticalFill styles={{
+                                                root: {
+                                                    marginTop: "0 !important",
+                                                    marginLeft: 0
+                                                },
+                                            }}
+                                                gap={15}>
+                                                <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.address !== "" ? propertyData?.singleProperty?.address : "-"}</Text>
+                                                <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.suburb !== "" ? propertyData?.singleProperty?.suburb : "-"}</Text>
+                                                <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.region !== "" ? propertyData?.singleProperty?.region : "-"}</Text>
+                                                <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.province !== "" ? propertyData?.singleProperty?.province : "-"}</Text>
+                                                <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.buildingType !== "" ? propertyData?.singleProperty?.buildingType : "-"}</Text>
+                                            </Stack>
 
                                         </Stack>
 
-
-                                        <Stack verticalFill styles={{
+                                        <Stack styles={{
                                             root: {
-                                                marginTop: "0 !important",
-                                                marginLeft: 20
-                                            },
-                                        }}
-                                            gap={15}>
-                                            <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.address !== "" ? propertyData?.singleProperty?.address : "-"}</Text>
-                                            <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.suburb !== "" ? propertyData?.singleProperty?.suburb : "-"}</Text>
-                                            <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.region !== "" ? propertyData?.singleProperty?.region : "-"}</Text>
-                                            <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.province !== "" ? propertyData?.singleProperty?.province : "-"}</Text>
-                                            <Text style={propertyDetailsStyles}>{propertyData?.singleProperty?.buildingType !== "" ? propertyData?.singleProperty?.buildingType : "-"}</Text>
+                                                padding: '10px',
+                                                textAlign: 'left',
+                                                alignItems: "left",
+                                                display: "flex",
+                                                flexFlow: "row",
+                                                marginTop: "0 !important"
+                                            }
+                                        }}>
+
+                                            <Stack verticalFill styles={{
+                                                root: {
+                                                    marginTop: "0 !important"
+                                                },
+                                            }}
+                                                gap={15}>
+
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Erf Extent:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Total GLA:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Vacant GLA:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Earliest Occupation:</Text>
+                                                <Text styles={boldStyle} style={propertyDetailsStyles}>Earliest Expiry:</Text>
+                                            </Stack>
+
+
+                                            <Stack verticalFill styles={{
+                                                root: {
+                                                    marginTop: "0 !important",
+                                                    marginLeft: 0
+                                                },
+                                            }}
+                                                gap={15}>
+
+                                                <Text style={propertyDetailsStyles}>{`${propertyData?.singleProperty?.erfExtent} m²`}</Text>
+                                                <Text style={propertyDetailsStyles}>{`${propertyData?.singleProperty?.totalGLA} m²`}</Text>
+                                                <Text style={propertyDetailsStyles}>{`${getVacantGLA()} m²`}</Text>
+                                                <Text style={propertyDetailsStyles}>{getEarliestOccDate()}</Text>
+                                                <Text style={propertyDetailsStyles}>{getEarliestExpDate()}</Text>
+                                            </Stack>
+
                                         </Stack>
 
                                     </Stack>
 
-                                    <Stack styles={{
-                                        root: {
-                                            padding: '10px',
-                                            textAlign: 'left',
-                                            alignItems: "left",
-                                            display: "flex",
-                                            flexFlow: "row",
-                                            marginTop: "0 !important"
-                                        }
-                                    }}>
+                                </div>
 
-                                        <Stack verticalFill styles={{
-                                            root: {
-                                                marginTop: "0 !important"
-                                            },
-                                        }}
-                                            gap={15}>
-
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Erf Extent:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Total GLA:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Vacant GLA:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Earliest Occupation:</Text>
-                                            <Text styles={boldStyle} style={propertyDetailsStyles}>Earliest Expiry:</Text>
-                                        </Stack>
-
-
-                                        <Stack verticalFill styles={{
-                                            root: {
-                                                marginTop: "0 !important",
-                                                marginLeft: 20
-                                            },
-                                        }}
-                                            gap={15}>
-
-                                            <Text style={propertyDetailsStyles}>{`${propertyData?.singleProperty?.erfExtent} m²`}</Text>
-                                            <Text style={propertyDetailsStyles}>{`${propertyData?.singleProperty?.totalGLA} m²`}</Text>
-                                            <Text style={propertyDetailsStyles}>{`${getVacantGLA()} m²`}</Text>
-                                            <Text style={propertyDetailsStyles}>{getEarliestOccDate()}</Text>
-                                            <Text style={propertyDetailsStyles}>{getEarliestExpDate()}</Text>
-                                        </Stack>
-
-                                    </Stack>
-
-                                </Stack>
 
                                 <Stack id="Notes" styles={{
                                     root: {
-                                        /* width: 700, */
+                                        width: containerWidth,
                                         /*   marginTop: 10, */
                                         marginBottom: 10,
                                         /*  padding: '10px', */
@@ -547,11 +571,11 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                                 }}
                                     gap={15}>
 
-                                    <div style={{ display: "flex",  /* borderTop: "3px solid rgb(204 171 124 / 42%)" , */ marginTop: "0 !important" }}>
+                                    <div style={{ display: "flex",  /* borderTop: "3px solid rgb(204 171 124 / 42%)" , */ marginTop: "0 !important", backgroundColor: "#faebd775", transform: "translate(-2px,0px)", boxShadow: "rgb(0 0 0 / 30%) 1px 3px 6px 0px" , }}>
                                         <Text styles={boldStyle2} style={propertyDetailsHeadingStyles}>Notes:</Text>
 
                                     </div>
-                                    <div style={{ display: "flex", /* borderBottom: "3px solid rgb(204 171 124 / 42%)", */ margin: 0, paddingBottom: 10 }}>
+                                    <div style={{ display: "flex", /* borderBottom: "3px solid rgb(204 171 124 / 42%)", */ margin: 0, paddingBottom: 10, paddingTop: 10, paddingLeft: 5, paddingRight: 5, backgroundColor: "#d7e0e024", boxShadow: "rgb(0 0 0 / 24%) 1px 3px 6px 0px", }}>
                                         <Text style={propertyNotesStyles}>{propertyData?.singleProperty?.notes}</Text>
 
                                     </div>
@@ -580,13 +604,13 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                                      selectors: {
                                          '&:hover': { background: "rgb(104 113 140 / 14%)" },
                                      }, */
-                                    maxWidth: "fit-content"
+                                   /*  maxWidth: "fit-content" */
 
                                 }
                             }}
                                 gap={15}>
-                                <div style={{ display: "flex", borderTop: "3px solid rgb(204 171 124 / 42%)" }}>
-                                    <Text styles={boldStyle2} style={propertyDetailsHeadingStyles}>Landlord Details:</Text>
+                                <div style={{ display: "flex", /* borderTop: "3px solid rgb(204 171 124 / 42%)"  */ backgroundColor: "#faebd775", transform: "translate(-2px,0px)", boxShadow: "rgb(0 0 0 / 30%) 1px 3px 6px 0px" }}>
+                                    <Text styles={boldStyle2} style={propertyDetailsLandlordHeadingStyles}>Landlord Details:</Text>
                                 </div>
 
 
@@ -603,14 +627,15 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                                         flexFlow: "row",
                                         /*  borderTop: "4px solid #2557a2;",
                                          borderBottom: "4px solid #2557a2;", */
-                                        backgroundColor: "white",
+                                        backgroundColor: "#d7e0e024",
+                                        boxShadow: "rgb(0 0 0 / 24%) 1px 3px 6px 0px",
                                         /*  background: isChecked() ? "rgb(104 113 140 / 14%)" : "white", */
                                         /*  boxShadow: "-1px 1px 7px 2px #d4cece",
                                          selectors: {
                                              '&:hover': { background: "rgb(104 113 140 / 14%)" },
                                          }, */
                                         marginTop: "0 !important",
-                                        borderBottom: "3px solid rgb(204 171 124 / 42%)"
+                                        /*  borderBottom: "3px solid rgb(204 171 124 / 42%)" */
 
 
                                     }
@@ -645,7 +670,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
                                         <Stack verticalFill styles={{
                                             root: {
                                                 marginTop: "0 !important",
-                                                marginLeft: 20
+                                                marginLeft: 0
                                             },
                                         }}
                                             gap={15}>
@@ -701,11 +726,12 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({distinctSuburbsO
 
 
 
-                    <Stack styles={{
+                    <Stack id="mapContainer" styles={{
                         root: {
-                            marginLeft: 30,
+                            marginLeft: 10,
                             marginRight: "auto",
                             padding: '10px',
+                            marginTop: "20px !important",
 
                         }
                     }}>

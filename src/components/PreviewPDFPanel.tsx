@@ -172,7 +172,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
     var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
 
-    console.log(selectedPropertyList)
+   
 
 
     

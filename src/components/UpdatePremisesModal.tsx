@@ -58,7 +58,7 @@ interface Props {
 
 export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, propertyId, premisesId }) => {
 
-    
+
 
     const {
         data: propertyData,
@@ -67,9 +67,6 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     } = useQuery<Query>(GET_SINGLE_PROPERTY, {
         variables: { propertyId: propertyId },
     });
-
-    console.log(propertyId)
-    console.log(premisesId)
 
 
     const getPremises = propertyData?.singleProperty?.premisesList!.find(premises => premises?.premisesId === premisesId);
@@ -113,20 +110,20 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     }, [getPremises])
 
 
-    React.useEffect(()=> {
-setUpdatedPremises(handlePremisesData)
-setSelectedPremisesType({ key: handlePremisesData().type!, text: handlePremisesData().type! })
-setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: String(handlePremisesData().premisesIndex!) }))
+    React.useEffect(() => {
+        setUpdatedPremises(handlePremisesData)
+        setSelectedPremisesType({ key: handlePremisesData().type!, text: handlePremisesData().type! })
+        setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: String(handlePremisesData().premisesIndex!) }))
 
-    },[handlePremisesData])
+    }, [handlePremisesData])
 
-    
-   
+
+
 
     const hideUpdatePremisesModal = () => {
-        
+
         navigationState({ ...navigationState(), showUpdatePremisesModal: false })
-        
+
     }
 
     const getNextMonth = () => {
@@ -174,8 +171,8 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
 
         });
 
-    console.log(updatedPremises)
-    
+   
+
 
     const [updatePremises, { data }] = useMutation<Mutation, MutationUpdatePremisesArgs>(UPDATE_PREMISES);
 
@@ -230,7 +227,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                 })
 
                 const updatedPremises = data.updatePremises
-                
+
                 const newPremisesList = [...filteredPremises!, updatedPremises]
 
                 const newProperty = { ...existingProperty, premisesList: newPremisesList }
@@ -245,7 +242,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
 
         })
         hideUpdatePremisesModal()
-       
+
 
 
     }
@@ -346,8 +343,6 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     const [selectedPremisesType, setSelectedPremisesType] = React.useState<IDropdownOption>();
     const [selectedPremisesIndex, setSelectedPremisesIndex] = React.useState<IDropdownOption>();
 
-console.log(selectedPremisesType)
-console.log(selectedPremisesIndex)
 
     const onChangePremisesType = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
         if (item !== undefined) {
@@ -1011,7 +1006,7 @@ console.log(selectedPremisesIndex)
 
                 titleAriaId={titleId}
                 isOpen={showUpdatePremisesModal}
-               /*  onDismiss={hideUpdatePremisesModal} */
+                /*  onDismiss={hideUpdatePremisesModal} */
                 isBlocking={false}
                 containerClassName={contentStyles.container}
             /* dragOptions={dragOptions} */

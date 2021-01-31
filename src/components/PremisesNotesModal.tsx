@@ -50,9 +50,7 @@ const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyI
     });
 
     const getPremises = propertyData?.singleProperty?.premisesList!.find(premises => premises?.premisesId === premisesId);
-console.log(propertyData)
-console.log(getPremises)
-console.log(premisesId)
+
 
     /* const {
       data: navigationStateData,

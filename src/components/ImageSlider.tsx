@@ -75,7 +75,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         imagesArray = propertyData?.singleProperty?.images!
     }
 
-    console.log(imagesArray)
+    
 
 
 

@@ -76,7 +76,7 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
 
   };
 
-  const onChangeSelectedPropertyListToggle = (ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
+  const onChangeSelectedPropertyListToggle = React.useCallback((ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
     if (showSelectedPropertyListPanel === false) {
       navigationState ( {...navigationState(), showSelectedPropertyListPanel: true})
      
@@ -84,7 +84,16 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
       navigationState ( {...navigationState(), showSelectedPropertyListPanel: false})
     }
 
-  }
+  },[showSelectedPropertyListPanel])
+
+  const onChangeSearch = React.useCallback(
+    (event?: React.ChangeEvent<HTMLInputElement>, newValue?: string) => {
+
+    setSearch(newValue)
+  },[setSearch])
+
+
+
 
   const imageProps: IImageProps = {
     src: HeaderImage,
@@ -144,7 +153,7 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
           onClear={ev => {
             console.log('Custom onClear Called');
           }}
-          onChange={(newValue: any) => setSearch(newValue)}
+          onChange={onChangeSearch}
           onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
         />
 

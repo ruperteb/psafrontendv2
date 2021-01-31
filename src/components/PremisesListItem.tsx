@@ -361,13 +361,13 @@ export const PremisesListItem: React.FunctionComponent<Props> = ({ premises, pro
         <Stack
             horizontalAlign="start"
             verticalAlign="start"
-            id="card"
+            id={`premisesRow${premises.premisesId}`}
 
             styles={{
                 root: {
                      width: "fit-content",
                     marginBottom: 10,
-                    marginLeft: 50,
+                    marginLeft: 20,
                     marginRight:"auto",
                     /* padding: '10px', */
                     textAlign: 'center',

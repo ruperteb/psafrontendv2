@@ -68,9 +68,6 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
         variables: { propertyId: propertyId },
     });
 
-    console.log(propertyId)
-    console.log(premisesId)
-
 
     const getPremises = propertyData?.singleProperty?.premisesList!.find(premises => premises?.premisesId === premisesId);
     const handlePremisesData = React.useCallback(() => {
@@ -174,7 +171,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
 
         });
 
-    console.log(duplicatedPremises)
+   
     
 
     const [postPremises, { data }] = useMutation<Mutation, MutationPostPremisesArgs>(NEW_PREMISES);
@@ -340,8 +337,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     const [selectedPremisesType, setSelectedPremisesType] = React.useState<IDropdownOption>();
     const [selectedPremisesIndex, setSelectedPremisesIndex] = React.useState<IDropdownOption>();
 
-console.log(selectedPremisesType)
-console.log(selectedPremisesIndex)
+
 
     const onChangePremisesType = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
         if (item !== undefined) {

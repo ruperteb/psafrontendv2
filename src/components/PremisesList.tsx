@@ -101,14 +101,14 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
             <Stack
                 horizontalAlign="start"
                 verticalAlign="start"
-                id="card"
+                id="premisesListHeadings"
 
                 styles={{
                     root: {
                         width: "fit-content",
                         marginBottom: 10,
                         marginTop: 20,
-                        marginLeft: 50,
+                        marginLeft: 20,
                         marginRight: "auto",
                         /* padding: '10px', */
                         textAlign: 'center',
@@ -223,7 +223,7 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
                             <TooltipHost styles={tooltipHostStyles} content="R/bay/month" id={tooltipCoveredRateId} calloutProps={calloutProps}> <Text styles={tableCellStyles} style={{ width: 50 }}>Covered Rate</Text></TooltipHost>
                             <Text styles={tableCellStyles} style={{ width: 50 }}>Shaded Bays</Text>
                             <TooltipHost styles={tooltipHostStyles} content="R/bay/month" id={tooltipShadedRateId} calloutProps={calloutProps}><Text styles={tableCellStyles} style={{ width: 50 }}>Shaded Rate</Text></TooltipHost>
-                            <TooltipHost styles={tooltipHostStyles} content="R/bay/month" id={tooltipParkingRatioId} calloutProps={calloutProps}><Text styles={tableCellStyles} style={{ width: 50 }}>Parking Ratio</Text></TooltipHost>
+                            <TooltipHost styles={tooltipHostStyles} content="bays/100m²" id={tooltipParkingRatioId} calloutProps={calloutProps}><Text styles={tableCellStyles} style={{ width: 50 }}>Parking Ratio</Text></TooltipHost>
                         </div>
                     </div>
                     <div style={{

@@ -352,8 +352,23 @@ const styles = StyleSheet.create({
         width: 20,
         borderWidth: 1,
         borderRadius: 20,
-        paddingLeft: 7,
-        paddingTop: 1.5,
+        paddingLeft: 6.95,
+        paddingTop: 1.35,
+        "backgroundColor": '#20314b',
+        color: "white",
+        fontFamily: "SegoeUI",
+        fontWeight: "bold",
+    },
+    propertyNumber10plus: {
+
+        fontSize: 10,
+        borderStyle: "solid",
+        height: 20,
+        width: 20,
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingLeft: 4.75,
+        paddingTop: 2.15,
         "backgroundColor": '#20314b',
         color: "white",
         fontFamily: "SegoeUI",
@@ -589,7 +604,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
 
                             <View style={styles.propertyNumberColumn}>
-                                <Text style={styles.propertyNumber}>{index + 1}</Text>
+                                <Text style={index<9? styles.propertyNumber:styles.propertyNumber10plus }>{index + 1}</Text>
                                 <Text style={styles.propertyHeading}>{property.propertyName}</Text>
                             </View>
 

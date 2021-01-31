@@ -26,10 +26,10 @@ function App() {
 
   var cl = new Cloudinary({cloud_name: "drlfedqyz", secure: true});
 
- var image = cl.url("1567618101_fela1x", { width:200 , crop:"fit"})
- console.log(image)
+ 
 
-  const [search, setSearch] = React.useState<string | undefined>('');
+
+  const [search, setSearch] = React.useState<string | undefined>("");
 
 
   const {
@@ -37,7 +37,7 @@ function App() {
     loading: propertyLoading,
     error: propertyError
   } = useQuery<Query>(GET_PROPERTIES);
-
+  
   const {
     data: suburbData,
     loading: suburbLoading,
@@ -71,15 +71,6 @@ function App() {
 var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
   return property.propertyId
 })
-
-var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPropertyList!
-
-
-  console.log(suburbData)
-  console.log(regionData)
-  console.log(propertyData)
-
-  console.log(navigationStateData)
 
   /* if(suburbData !== undefined) */
   const suburbWC = suburbData?.distinctSuburbs!.filter((suburb) => {
@@ -180,7 +171,7 @@ var selectedPropertyList: SelectedPropertyList = propertyListData?.selectedPrope
     ]
   }
 
-  console.log(distinctRegionsOptions)
+
 
   const {
     data: landlordData,
@@ -255,7 +246,7 @@ if(landlordsFormatted !== undefined) {
       gap={15}
     >
       <Navigation selectedPropertyType={navigationState.selectedPropertyType} setSearch={setSearch} showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel}  > </Navigation>
-      <PropertyList propertyData={propertyData}></PropertyList>
+      <PropertyList propertyData={propertyData} search={search}></PropertyList>
       <NewProperyModal showNewPropertyModal={navigationState.showNewPropertyModal} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></NewProperyModal>
       <SelectedPropertyPanel distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></SelectedPropertyPanel>
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>

@@ -82,7 +82,6 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
         });
 
-console.log(selectedLandlord)
 
     interface SelectedContact {
         contactId: number
@@ -105,9 +104,6 @@ console.log(selectedLandlord)
 
         });
 
-    console.log(selectedContact)
-
-    console.log(updatedProperty)
 
     const [updateProperty, { data }] = useMutation<Mutation, MutationUpdatePropertyArgs>(UPDATE_PROPERTY);
 
@@ -316,7 +312,7 @@ console.log(selectedLandlord)
         [selectedLandlord],
     );
 
-    console.log(selectedLandlord)
+   
 
     const contactsFormatted = selectedLandlord.landlordData?.contactsList?.map((contact) => {
         return { key: contact.name!, text: contact.name!, data: contact }
