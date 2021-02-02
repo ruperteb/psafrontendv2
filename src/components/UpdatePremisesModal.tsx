@@ -171,7 +171,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
 
         });
 
-   
+
 
 
     const [updatePremises, { data }] = useMutation<Mutation, MutationUpdatePremisesArgs>(UPDATE_PREMISES);
@@ -259,6 +259,8 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldFloorStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldAreaStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
+    const textFieldYardStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 125, marginRight: 20} };
+    const textFieldPowerStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldEscStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
     const textFieldCoordinatesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
     const textFieldErfStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
@@ -527,6 +529,55 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     const onChangeTenantNotes = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setUpdatedPremises({ ...updatedPremises, tenantNotes: newValue || '' });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeYard = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, yard: parseFloat(newValue!) || 0 });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeHeight = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, height: parseFloat(newValue!) || 0 });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeDoors = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, doors: parseFloat(newValue!) || 0 });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeLoading = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, loading: newValue || '' });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeSprinklered = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, sprinklered: newValue || '' });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeCanopies = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, canopies: newValue || '' });
+        },
+        [updatedPremises],
+    );
+
+    const onChangePower = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, power: newValue || '' });
         },
         [updatedPremises],
     );
@@ -929,6 +980,103 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                     </>
                 )
 
+            case "Industrial Features":
+
+                return (
+                    <>
+
+
+                        <Stack horizontal styles={{
+                            root: {
+                                color: '#605e5c',
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }
+                        }}>
+
+                            <TextField
+                                label="Yard Size"
+                                value={updatedPremises.yard === 0 ? "" : String(updatedPremises.yard)}
+                                onChange={onChangeYard}
+                                styles={textFieldYardStyles}
+                                suffix="m²"
+
+                            />
+
+                            <TextField
+                                label="Floor to Eave Height"
+                                value={updatedPremises.height === 0 ? "" : String(updatedPremises.height)}
+                                onChange={onChangeHeight}
+                                styles={textFieldYardStyles}
+                                suffix="m"
+                            />
+
+                            <TextField
+                                label="No of Doors"
+                                value={updatedPremises.doors === 0 ? "" : String(updatedPremises.doors)}
+                                onChange={onChangeDoors}
+                                styles={textFieldYardStyles}
+
+                            />
+
+
+
+                        </Stack>
+
+                        <Stack horizontal styles={{
+                            root: {
+                                color: '#605e5c',
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }
+                        }}>
+
+                            <TextField
+                                label="Loading Type"
+                                value={updatedPremises.loading === "" ? "" : updatedPremises.loading}
+                                onChange={onChangeLoading}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                            <TextField
+                                label="Sprinkler Type"
+                                value={updatedPremises.sprinklered === "" ? "" : updatedPremises.sprinklered}
+                                onChange={onChangeSprinklered}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                        </Stack>
+
+                        <Stack horizontal styles={{
+                            root: {
+                                color: '#605e5c',
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }
+                        }}>
+
+                            <TextField
+                                label="Canopy Details"
+                                value={updatedPremises.canopies === "" ? "" : updatedPremises.canopies}
+                                onChange={onChangeCanopies}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                            <TextField
+                                label="Power"
+                                value={updatedPremises.power === "" ? "" : updatedPremises.power}
+                                onChange={onChangePower}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                        </Stack>
+                    </>
+                )
+
 
             case "Tenant Details":
 
@@ -1044,11 +1192,13 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                             onLinkClick={handleLinkClick}
                             headersOnly={true}
                             getTabId={getTabId}
+                            styles={{link:{/* padding:0, margin:0, fontSize:14 */  marginRight: 20}, linkIsSelected:{/* padding:0, margin:0, fontSize:14 */marginRight: 20}, root: {marginLeft: "auto", marginRight: "auto"}}}
                         >
-                            <PivotItem headerText="Premises Details" itemKey="Premises Details" />
-                            <PivotItem headerText="Rental Details" itemKey="Rental Details" />
-                            <PivotItem headerText="Parking Details" itemKey="Parking Details" />
-                            <PivotItem headerText="Tenant Details" itemKey="Tenant Details" />
+                            <PivotItem headerText="Premises" itemKey="Premises Details" />
+                            <PivotItem headerText="Rental" itemKey="Rental Details" />
+                            <PivotItem headerText="Parking" itemKey="Parking Details" />
+                            <PivotItem headerText="Industrial" itemKey="Industrial Features" />
+                            <PivotItem headerText="Tenant" itemKey="Tenant Details" />
                         </Pivot>
 
                         {updatePremisesTab()}
@@ -1072,7 +1222,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        /*  width: 525, */
+         width: 525,
 
     },
 

@@ -92,7 +92,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
             canopies: "",
             power: "",
         })
-        
+
     }
 
     const getNextMonth = () => {
@@ -140,7 +140,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
 
         });
 
-    
+
 
     const [postPremises, { data }] = useMutation<Mutation, MutationPostPremisesArgs>(NEW_PREMISES);
 
@@ -221,6 +221,8 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
     const textFieldFloorStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldAreaStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
     const textFieldEscStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
+    const textFieldYardStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 125, marginRight: 20} };
+    const textFieldPowerStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldCoordinatesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
     const textFieldErfStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldNotesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 470 } };
@@ -230,7 +232,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
 
     const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
-    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 },  };
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
 
     const datePickerStyles: IStyleFunctionOrObject<IDatePickerStyleProps, IDatePickerStyles> = { root: { width: 160, marginRight: 20 }, callout: {} }
 
@@ -489,6 +491,55 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
     const onChangeTenantNotes = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setNewPremises({ ...newPremises, tenantNotes: newValue || '' });
+        },
+        [newPremises],
+    );
+
+    const onChangeYard = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, yard: parseFloat(newValue!) || 0 });
+        },
+        [newPremises],
+    );
+
+    const onChangeHeight = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, height: parseFloat(newValue!) || 0 });
+        },
+        [newPremises],
+    );
+
+    const onChangeDoors = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, doors: parseFloat(newValue!) || 0 });
+        },
+        [newPremises],
+    );
+
+    const onChangeLoading = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, loading: newValue || '' });
+        },
+        [newPremises],
+    );
+
+    const onChangeSprinklered = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, sprinklered: newValue || '' });
+        },
+        [newPremises],
+    );
+
+    const onChangeCanopies = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, canopies: newValue || '' });
+        },
+        [newPremises],
+    );
+
+    const onChangePower = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setNewPremises({ ...newPremises, power: newValue || '' });
         },
         [newPremises],
     );
@@ -863,12 +914,109 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
                     </>
                 )
 
+            case "Industrial Features":
+
+                return (
+                    <>
+
+
+                        <Stack horizontal styles={{
+                            root: {
+                                color: '#605e5c',
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }
+                        }}>
+
+                            <TextField
+                                label="Yard Size"
+                                value={newPremises.yard === 0 ? "" : String(newPremises.yard)}
+                                onChange={onChangeYard}
+                                styles={textFieldYardStyles}
+                                suffix="m²"
+
+                            />
+
+                            <TextField
+                                label="Floor to Eave Height"
+                                value={newPremises.height === 0 ? "" : String(newPremises.height)}
+                                onChange={onChangeHeight}
+                                styles={textFieldYardStyles}
+                                suffix="m"
+                            />
+
+                            <TextField
+                                label="No of Doors"
+                                value={newPremises.doors === 0 ? "" : String(newPremises.doors)}
+                                onChange={onChangeDoors}
+                                styles={textFieldYardStyles}
+
+                            />
+
+
+
+                        </Stack>
+
+                        <Stack horizontal styles={{
+                            root: {
+                                color: '#605e5c',
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }
+                        }}>
+
+                            <TextField
+                                label="Loading Type"
+                                value={newPremises.loading === "" ? "" : newPremises.loading}
+                                onChange={onChangeLoading}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                            <TextField
+                                label="Sprinkler Type"
+                                value={newPremises.sprinklered === "" ? "" : newPremises.sprinklered}
+                                onChange={onChangeSprinklered}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                        </Stack>
+
+                        <Stack horizontal styles={{
+                            root: {
+                                color: '#605e5c',
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }
+                        }}>
+
+                            <TextField
+                                label="Canopy Details"
+                                value={newPremises.canopies === "" ? "" : newPremises.canopies}
+                                onChange={onChangeCanopies}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                            <TextField
+                                label="Power"
+                                value={newPremises.power === "" ? "" : newPremises.power}
+                                onChange={onChangePower}
+                                styles={textFieldPowerStyles}
+
+                            />
+
+                        </Stack>
+                    </>
+                )
+
 
             case "Tenant Details":
 
                 return (
                     <>
-                        
+
 
                         <Stack horizontal styles={{
                             root: {
@@ -887,7 +1035,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
 
                             <TextField
                                 label="Tenant Name"
-                                value={newPremises.tenantName === "-"? "" : newPremises.tenantName}
+                                value={newPremises.tenantName === "-" ? "" : newPremises.tenantName}
                                 onChange={onChangeTenantName}
                                 styles={textFieldFloorStyles}
 
@@ -978,11 +1126,13 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
                             onLinkClick={handleLinkClick}
                             headersOnly={true}
                             getTabId={getTabId}
+                            styles={{link:{/* padding:0, margin:0, fontSize:14 */  marginRight: 20}, linkIsSelected:{/* padding:0, margin:0, fontSize:14 */marginRight: 20}, root: {marginLeft: "auto", marginRight: "auto"}}}
                         >
-                            <PivotItem headerText="Premises Details" itemKey="Premises Details" />
-                            <PivotItem headerText="Rental Details" itemKey="Rental Details" />
-                            <PivotItem headerText="Parking Details" itemKey="Parking Details" />
-                            <PivotItem headerText="Tenant Details" itemKey="Tenant Details" />
+                            <PivotItem headerText="Premises" itemKey="Premises Details" />
+                            <PivotItem headerText="Rental" itemKey="Rental Details" />
+                            <PivotItem headerText="Parking" itemKey="Parking Details" />
+                            <PivotItem headerText="Industrial" itemKey="Industrial Features" />
+                            <PivotItem headerText="Tenant" itemKey="Tenant Details" />
                         </Pivot>
 
                         {newPremisesTab()}
@@ -1006,7 +1156,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        /*  width: 525, */
+         width: 525,
 
     },
 

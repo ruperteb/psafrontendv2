@@ -61,6 +61,8 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
 
 
     const tableCellStyles: ITextStyles = { root: { alignSelf: "start", fontSize: "14px", padding: 5, marginTop: "auto !important", marginBottom: "auto", width: 45, /* fontStyle : "italic", */ fontWeight: 600, } }
+    const tableCellTenantStyles: ITextStyles = { root: {height: 19, marginTop: "9.5px !important", marginBottom:9.5 , alignSelf: "start", fontSize: "14px", padding: 5,   /* fontStyle : "italic", */ fontWeight: 600, } }
+    const tableCellNotesStyles: ITextStyles = { root: {height: 19, marginTop: "auto !important", marginBottom:18 , alignSelf: "start", fontSize: "14px", padding: 5,   /* fontStyle : "italic", */ fontWeight: 600, } }
     const tableHeadingStyles: ITextStyles = { root: { fontSize: "18px", paddingTop: 5, fontWeight: 600, } }
     const tableCellBelowStyles: ITextStyles = { root: { alignSelf: "start", fontSize: "10px", padding: 0, marginTop: "auto !important", marginBottom: "auto", width: 50, } }
     const theme = getTheme();
@@ -237,11 +239,11 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
                     }}>
                         <Text styles={tableHeadingStyles}>Tenant Details</Text>
                         <div style={{ display: "flex", flexFlow: "row" }}>
-                            <Text styles={tableCellStyles} style={{ width: 125 }}>Tenant Name <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></Text>
-                            <Text styles={tableCellStyles} style={{ width: 100 }}>Lease Expiry <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> </Text>
+                            <Text styles={tableCellTenantStyles} style={{ width: 125, height: 19, marginTop: "9.5px !important", marginBottom:9.5 }}>Tenant Name</Text>
+                            <Text styles={tableCellTenantStyles} style={{ width: 100 }}>Lease Expiry </Text>
                         </div>
                     </div>
-                    <Text style={{ width: 60 }} styles={tableCellStyles}>Notes</Text>
+                    <Text style={{ width: 60 }} styles={tableCellNotesStyles}>{`Notes & Features`}</Text>
                 </Stack>
             </Stack>
 

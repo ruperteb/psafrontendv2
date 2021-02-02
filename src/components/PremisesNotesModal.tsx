@@ -8,6 +8,7 @@ import {
     Toggle,
     DefaultButton,
     Modal,
+    IModalStyles,
     IDragOptions,
     IconButton,
     IIconProps,
@@ -37,9 +38,9 @@ interface Props {
     /* imagesArray: Maybe<string>[] */
 }
 
-const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyId, premisesId  }) => {
+const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyId, premisesId }) => {
 
-    
+
 
     const {
         data: propertyData,
@@ -75,13 +76,16 @@ const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyI
         navigationStateVar({ ...navigationStateVar(), showPremisesNotesModal: false })
     }
 
-    const modalProps: IModalProps = {
-        isBlocking: false,
-        styles: { main: { maxWidth: 450 } },
-    };
+    
+
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
 
     const boldStyle = { root: { fontWeight: FontWeights.semibold } };
-    const propertyDetailsStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: "15px" }
+    const notesHeadingStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: "15px" }
+    const notesStyles = { alignSelf: "start", fontSize: "14px", paddingLeft: "15px", marginLeft:20 }
+
+    const featuresStyles = { alignSelf: "start", fontSize: "14px", paddingLeft: "15px" }
+    const featuresHeadingStyles = { alignSelf: "start", fontSize: "14px", paddingLeft: "15px" }
 
     /* const onLayerDidMount: ILayerProps ={
         onLayerDidMount: true
@@ -89,7 +93,7 @@ const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyI
 
     // Use useId() to ensure that the IDs are unique on the page.
     // (It's also okay to use plain strings and manually ensure uniqueness.)
-    const titleId = useId('ImageGallery');
+    const titleId = useId('Notes&Features');
 
     return (
         <div>
@@ -100,16 +104,17 @@ const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyI
                 /* onDismiss={hideImageGalleryModal} */
                 isBlocking={true}
                 containerClassName={contentStyles.container}
+                styles={modalStyles}
             /* modalProps={modalProps} */
             /*  layerProps={onLayerDidMount} */
 
             >
                 <div className={contentStyles.header}>
-                    <span id={titleId}>Notes</span>
+                    <span id={titleId}>{`Notes & Features`}</span>
                     <IconButton
                         styles={iconButtonStyles}
                         iconProps={cancelIcon}
-                        ariaLabel="Close image gallery"
+                        ariaLabel={"Close Notes & Features Modal"}
                         onClick={hidePremisesNotesModal}
                     />
                 </div>
@@ -122,10 +127,65 @@ const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyI
                         },
                     }}
                         gap={15}>
-                        <Text styles={boldStyle} style={propertyDetailsStyles}>Premises Notes:</Text>
-                        <Text /* styles={boldStyle} */ style={propertyDetailsStyles}>{getPremises?.premisesNotes}</Text>
-                        
-                        
+                        <Text styles={boldStyle} style={notesHeadingStyles}>Industrial Features:</Text>
+                        <Stack horizontal styles={{
+                        root: {
+                            marginLeft:20
+                        },
+                    }}>
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>Yard Size:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.yard} m²`}</Text>
+
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>Floor to Eave Height:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.height} m`}</Text>
+
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>No of Doors:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.doors}`}</Text>
+                        </Stack>
+
+                        <Stack horizontal styles={{
+                        root: {
+                            marginLeft:20
+                        },
+                    }}>
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>Loading Type:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.loading}`}</Text>
+
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>Sprinkler Type:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.sprinklered}`}</Text>
+
+                            
+                        </Stack>
+
+                        <Stack horizontal styles={{
+                        root: {
+                            marginLeft:20
+                        },
+                    }}>
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>Canopy Details:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.canopies}`}</Text>
+
+                            <Text styles={boldStyle} style={featuresHeadingStyles}>Power:</Text>
+                            <Text /* styles={boldStyle} */ style={featuresStyles}>{`${getPremises?.power}`}</Text>
+
+                            
+                        </Stack>
+
+
+
+                    </Stack>
+
+                    <Stack verticalFill styles={{
+                        root: {
+                            marginTop: "0 !important",
+                            marginBottom: 20,
+                        },
+                    }}
+                        gap={15}>
+                        <Text styles={boldStyle} style={notesHeadingStyles}>Premises Notes:</Text>
+                        <Text /* styles={boldStyle} */ style={notesStyles}>{getPremises?.premisesNotes}</Text>
+
+
                     </Stack>
 
                     <Stack verticalFill styles={{
@@ -134,10 +194,10 @@ const PremisesNotesModal: React.FC<Props> = ({ showPremisesNotesModal, propertyI
                         },
                     }}
                         gap={15}>
-                        <Text styles={boldStyle} style={propertyDetailsStyles}>Tenant Notes:</Text>
-                        <Text /* styles={boldStyle} */ style={propertyDetailsStyles}>{getPremises?.tenantNotes}</Text>
-                        
-                        
+                        <Text styles={boldStyle} style={notesHeadingStyles}>Tenant Notes:</Text>
+                        <Text /* styles={boldStyle} */ style={notesStyles}>{getPremises?.tenantNotes}</Text>
+
+
                     </Stack>
 
 
@@ -154,7 +214,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        width: 500
+        width: 550
     },
     header: [
 
