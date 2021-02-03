@@ -538,6 +538,157 @@ const getLowestHighestEsc = (premises: Premises[]) => {
     return escPair
 }
 
+const getLowestHighestYard = (premises: Premises[]) => {
+    var filteredPremises: Premises[] = []
+    var premisesByYard: Premises[] = []
+    var yardPair: number[] = []
+    if (premises !== undefined) {
+
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.yard !== 0 
+        })
+
+        premisesByYard = filteredPremises.slice().sort((a, b) => {
+            return a.yard! - b.yard!
+        });
+    }
+
+    if (premisesByYard[0] !== undefined ) {
+       
+            yardPair = [premisesByYard[0].yard!, premisesByYard[premisesByYard.length - 1].yard!]
+          
+    } 
+    if(yardPair[0] !== undefined) {
+        return yardPair
+    } else return [0,0]
+    
+}
+
+const getLowestHighestHeight = (premises: Premises[]) => {
+
+    var filteredPremises: Premises[] = []
+    var premisesByHeight: Premises[] = []
+    var heightPair: number[] = []
+    if (premises !== undefined) {
+
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.height !== 0
+        })
+
+        premisesByHeight = filteredPremises.slice().sort((a, b) => {
+            return a.height! - b.height!
+        });
+    }
+
+    if (premisesByHeight[0] !== undefined) {
+        heightPair = [premisesByHeight[0].height!, premisesByHeight[premisesByHeight.length - 1].height!]
+    }
+    if(heightPair[0] !== undefined) {
+        return heightPair
+    } else return [0,0]
+}
+
+const getLowestHighestDoors = (premises: Premises[]) => {
+
+    var filteredPremises: Premises[] = []
+    var premisesByDoors: Premises[] = []
+    var doorPair: number[] = []
+    if (premises !== undefined) {
+
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.doors !== 0
+        })
+
+        premisesByDoors = filteredPremises.slice().sort((a, b) => {
+            return a.doors! - b.doors!
+        });
+    }
+
+    if (premisesByDoors[0] !== undefined) {
+        doorPair = [premisesByDoors[0].doors!, premisesByDoors[premisesByDoors.length - 1].doors!]
+    }
+    if(doorPair[0] !== undefined) {
+        return doorPair
+    } else return [0,0]
+}
+
+const getLoading = (premises: Premises[]) => {
+    var filteredPremises: Premises[] = []
+    var premisesByArea: Premises[] = []
+    
+    if (premises !== undefined) {
+
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.loading !== "" && premises.loading !== undefined
+        })
+        premisesByArea = filteredPremises.slice().sort((a, b) => {
+            return a.area! - b.area!
+        });
+    }
+
+   if(premisesByArea[premisesByArea.length - 1] !== undefined) {
+    return premisesByArea[premisesByArea.length - 1].loading!
+   } else { return ""}
+    
+}
+
+const getSprinklered = (premises: Premises[]) => {
+    var filteredPremises: Premises[] = []
+    var premisesByArea: Premises[] = []
+    
+    if (premises !== undefined) {
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.sprinklered !== "" && premises.sprinklered !== undefined
+        })
+        premisesByArea = filteredPremises.slice().sort((a, b) => {
+            return a.area! - b.area!
+        });
+    }
+
+    if(premisesByArea[premisesByArea.length - 1] !== undefined) {
+        return premisesByArea[premisesByArea.length - 1].sprinklered!
+    } else { return ""}
+    
+}
+
+const getCanopies = (premises: Premises[]) => {
+    var filteredPremises: Premises[] = []
+    var premisesByArea: Premises[] = []
+    
+    if (premises !== undefined) {
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.canopies !== "" && premises.canopies !== undefined
+        })
+        premisesByArea = filteredPremises.slice().sort((a, b) => {
+            return a.area! - b.area!
+        });
+    }
+
+    if(premisesByArea[premisesByArea.length - 1] !== undefined) {
+        return premisesByArea[premisesByArea.length - 1].canopies!
+    } else {return ""}
+    
+}
+
+const getPower = (premises: Premises[]) => {
+    var filteredPremises: Premises[] = []
+    var premisesByArea: Premises[] = []
+    
+    if (premises !== undefined) {
+        filteredPremises = premises.filter((premises)=> {
+            return premises.area !== 0 && premises.power !== "" && premises.power !== undefined
+        })
+        premisesByArea = filteredPremises.slice().sort((a, b) => {
+            return a.area! - b.area!
+        });
+    }
+
+    if(premisesByArea[premisesByArea.length - 1] !== undefined) {
+        return premisesByArea[premisesByArea.length - 1].power!
+    } else {return ""}
+   
+}
+
 interface Props {
 
     selectedPropertyList: SelectedPropertyList,
@@ -604,7 +755,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
 
                             <View style={styles.propertyNumberColumn}>
-                                <Text style={index<9? styles.propertyNumber:styles.propertyNumber10plus }>{index + 1}</Text>
+                                <Text style={index < 9 ? styles.propertyNumber : styles.propertyNumber10plus}>{index + 1}</Text>
                                 <Text style={styles.propertyHeading}>{property.propertyName}</Text>
                             </View>
 
@@ -698,99 +849,99 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                 return acc + premises.coveredRate!
-                            }, 0) > 0 ?
-                            <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { textAlign: "left" }]} >Covered</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                                return acc + premises.coveredBays!
-                                            }, 0)> 0?
-                                        selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                            }, 0) > 0 && property.buildingType !== "Industrial" ?
+                                <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { textAlign: "left" }]} >Covered</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.coveredBays!
-                                        }, 0) : "-"
-                                    }</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        }, 0) > 0 ?
+                                            selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.coveredBays!
-                                            }, 0)> 0?
-                                        (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                            }, 0) : "-"
+                                        }</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.coveredBays!
-                                        }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.area!
-                                        }, 0) * 100).toFixed(1) : "-"
-                                    }</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 50 }]}>
-                                    <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
-                                        (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            if (premises.coveredBays! === 0) {
-                                                return acc + premises.coveredRate!
-                                            } else {
-                                                return acc + (premises.coveredRate! * premises.coveredBays!)
-                                            }
-                                        }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            if (premises.coveredBays! === 0) {
-                                                return acc + 1
-                                            } else {
+                                        }, 0) > 0 ?
+                                            (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.coveredBays!
-                                            }
-                                        }, 0)).toFixed(2) : 0
-                                    }</Text>
-                                </View>
-                            </View>: <Text></Text>}
+                                            }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.area!
+                                            }, 0) * 100).toFixed(1) : "-"
+                                        }</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 50 }]}>
+                                        <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                            (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                if (premises.coveredBays! === 0) {
+                                                    return acc + premises.coveredRate!
+                                                } else {
+                                                    return acc + (premises.coveredRate! * premises.coveredBays!)
+                                                }
+                                            }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                if (premises.coveredBays! === 0) {
+                                                    return acc + 1
+                                                } else {
+                                                    return acc + premises.coveredBays!
+                                                }
+                                            }, 0)).toFixed(2) : 0
+                                        }</Text>
+                                    </View>
+                                </View> : <Text></Text>}
 
                             {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                 return acc + premises.shadedRate!
-                            }, 0) > 0 ?
-                            <View style={[styles.premisesDetails]}>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { textAlign: "left" }]} >Shaded</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                                return acc + premises.shadedBays!
-                                            }, 0)> 0?
-                                        selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                            }, 0) > 0 && property.buildingType !== "Industrial" ?
+                                <View style={[styles.premisesDetails]}>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { textAlign: "left" }]} >Shaded</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.shadedBays!
-                                        }, 0) : "-"
-                                    }</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0  && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        }, 0) > 0 ?
+                                            selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.shadedBays!
-                                            }, 0)> 0?
-                                        (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                            }, 0) : "-"
+                                        }</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.shadedBays!
-                                        }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.area!
-                                        }, 0) * 100).toFixed(1) : "-"
-                                    }</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 50 }]}>
-                                    <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
-                                        (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            if (premises.shadedBays! === 0) {
-                                                return acc + premises.shadedRate!
-                                            } else {
-                                                return acc + (premises.shadedRate! * premises.shadedBays!)
-                                            }
-                                        }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            if (premises.shadedBays! === 0) {
-                                                return acc + 1
-                                            } else {
+                                        }, 0) > 0 ?
+                                            (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.shadedBays!
-                                            }
-                                        }, 0)).toFixed(2) : 0
-                                    }</Text>
-                                </View>
-                            </View>: <Text></Text>}
+                                            }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                return acc + premises.area!
+                                            }, 0) * 100).toFixed(1) : "-"
+                                        }</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 50 }]}>
+                                        <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                            (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                if (premises.shadedBays! === 0) {
+                                                    return acc + premises.shadedRate!
+                                                } else {
+                                                    return acc + (premises.shadedRate! * premises.shadedBays!)
+                                                }
+                                            }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                if (premises.shadedBays! === 0) {
+                                                    return acc + 1
+                                                } else {
+                                                    return acc + premises.shadedBays!
+                                                }
+                                            }, 0)).toFixed(2) : 0
+                                        }</Text>
+                                    </View>
+                                </View> : <Text></Text>}
 
                             {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                 return acc + premises.openRate!
-                            }, 0) > 0 ?
+                            }, 0) > 0 && property.buildingType !== "Industrial" ?
                                 <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={[styles.premisesText, { textAlign: "left" }]} >Open</Text>
@@ -799,16 +950,16 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         <Text style={[styles.premisesText, { width: 40 }]} >
                                             {selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.openBays!
-                                            }, 0)> 0?
-                                            selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                                return acc + premises.openBays!
-                                            }, 0) : "-"
-                                        }</Text>
+                                            }, 0) > 0 ?
+                                                selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                                    return acc + premises.openBays!
+                                                }, 0) : "-"
+                                            }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                                return acc + premises.openBays!
-                                            }, 0)> 0?
+                                            return acc + premises.openBays!
+                                        }, 0) > 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.openBays!
                                             }, 0) / selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
@@ -866,8 +1017,8 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
                                     <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
-                                            return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
-                                        }, 0) > 0 ?
+                                        return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+                                    }, 0) > 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
 
                                             return acc + (premises.openRate! * premises.openBays!) + (premises.shadedRate! * premises.shadedBays!) + (premises.coveredRate! * premises.coveredBays!)
@@ -893,21 +1044,55 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                                 <View style={styles.premisesInfo}>
                                     <Text style={[styles.premisesInfoHeadings, { width: 75 }]}>Escalation:</Text>
-                                    {getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== undefined ? 
-                                    <Text style={styles.premisesInfoText}>{getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1] ?
-                                     `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `
-                                     : `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}`}
-                                    </Text> : <Text></Text>}
+                                    {getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== undefined ?
+                                        <Text style={styles.premisesInfoText}>{getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1] ?
+                                            `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `
+                                            : `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}`}
+                                        </Text> : <Text></Text>}
 
                                 </View>
 
-                                {property.notes !== "" ? <View  style={[styles.premisesInfo, {flexDirection:"column"}]}>
-                                    <Text style={[styles.premisesInfoHeadings, { width: 75, marginLeft: 0 }]}>Notes:</Text>
-                                   
-                                    <Text style={[styles.premisesInfoText, {marginLeft: 0, fontSize: 8}]}>{property.notes}</Text> 
-                                    
+                                {property.buildingType === "Industrial" ? <View style={[styles.premisesInfo, { flexDirection: "column" }]}>
+                                    <Text style={[styles.premisesInfoHeadings, { width: 75, marginLeft: 0 }]}>Features:</Text>
 
-                                </View>: <Text></Text>}
+                                    <Text style={[styles.premisesInfoText, { marginLeft: 0, fontSize: 8 }]}>
+                                        {getLowestHighestYard(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] || getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] !== 0  ? 
+                                        `Yard Size: ${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] ?
+                                            `${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0]}m² to ${getLowestHighestYard(selectedPropertyList[index].premisesList!)[1]}m²`
+                                            : `${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0]}m²`} | `: ""} 
+
+                                         {getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] || getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] !== 0  ? 
+                                         `Floor to Eave Height:  ${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] ?
+                                            `${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0]}m to ${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1]}m`
+                                            : `${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0]}m`} | `: ""} 
+                                            
+                                            {getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] || getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] !== 0   ? 
+                                            `Doors: ${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] ?
+                                            `${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0]} to ${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1]}`
+                                            : `${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0]}`} | ` : ""}
+
+                                            {getLoading(property.premisesList!) !== "" ? `Loading Type: ${getLoading(property.premisesList!)} | `  : ""}
+
+                                            {getSprinklered(property.premisesList!) !== "" ? `Sprinkler Type: ${getSprinklered(property.premisesList!)} | `  : ""}
+
+                                            {getCanopies(property.premisesList!) !== "" ? `Canopy Details: ${getCanopies(property.premisesList!)} | `  : ""}
+
+                                            {getPower(property.premisesList!) !== "" ? `Power: ${getPower(property.premisesList!)}`  : ""}
+                                            
+                                            </Text>
+
+
+                                </View> : <Text></Text>}
+
+                               
+
+                                {property.notes !== "" ? <View style={[styles.premisesInfo, { flexDirection: "column" }]}>
+                                    <Text style={[styles.premisesInfoHeadings, { width: 75, marginLeft: 0 }]}>Notes:</Text>
+
+                                    <Text style={[styles.premisesInfoText, { marginLeft: 0, fontSize: 8 }]}>{property.notes}</Text>
+
+
+                                </View> : <Text></Text>}
 
                             </View>
 
