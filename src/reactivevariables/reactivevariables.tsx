@@ -14,12 +14,13 @@ const navigationStateInitialValues: NavigationState =
     showPreviewPDFPanel: false,
     showManageLandlordsPanel: false,
     showSelectedPropertyPanel: false,
-  showFilterModal: false,
-  selectedPropertyType: "all",
-  search: "",
-  showSelectedPropertyListPanel: false,
-  selectedPropertyId: 0,
-  selectedPremisesId: 0,
+    showSavedListsPanel: false,
+    showFilterModal: false,
+    selectedPropertyType: "all",
+    search: "",
+    showSelectedPropertyListPanel: false,
+    selectedPropertyId: 0,
+    selectedPremisesId: 0,
   }
 
 
@@ -39,7 +40,12 @@ const PDFVariablesInitiallState: PDFVariables =
       name: "",
       mobile: "",
       email: ""
-    }
+    },
+    outputType: "Large Images",
+    onlyShowVacant: true,
+    showImages: true,
+    imageLimit: "All",
+
   }
 
 

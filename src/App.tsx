@@ -19,6 +19,7 @@ import SelectedPropertyPanel from "./components/SelectedPropertyPanel"
 import SelectedPropertyListPanel from "./components/SelectedPropertyListPanel"
 import PreviewPDFPanel from "./components/PreviewPDFPanel"
 import ManageLandlordsPanel from "./components/ManageLandlordsPanel"
+import SavedListsPanel from "./components/SavedListsPanel"
 import {Cloudinary} from "cloudinary-core"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
@@ -213,6 +214,7 @@ if(landlordsFormatted !== undefined) {
     showSelectedPropertyListPanel: false,
     showSelectedPropertyPanel: false,
     showManageLandlordsPanel: false,
+    showSavedListsPanel: false,
     selectedPropertyId: 0,
     selectedPremisesId: 0,
   }
@@ -252,7 +254,7 @@ if(landlordsFormatted !== undefined) {
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
       <ManageLandlordsPanel showManageLandlordsPanel={navigationState.showManageLandlordsPanel} landLordsList={landLordsList}></ManageLandlordsPanel>
-    
+     <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel}></SavedListsPanel>
     
     </Stack>
 

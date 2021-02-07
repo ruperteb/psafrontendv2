@@ -689,11 +689,23 @@ const getPower = (premises: Premises[]) => {
    
 }
 
+const getImageLimit = (imageLimit:any, showImages: boolean) => {
+    if(showImages === true) {
+        if(isNaN(imageLimit) === false )  {
+            return imageLimit
+        }
+    } else return 1
+  
+
+}
+
 interface Props {
 
     selectedPropertyList: SelectedPropertyList,
     enquiryName: string,
     agent: Agent,
+    imageLimit: number | string,
+    showImages: boolean
 
     /* enquiryName: string */
 
@@ -701,7 +713,7 @@ interface Props {
 
 
 
-const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent }) => (
+const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent, imageLimit, showImages }) => (
 
 
 
@@ -1102,13 +1114,21 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                     </View>
 
-                    {property.images?.slice(1).map((image) => (
+                    {imageLimit === "Any" ? property.images?.slice(1).map((image) => (
 
                         <View style={styles.secondaryImageContainers} >
                             {selectedPropertyList[index].images!.length !== 0 ? <Image style={styles.secondaryImage} src={cl.url(`${image}`, /* { width: 600, crop: "fit" } */)}></Image> : <Text></Text>}
                         </View>
 
-                    ))}
+                    )) : 
+                    property.images?.slice(1, getImageLimit(imageLimit, showImages)).map((image) => (
+
+                        <View style={styles.secondaryImageContainers} >
+                            {selectedPropertyList[index].images!.length !== 0 ? <Image style={styles.secondaryImage} src={cl.url(`${image}`, /* { width: 600, crop: "fit" } */)}></Image> : <Text></Text>}
+                        </View>
+
+                    ))
+                    }
 
                 </View>
 

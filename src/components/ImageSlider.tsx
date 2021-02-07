@@ -75,9 +75,15 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         imagesArray = propertyData?.singleProperty?.images!
     }
 
-    
 
 
+    const getContactId = () => {
+        if (propertyData?.singleProperty?.contact?.contactId === undefined || propertyData?.singleProperty?.contact?.contactId === null) {
+            return 45
+        } else {
+            return propertyData?.singleProperty?.contact?.contactId
+        }
+    }
 
     const [updateProperty, { data }] = useMutation<Mutation, MutationUpdatePropertyArgs>(UPDATE_IMAGES);
 
@@ -86,7 +92,8 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         updateProperty({
             variables: {
                 propertyId: propertyId,
-                images: imagesArray
+                images: imagesArray,
+                contactId: getContactId()
             },
 
             update(cache, { data }) {
@@ -141,14 +148,14 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         }
         if (item?.key === "Penultimate") {
             var penultimate = imagesArray[imageIndex]
-            
+
             var rest = imagesArray.filter(image => {
-                return image !== penultimate 
+                return image !== penultimate
             })
             var final = rest[rest.length - 1]
-var restLessFinal = rest.slice(0, rest.length - 1)
+            var restLessFinal = rest.slice(0, rest.length - 1)
 
-            imagesArray = [...restLessFinal, penultimate  ,final]
+            imagesArray = [...restLessFinal, penultimate, final]
         }
         if (item?.key === "Final") {
             var final = imagesArray[imageIndex]
@@ -170,7 +177,8 @@ var restLessFinal = rest.slice(0, rest.length - 1)
                 propertyId: propertyId,
                 images: imagesArray.filter(image => {
                     return image !== imagesArray[imageIndex]
-                })
+                }),
+                contactId: getContactId()
             },
 
             update(cache, { data }) {
@@ -234,6 +242,30 @@ var restLessFinal = rest.slice(0, rest.length - 1)
         ],
         directionalHintFixed: true,
     };
+
+    const getImageName = () => {
+
+switch (imageIndex) {
+    case 0:
+      return "Primary"
+      break;
+    case 1:
+        return "Secondary"
+      break;
+      case 2:
+        return "Tertiary"
+      break;
+      case imagesArray.length-2:
+        return "Penultimate"
+      break;
+      case imagesArray.length-1:
+        return "Final"
+      break;
+    default:
+      return `Image ${imageIndex}`
+
+    }
+}
 
     function _getMenu(props: IContextualMenuProps): JSX.Element {
         // Customize contextual menu with menuAs
@@ -304,6 +336,8 @@ var restLessFinal = rest.slice(0, rest.length - 1)
         marginRight: "auto",
         marginTop: "0px !important",
         zIndex: 2,
+       /*  backgroundColor: "rgb(208 209 230 / 50%)",
+        borderRadius: 30, */
         /* padding: "5px", */
         selectors: {
             '&:hover': { backgroundColor: "rgb(208 209 230 / 81%)", borderRadius: 30, "transition": "all .2s ease-in-out", transform: "scale(1.2)" },
@@ -314,7 +348,7 @@ var restLessFinal = rest.slice(0, rest.length - 1)
     const chevronClassRight = mergeStyles({
         alignSelf: 'center',
         marginLeft: 2,
-
+        color: "rgb(240 255 255)",
         marginTop: "0 !important",
 
         fontSize: 20,
@@ -326,8 +360,8 @@ var restLessFinal = rest.slice(0, rest.length - 1)
 
     const chevronClassLeft = mergeStyles({
         alignSelf: 'center',
-        marginLeft: 2,
-
+        /* marginLeft: 2, */
+        color: "rgb(240 255 255)",
         marginTop: "0 !important",
 
         fontSize: 20,
@@ -340,6 +374,7 @@ var restLessFinal = rest.slice(0, rest.length - 1)
     const imgStyles: any = {
         "position": "absolute",
         maxWidth: 600,
+
     }
 
     const [isDeleteCalloutVisible, { toggle: toggleIsDeleteCalloutVisible }] = useBoolean(false);
@@ -388,6 +423,9 @@ var restLessFinal = rest.slice(0, rest.length - 1)
         ],
     });
 
+    const boldStyle = { root: { fontWeight: FontWeights.semibold } };
+    const textStyles = { alignSelf: "start", fontSize: "24px", paddingLeft: 10, paddingRight: 10, "white-space": "nowrap" }
+
     return (
         <div style={sliderContainerClass}>
             <AnimatePresence initial={false} custom={direction}>
@@ -421,55 +459,6 @@ var restLessFinal = rest.slice(0, rest.length - 1)
 
                     <Image cloudName="drlfedqyz" publicId={imagesArray[imageIndex]} width="600" /* height="400" */ crop="fit" />
 
-                    <div style={{ display: "flex" }}>
-
-                        <DefaultButton
-                            id={`deleteImageButton_${propertyId}_Image_${imageIndex}`}
-                            styles={deleteButtonStyles}
-                            text="Delete Image"
-                            iconProps={deleteIcon}
-                            onClick={toggleIsDeleteCalloutVisible}
-                        />
-                        {isDeleteCalloutVisible ? (
-                            <div>
-                                <FocusTrapCallout
-                                    role="alertdialog"
-                                    className={styles.callout}
-                                    gapSpace={0}
-                                    target={`#deleteImageButton_${propertyId}_Image_${imageIndex}`}
-                                    onDismiss={toggleIsDeleteCalloutVisible}
-                                    setInitialFocus
-                                >
-                                    <div className={styles.header}>
-                                        <Text className={styles.title}>Delete Image</Text>
-                                    </div>
-                                    <div className={styles.inner}>
-                                        <div>
-                                            <Text className={styles.subtext}>
-                                                Are you sure you want to delete this image?
-                </Text>
-                                        </div>
-                                    </div>
-                                    <FocusZone>
-                                        <Stack className={styles.buttons} gap={8} horizontal>
-                                            <PrimaryButton onClick={deleteImage}>Confirm</PrimaryButton>
-                                            <DefaultButton onClick={toggleIsDeleteCalloutVisible}>Cancel</DefaultButton>
-                                        </Stack>
-                                    </FocusZone>
-                                </FocusTrapCallout>
-                            </div>
-                        ) : null}
-                        <DefaultButton
-                            styles={dropdownStyles}
-                            text="Set Image"
-                            menuIconProps={chevronUpIcon}
-                            menuProps={menuProps}
-                            menuAs={_getMenu}
-                            onMenuClick={_onMenuClick}
-                        />
-
-                    </div>
-
 
                 </motion.div>
             </AnimatePresence>
@@ -479,7 +468,58 @@ var restLessFinal = rest.slice(0, rest.length - 1)
             <div className={chevronIconDivLeft} onClick={() => paginate(1)}><Icon className={chevronClassLeft} iconName={'ChevronRight'} /></div>
             <div className={chevronIconDivRight} onClick={() => paginate(1)}><Icon className={chevronClassRight} iconName={'ChevronRight'} /></div>
 
+            <div style={{ display: "flex", position: "absolute", bottom: 5, left:20, zIndex:5 }}>
+                <Text styles={boldStyle} style={textStyles}> {getImageName()}</Text>
+            </div>
 
+            <div style={{ display: "flex", position: "absolute", bottom: 0, right:0, zIndex:5 }}>
+
+                <DefaultButton
+                    id={`deleteImageButton_${propertyId}_Image_${imageIndex}`}
+                    styles={deleteButtonStyles}
+                    text="Delete Image"
+                    iconProps={deleteIcon}
+                    onClick={toggleIsDeleteCalloutVisible}
+                />
+                {isDeleteCalloutVisible ? (
+                    <div>
+                        <FocusTrapCallout
+                            role="alertdialog"
+                            className={styles.callout}
+                            gapSpace={0}
+                            target={`#deleteImageButton_${propertyId}_Image_${imageIndex}`}
+                            onDismiss={toggleIsDeleteCalloutVisible}
+                            setInitialFocus
+                        >
+                            <div className={styles.header}>
+                                <Text className={styles.title}>Delete Image</Text>
+                            </div>
+                            <div className={styles.inner}>
+                                <div>
+                                    <Text className={styles.subtext}>
+                                        Are you sure you want to delete this image?
+</Text>
+                                </div>
+                            </div>
+                            <FocusZone>
+                                <Stack className={styles.buttons} gap={8} horizontal>
+                                    <PrimaryButton onClick={deleteImage}>Confirm</PrimaryButton>
+                                    <DefaultButton onClick={toggleIsDeleteCalloutVisible}>Cancel</DefaultButton>
+                                </Stack>
+                            </FocusZone>
+                        </FocusTrapCallout>
+                    </div>
+                ) : null}
+                <DefaultButton
+                    styles={dropdownStyles}
+                    text="Set Image"
+                    menuIconProps={chevronUpIcon}
+                    menuProps={menuProps}
+                    menuAs={_getMenu}
+                    onMenuClick={_onMenuClick}
+                />
+
+            </div>
 
 
         </div>

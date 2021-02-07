@@ -7,7 +7,7 @@ import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
 import { GET_SINGLE_PROPERTY, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises } from "../schematypes/schematypes"
+import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, Property } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar } from "../reactivevariables/reactivevariables"
 import { Icon } from '@fluentui/react/lib/Icon';
 import Map from "./Map"
@@ -60,7 +60,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
 
     /* var containerRef = React.useRef<HTMLDivElement>(null); */
 
-    
+
 
 
     const [containerWidth, setContainerWidth] = React.useState<number>(0);
@@ -70,7 +70,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
         if (node !== null) {
             setContainerWidth(node.offsetWidth);
         }
-      }, []);
+    }, []);
 
     const {
         data: navigationStateData,
@@ -108,7 +108,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
         variables: { propertyId: navigationState.selectedPropertyId },
     });
 
-    
+
 
 
 
@@ -188,15 +188,15 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
 
     const boldStyle = { root: { fontWeight: FontWeights.semibold } };
     const propertyDetailsStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: 10, paddingRight: 10, "white-space": "nowrap" }
-    const propertyDetailsLandlordStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: 10, paddingRight: 10 , "white-space": "nowrap"}
+    const propertyDetailsLandlordStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: 10, paddingRight: 10, "white-space": "nowrap" }
 
     const boldStyle2 = { root: { fontWeight: FontWeights.bold } };
-    const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "18px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 , "white-space": "nowrap"}
-    const propertyDetailsLandlordHeadingStyles = { /* alignSelf: "start", */ fontSize: "18px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10, paddingLeft: 20, paddingRight: 20 , "white-space": "nowrap"}
+    const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "18px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10, "white-space": "nowrap" }
+    const propertyDetailsLandlordHeadingStyles = { /* alignSelf: "start", */ fontSize: "18px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10, paddingLeft: 20, paddingRight: 20, "white-space": "nowrap" }
     const propertyNotesStyles = { alignSelf: "start", fontSize: "14px", paddingLeft: "15px", marginTop: 0 }
 
 
-    
+
 
     const getEarliestOccDate = () => {
 
@@ -319,6 +319,14 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
 
     }
 
+    const getContactId = () => {
+        if (propertyData?.singleProperty?.contact?.contactId === undefined || propertyData?.singleProperty?.contact?.contactId === null) {
+            return 45
+        } else {
+            return propertyData?.singleProperty?.contact?.contactId
+        }
+    }
+
     const [updateProperty, { data }] = useMutation<Mutation, MutationUpdatePropertyArgs>(UPDATE_IMAGES);
 
     const saveNewImage = (image: string) => {
@@ -326,7 +334,8 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
         updateProperty({
             variables: {
                 propertyId: navigationState.selectedPropertyId,
-                images: propertyData?.singleProperty?.images?.concat(image)
+                images: propertyData?.singleProperty?.images?.concat(image),
+                contactId: getContactId()
             },
 
             update(cache, { data }) {
@@ -336,8 +345,13 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
                 }
 
                 const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: navigationState.selectedPropertyId } })
+                const existingProperty: Property = getExistingProperty ? getExistingProperty.singleProperty! : { propertyId: 1, propertyName: "" };
 
-                const updatedProperty = data.updateProperty!;
+                const updatedProperty = {
+                    ...existingProperty,
+                    images: data.updateProperty.images,
+                    contact: { ...existingProperty.contact, contactId: data.updateProperty.contact?.contactId! }
+                }
                 console.log(updatedProperty)
                 if (getExistingProperty)
                     cache.writeQuery<Query>({
@@ -379,7 +393,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
                         root: {
                             /*   display: "flex",
                               flexFlow: "row", */
-                           /*  maxWidth: "fit-content", */
+                            /*  maxWidth: "fit-content", */
                             marginLeft: 10,
                             marginTop: 20
                             /*  marginTop: "0 !important" */
@@ -424,7 +438,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
                                     <Text styles={boldStyle2} style={propertyDetailsHeadingStyles}>Property Details:</Text>
                                 </div>
 
-                                <div  ref={containerRef} style={{marginTop: 0, width: "fit-content"}}>
+                                <div ref={containerRef} style={{ marginTop: 0, width: "fit-content" }}>
 
                                     <Stack styles={{
                                         root: {
@@ -571,7 +585,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
                                 }}
                                     gap={15}>
 
-                                    <div style={{ display: "flex",  /* borderTop: "3px solid rgb(204 171 124 / 42%)" , */ marginTop: "0 !important", backgroundColor: "#faebd775", transform: "translate(-2px,0px)", boxShadow: "rgb(0 0 0 / 30%) 1px 3px 6px 0px" , }}>
+                                    <div style={{ display: "flex",  /* borderTop: "3px solid rgb(204 171 124 / 42%)" , */ marginTop: "0 !important", backgroundColor: "#faebd775", transform: "translate(-2px,0px)", boxShadow: "rgb(0 0 0 / 30%) 1px 3px 6px 0px", }}>
                                         <Text styles={boldStyle2} style={propertyDetailsHeadingStyles}>Notes:</Text>
 
                                     </div>
@@ -604,7 +618,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
                                      selectors: {
                                          '&:hover': { background: "rgb(104 113 140 / 14%)" },
                                      }, */
-                                   /*  maxWidth: "fit-content" */
+                                    /*  maxWidth: "fit-content" */
 
                                 }
                             }}

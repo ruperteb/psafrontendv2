@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
-        width: 125,
+        width: 110,
         /* borderStyle: "solid",
         borderWidth: 1, */
         /*    flexGrow: 1, */
@@ -382,13 +382,15 @@ interface Props {
     selectedPropertyList: SelectedPropertyList,
     enquiryName: string,
     agent: Agent,
+    imageLimit: string | number,
+    showImages: boolean
 
     /* enquiryName: string */
 
 }
 
 
-const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent }) => (
+const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent, imageLimit, showImages }) => (
 
 
 
@@ -614,13 +616,13 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                     <View style={styles.imagesSection}>
 
-                        {selectedPropertyList[index].images!.slice(0, 3).map((image, index) => (
+                        {showImages === true ? selectedPropertyList[index].images!.slice(0, 3).map((image, index) => (
 
                             <View style={styles.imagesContainer} >
                                 <Image style={styles.image} src={cl.url(`${image}`, { width: 600, crop: "fit" })}></Image>
                             </View>
 
-                        ))}
+                        )): <Text></Text>}
 
 
 

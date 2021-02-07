@@ -302,12 +302,13 @@ export type NavigationState = {
     showPreviewPDFPanel: boolean,
     showManageLandlordsPanel: boolean,
     showSelectedPropertyPanel: boolean,
-  showFilterModal: boolean,
-  selectedPropertyType: string | undefined,
-  search: string | undefined,
-  showSelectedPropertyListPanel: boolean,
-  selectedPropertyId: number,
-  selectedPremisesId: number,
+    showSavedListsPanel: boolean,
+    showFilterModal: boolean,
+    selectedPropertyType: string | undefined,
+    search: string | undefined,
+    showSelectedPropertyListPanel: boolean,
+    selectedPropertyId: number,
+    selectedPremisesId: number,
  
   }
 
@@ -336,7 +337,12 @@ propertyIds: Scalars['Int'][]
 
    export type PDFVariables = {
     enquiryName: string,
-    agent: Agent
+    agent: Agent,
+    outputType: string,
+    onlyShowVacant: boolean,
+    showImages: boolean,
+    imageLimit: number | string,
+
   }
 
   export type Landlord = {

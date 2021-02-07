@@ -5,7 +5,7 @@ import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
-import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES , GET_MULTI_PROPERTY} from "../gql/gql"
+import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, GET_MULTI_PROPERTY, GET_PDF_VARIABLES } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
 import { Mutation, MutationUpdatePropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
@@ -54,22 +54,35 @@ interface Props {
     propertyIdList: number[]
 }
 
-const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, enquiryName , agent,  propertyIdList=[]}) => {
+const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, enquiryName, agent, propertyIdList = [] }) => {
 
-/* 
     const {
-        data: propertyListData,
-        loading: propertyLoading,
-        error: propertyError
-    } = useQuery<Query>(GET_SELECTED_PROPERTIES);
- */
+        data: pdfVariables,
+        loading: pdfLoading,
+        error: pdfError
+    } = useQuery<Query>(GET_PDF_VARIABLES);
+
     const {
         data: propertyListData,
         loading: propertyListDataLoading,
         error: propertyListDataError
     } = useQuery<Query>(GET_MULTI_PROPERTY, {
-        variables: { propertyIdList: propertyIdList  }, fetchPolicy: "network-only"
+        variables: { propertyIdList: propertyIdList }, fetchPolicy: "network-only"
     });
+
+    var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
+
+    var filteredPropertyList = selectedPropertyList?.map((property) => {
+        if(pdfVariables?.pdfVariables?.onlyShowVacant === true) {
+            let filteredPremises = property.premisesList!.filter((premises) => {
+                return premises.vacant === "true"
+            })
+           let premisesFilteredProperty = {...property, premisesList: filteredPremises }
+            return premisesFilteredProperty
+        } else {
+            return property
+        }
+    })
 
 
 
@@ -78,7 +91,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
     }
 
-    
+
 
 
 
@@ -103,7 +116,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
         }
     };
 
-    
+
 
     const cancelIcon: IIconProps = { iconName: 'Cancel' };
     const addIcon: IIconProps = { iconName: 'Add' };
@@ -170,12 +183,12 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
     );
 
 
-    var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
-
-   
 
 
-    
+
+
+
+
 
     return (
         <div >
@@ -202,15 +215,18 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
                     }
                 }}>
 
-                    
 
 
-{ <div style={{height: '85vh'}}> 
-      <PDFViewer width="100%" height="100%">
-    <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={selectedPropertyList} />
-  </PDFViewer>
 
-      </div>}
+                    {<div style={{ height: '85vh' }}>
+                        <PDFViewer width="100%" height="100%">
+                            {pdfVariables?.pdfVariables?.outputType === "Large Images" ?
+                            <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables.pdfVariables.imageLimit} showImages={pdfVariables.pdfVariables.showImages}/>:
+                            <SelectedPropertyListPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages}/>
+                            }
+                        </PDFViewer>
+
+                    </div>}
 
 
                 </Stack>

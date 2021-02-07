@@ -43,7 +43,13 @@ import {
     IStackStyles,
     TextField,
     ITextFieldStyles,
-    IDropdownStyles
+    IDropdownStyles,
+    IContextualMenuProps,
+    DirectionalHint,
+    IContextualMenuStyleProps,
+    IContextualMenuStyles,
+    FocusTrapCallout,
+    FocusZone,
 
 } from 'office-ui-fabric-react';
 import SelectedPropertyListPDF from './PDFOutput/SelectedPropertyListPDF';
@@ -55,7 +61,7 @@ interface Props {
 
 }
 
-const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelectedPropertyListPanel, propertyIdList=[] }) => {
+const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelectedPropertyListPanel, propertyIdList = [] }) => {
 
 
     /* const {
@@ -81,7 +87,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         loading: propertyListDataLoading,
         error: propertyListDataError
     } = useQuery<Query>(GET_MULTI_PROPERTY, {
-        variables: { propertyIdList: propertyIdList  },
+        variables: { propertyIdList: propertyIdList },
     });
 
 
@@ -106,6 +112,31 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
     ]
 
+    const [selectedOutputType, setSelectedOutputType] = React.useState<IDropdownOption>({ key: 'Large Images', text: 'Large Images' });
+    /* const [selectedAgentDetails, setSelectedAgentDetails] = React.useState<Agent>(); */
+
+    const outputTypeOptions = [
+
+        { key: 'Large Images', text: 'Large Images' },
+        { key: 'Schedule', text: 'Schedule' },
+
+    ]
+
+    const [selectedImageLimit, setSelectedImageLimit] = React.useState<IDropdownOption>({ key: 'All', text: 'All' });
+    /* const [selectedAgentDetails, setSelectedAgentDetails] = React.useState<Agent>(); */
+
+    const imageLimitOptions = [
+
+        { key: 'All', text: 'All' },
+        { key: "1", text: "1" },
+        { key: "2", text: "2" },
+        { key: "3", text: "3" },
+        { key: "4", text: "4" },
+        { key: "5", text: "5" },
+        { key: "6", text: "6" },
+
+    ]
+
 
     const onChangeAgent = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
         if (item !== undefined && item.key === 'Sean Ellis Brown') {
@@ -119,6 +150,77 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
             pdfVariablesVar({ ...pdfVariablesVar(), agent: { name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" } })
         }
     };
+
+    const onChangeOutputType = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
+        if (item !== undefined && item.key === 'Large Images') {
+            setSelectedOutputType(item)
+            /*  setSelectedAgentDetails({name: "Sean Ellis Brown", mobile: "082 4555 183", email: "sean@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), outputType: item.key })
+        }
+        if (item !== undefined && item.key === 'Schedule') {
+            setSelectedOutputType(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), outputType: item.key })
+        }
+    };
+
+    const onChangeOnlyShowVacantToggle = React.useCallback((ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
+        if (pdfVariables?.pdfVariables?.onlyShowVacant === false) {
+            pdfVariablesVar({ ...pdfVariablesVar(), onlyShowVacant: true })
+
+        } else {
+            pdfVariablesVar({ ...pdfVariablesVar(), onlyShowVacant: false })
+        }
+
+    }, [pdfVariables?.pdfVariables?.onlyShowVacant])
+
+    const onChangeImageLimit = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
+        if (item !== undefined && item.key === 'All') {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Sean Ellis Brown", mobile: "082 4555 183", email: "sean@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: item.key })
+        }
+        if (item !== undefined && item.key === "1") {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: parseInt(item.key) })
+        }
+        if (item !== undefined && item.key === "2") {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: parseInt(item.key) })
+        }
+        if (item !== undefined && item.key === "3") {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: parseInt(item.key) })
+        }
+        if (item !== undefined && item.key === "4") {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: parseInt(item.key) })
+        }
+        if (item !== undefined && item.key === "5") {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: parseInt(item.key) })
+        }
+        if (item !== undefined && item.key === "6") {
+            setSelectedImageLimit(item)
+            /*  setSelectedAgentDetails({name: "Mark Ellis Brown", mobile: "082 4555 183", email: "mark@ellisbrown.co.za" });  */
+            pdfVariablesVar({ ...pdfVariablesVar(), imageLimit: parseInt(item.key) })
+        }
+    };
+
+    const onChangeShowImagesToggle = React.useCallback((ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
+        if (pdfVariables?.pdfVariables?.showImages === false) {
+            pdfVariablesVar({ ...pdfVariablesVar(), showImages: true })
+
+        } else {
+            pdfVariablesVar({ ...pdfVariablesVar(), showImages: false })
+        }
+
+    }, [pdfVariables?.pdfVariables?.showImages])
 
 
     const handlePanelDismiss = () => {
@@ -221,11 +323,27 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     const propertyDetailsHeadingStyles = { /* alignSelf: "start", */ fontSize: "20px", marginLeft: "auto", marginRight: "auto", marginTop: 10, marginBottom: 10 }
     const propertyNotesStyles = { alignSelf: "start", fontSize: "16px", paddingLeft: "15px", marginTop: 0 }
 
-    const buttonStyles = { root: {width: 100 ,marginRight: 8, marginBottom: 0, marginTop: "auto !important", marginLeft: 10 } };
+    const buttonStyles = { root: { marginRight: 8, marginBottom: 0, marginTop: "20px !important" }, };
 
-    const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: {  marginRight: 20, marginBottom: 10, }, root: {width: "100%",} };
+    const saveListButtonStyles: IButtonStyles = {
+        root: { marginBottom: 0, marginTop: "auto !important", },
+        flexContainer: { marginBottom: 0, marginTop: "auto !important", },
 
-    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 150, marginRight: 10 } };
+        splitButtonMenuButton: { backgroundColor: 'rgb(0, 120, 212)', width: 28, border: 'none' },
+        splitButtonMenuIcon: { fontSize: '7px' },
+        splitButtonDivider: { backgroundColor: '#c8c8c8', width: 1, right: 26, position: 'absolute', top: 4, bottom: 4 },
+        splitButtonContainer: {
+            height: "fit-content",
+            marginBottom: 0, marginTop: "auto !important",
+        },
+    }
+
+
+    const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { marginRight: 20, /* marginBottom: 10, */ }, root: { width: "100%", } };
+
+    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 135, marginRight: 10 } };
+
+    const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
 
     const onRenderNavigationContent: IRenderFunction<IPanelProps> = React.useCallback(
         (props, defaultRender) => (
@@ -250,12 +368,77 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         [],
     );
 
+    const dropdownMenuStyles: IStyleFunctionOrObject<IContextualMenuStyleProps, IContextualMenuStyles> = { container: { width: 125 } };
+
+    const menuPropsPDF: IContextualMenuProps = {
+        styles: dropdownMenuStyles,
+        // For example: disable dismiss if shift key is held down while dismissing
+        directionalHint: DirectionalHint.topRightEdge,
+        items: [
+            {
+                key: 'ManageLists',
+                text: 'Manage Lists',
+                iconProps: { iconName: 'List' },
+                /*   onClick: {} */
+            },
+
+        ],
+    };
+
+    const [isOutputOptionsCalloutVisible, { toggle: toggleIsOutputOptionsCalloutVisible }] = useBoolean(false);
+
+    const outputOptionsStyles = mergeStyleSets({
+        /*  buttonArea: {
+           verticalAlign: 'top',
+           display: 'inline-block',
+           textAlign: 'center',
+           margin: '0 100px',
+           minWidth: 130,
+           height: 32,
+         }, */
+        callout: {
+            maxWidth: 600,
+        },
+        header: {
+            padding: '18px 24px 12px',
+        },
+        title: [
+            {
+                margin: 0,
+                fontWeight: FontWeights.bold,
+            },
+        ],
+        inner: {
+            height: '100%',
+            padding: '0 24px 20px',
+        },
+        actions: {
+            position: 'relative',
+            marginTop: 20,
+            width: '100%',
+            whiteSpace: 'nowrap',
+        },
+        buttons: {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            padding: '0 24px 24px',
+        },
+        subtext: [
+            {
+                margin: 0,
+                fontWeight: FontWeights.semilight,
+            },
+        ],
+    });
+
+
+
     const onRenderFooterContent = React.useCallback(
         () => (
-            <Stack   styles={{
-                root:{
-flexFlow: "row wrap",
-marginBottom: 20
+            <Stack styles={{
+                root: {
+                    flexFlow: "row wrap",
+                    marginBottom: 20
                 }
             }
             }>
@@ -271,23 +454,39 @@ marginBottom: 20
                     selectedKey={selectedAgent ? selectedAgent.key : undefined}
                     // eslint-disable-next-line react/jsx-no-bind
                     onChange={onChangeAgent}
-                    placeholder="Select type"
+                    placeholder="Select Agent"
                     options={agentOptions}
                     styles={dropdownStyles}
                 />
-                <PrimaryButton onClick={handlePreviewPDF} styles={buttonStyles}>
+                <PrimaryButton
+                    split
+                    menuProps={menuPropsPDF}
+                    onClick={handlePreviewPDF} styles={saveListButtonStyles}>
+                    Save List
+            </PrimaryButton>
+
+
+                <PrimaryButton
+                    /* menuProps={menuPropsPDF} */
+                    onClick={handlePreviewPDF} styles={buttonStyles}>
                     Preview PDF
             </PrimaryButton>
-               {/*  {<PDFDownloadLink document={<SelectedPropertyListPDF enquiryName={enquiryName} agent={pdfVariables?.pdfVariables?.agent!} selectedPropertyList={selectedPropertyList} />} fileName={`Schedule of Accomodation:${enquiryName}.pdf`}>
-                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <PrimaryButton onClick={handlePDFDDownload} styles={buttonStyles}>
-                        PDF
-        </PrimaryButton>)}
-                </PDFDownloadLink>} */}
-                
+
+                <PrimaryButton
+                    id="OutputOptionsButton"
+                    /* menuProps={menuPropsPDF} */
+                    onClick={toggleIsOutputOptionsCalloutVisible} styles={buttonStyles}>
+                    Output Options
+            </PrimaryButton>
 
 
 
-                {/*  <DefaultButton onClick={handlePanelDismiss}>Save</DefaultButton> */}
+
+
+
+
+
+
             </Stack>
         ),
         [enquiryName],
@@ -296,9 +495,9 @@ marginBottom: 20
 
     var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
 
-    
 
-   
+
+
 
     /* const propertyList = () =>  {
 
@@ -322,32 +521,32 @@ marginBottom: 20
        return list
     } */
 
-   
-
-    const propertyList =  selectedPropertyList?.map(property => {
-             return (
-                 <Stack styles={{ root: { marginLeft: 10, marginTop: "10px !important", alignItems: "center" } }} horizontal>
-                     {property.propertyName}
-                     <IconButton
-                         styles={deleteIconStyles}
-                         iconProps={deleteIcon}
-                         ariaLabel="Remove Property"
-                         onClick={() => handleRemoveProperty(property.propertyId)}
-                     />
-     
-                 </Stack>
-             )
-         })
-         
-   
-         /* if (propertyListDataLoading) return <div>Loading</div>; */
-        
-        
-      
-    
 
 
-    
+    const propertyList = selectedPropertyList?.map(property => {
+        return (
+            <Stack styles={{ root: { marginLeft: 10, marginTop: "10px !important", alignItems: "center" } }} horizontal>
+                {property.propertyName}
+                <IconButton
+                    styles={deleteIconStyles}
+                    iconProps={deleteIcon}
+                    ariaLabel="Remove Property"
+                    onClick={() => handleRemoveProperty(property.propertyId)}
+                />
+
+            </Stack>
+        )
+    })
+
+
+    /* if (propertyListDataLoading) return <div>Loading</div>; */
+
+
+
+
+
+
+
 
     return (
         <div >
@@ -378,10 +577,93 @@ marginBottom: 20
                 }}>
 
 
-                    {selectedPropertyList !== undefined? propertyList : <div>loading</div>}
+                    {selectedPropertyList !== undefined ? propertyList : <div>loading</div>}
 
 
                 </Stack>
+
+                {isOutputOptionsCalloutVisible ? (
+                    <div>
+                        <FocusTrapCallout
+                            role="alertdialog"
+                            className={outputOptionsStyles.callout}
+                            gapSpace={0}
+                            target={`#OutputOptionsButton`}
+                            onDismiss={toggleIsOutputOptionsCalloutVisible}
+                            setInitialFocus
+                        >
+                            <div className={outputOptionsStyles.header}>
+                                <Text className={outputOptionsStyles.title}>Output Options</Text>
+                            </div>
+                            <div className={outputOptionsStyles.inner}>
+                                <div>
+
+                                    <Stack>
+
+                                        <Stack horizontal>
+
+                                        <Dropdown
+                                            label="Output Type"
+                                            selectedKey={selectedOutputType ? selectedOutputType.key : undefined}
+                                            // eslint-disable-next-line react/jsx-no-bind
+                                            onChange={onChangeOutputType}
+                                            placeholder="Output Type"
+                                            options={outputTypeOptions}
+                                            styles={dropdownStyles}
+                                        />
+
+                                        <Toggle
+                                            onText="Vacant"
+                                            offText="All"
+                                            styles={toggleStyles}
+                                            label="Display:"
+                                            checked={pdfVariables?.pdfVariables?.onlyShowVacant}
+                                            onChange={onChangeOnlyShowVacantToggle}
+                                        />
+
+                                        </Stack>
+
+                                        <Stack horizontal>
+
+                                        <Dropdown
+                                            label="Image Limit"
+                                            selectedKey={selectedImageLimit ? selectedImageLimit.key : undefined}
+                                            // eslint-disable-next-line react/jsx-no-bind
+                                            onChange={onChangeImageLimit}
+                                            placeholder="Image Limit"
+                                            options={imageLimitOptions}
+                                            styles={dropdownStyles}
+                                        />
+
+                                        <Toggle
+                                            onText="Yes"
+                                            offText="No"
+                                            styles={toggleStyles}
+                                            label="Show Images?"
+                                            checked={pdfVariables?.pdfVariables?.showImages}
+                                            onChange={onChangeShowImagesToggle}
+                                        />
+
+                                        </Stack>
+
+                                        
+
+
+                                    </Stack>
+                                    {/* <Text className={outputOptionsStyles.subtext}>
+                                        Are you sure you want to delete this image?
+</Text> */}
+                                </div>
+                            </div>
+                            <FocusZone>
+                                <Stack className={outputOptionsStyles.buttons} gap={8} horizontal>
+                                    
+                                    <DefaultButton style={{marginLeft:0, marginRight: "auto"}} onClick={toggleIsOutputOptionsCalloutVisible}>Close</DefaultButton>
+                                </Stack>
+                            </FocusZone>
+                        </FocusTrapCallout>
+                    </div>
+                ) : null}
 
 
 

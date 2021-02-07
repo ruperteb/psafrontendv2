@@ -397,12 +397,14 @@ export const UPDATE_IMAGES = gql`
   mutation UpdateProperty (
   $propertyId: Int!,
   $images: [String],
+  $contactId: Int!,
   
       ) {
 
     updateProperty (
     propertyId: $propertyId,
     images: $images,
+    contactId: $contactId,
 ) {
   propertyId
     propertyName
@@ -450,6 +452,25 @@ export const UPDATE_IMAGES = gql`
       sprinklered
       canopies
       power
+    }
+    contact{
+      contactId
+      name
+      email
+      mobileNo
+      officeNo
+      landlordName{
+        landlordName
+        landlordId
+        contactsList{
+          contactId
+          name
+          email
+          mobileNo
+          officeNo
+        }
+
+      }
     }
 }
   }
@@ -708,6 +729,11 @@ export const GET_PDF_VARIABLES = gql`
           mobile
           email
         }
+        outputType
+        onlyShowVacant
+        showImages
+        imageLimit
+
     }
   }
   `
