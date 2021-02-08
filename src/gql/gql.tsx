@@ -221,6 +221,7 @@ export const GET_NAV_STATE = gql`
         showPreviewPDFPanel
         showManageLandlordsPanel
         showSelectedPropertyPanel
+        showSavedListsPanel
   showFilterModal
   selectedPropertyType
   search
