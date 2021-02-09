@@ -8,8 +8,8 @@ import {
   IComboBox,
   SelectableOptionMenuItemType,
 } from 'office-ui-fabric-react';
-import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES, GET_LANDLORDS} from "./gql/gql"
-import { Query, NavigationState, SelectedPropertyList, Landlord } from "./schematypes/schematypes"
+import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES, GET_LANDLORDS, GET_PROPERTY_LISTS} from "./gql/gql"
+import { Query, NavigationState, SelectedPropertyList, Landlord, PropertyList as SavedPropertyList } from "./schematypes/schematypes"
 import { gql, useQuery, useApolloClient } from '@apollo/client';
 import Loading from "./components/Loading"
 import Navigation from "./components/Navigation"
@@ -191,7 +191,13 @@ if(landlordsFormatted !== undefined) {
   landlordsOptions = [...landlordsFormatted]
 }
 
+const {
+  data: propertyListsData,
+  loading: propertyListsLoading,
+  error: propertyListsError
+} = useQuery<Query>(GET_PROPERTY_LISTS);
 
+var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
   
 
 
@@ -254,7 +260,7 @@ if(landlordsFormatted !== undefined) {
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
       <ManageLandlordsPanel showManageLandlordsPanel={navigationState.showManageLandlordsPanel} landLordsList={landLordsList}></ManageLandlordsPanel>
-     <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel}></SavedListsPanel>
+     <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel} propertyLists={propertyLists}></SavedListsPanel>
     
     </Stack>
 

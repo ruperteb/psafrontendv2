@@ -5,9 +5,9 @@ import { IRenderFunction, IStyleFunctionOrObject } from 'office-ui-fabric-react/
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
-import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, GET_PDF_VARIABLES, GET_MULTI_PROPERTY } from "../gql/gql"
+import { GET_SELECTED_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, GET_PDF_VARIABLES, GET_MULTI_PROPERTY, NEW_PROPERTY_LIST, GET_PROPERTY_LISTS } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, QueryMultiPropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent } from "../schematypes/schematypes"
+import { Mutation, QueryMultiPropertyArgs, Query, NavigationState, Premises, SelectedPropertyList, Property, Agent, MutationPostPropertyListArgs, PropertyList } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar, pdfVariables as pdfVariablesVar } from "../reactivevariables/reactivevariables"
 import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
 import { Icon } from '@fluentui/react/lib/Icon';
@@ -50,6 +50,7 @@ import {
     IContextualMenuStyles,
     FocusTrapCallout,
     FocusZone,
+    IContextualMenuItem,
 
 } from 'office-ui-fabric-react';
 import SelectedPropertyListPDF from './PDFOutput/SelectedPropertyListPDF';
@@ -89,6 +90,42 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     } = useQuery<Query>(GET_MULTI_PROPERTY, {
         variables: { propertyIdList: propertyIdList },
     });
+
+    const [postPropertyList, { data: postPropertyListData }] = useMutation<Mutation, MutationPostPropertyListArgs>(NEW_PROPERTY_LIST);
+
+  const postPropertyListButton = () => {
+
+    postPropertyList({
+      variables: {
+        
+        enquiryName: enquiryName,
+        enquiryDate: new Date(),
+        propertyIdList: propertyIdList
+
+      },
+
+      update(cache, { data }) {
+
+        if (!data) {
+          return null;
+        }
+
+        const getExistingPropertyLists = cache.readQuery<Query>({ query: GET_PROPERTY_LISTS });
+
+        const existingPropertyLists = getExistingPropertyLists ? getExistingPropertyLists.propertyLists : [];
+        const newPropertyList = data.postPropertyList!/* .returning[0] */;
+        
+        if (existingPropertyLists)
+          cache.writeQuery<Query>({
+            query: GET_PROPERTY_LISTS,
+            data: { propertyLists: [newPropertyList, ...existingPropertyLists] }
+          });
+      }
+
+    })
+    
+    
+  }
 
 
 
@@ -249,7 +286,13 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     }
 
 
+    const handleManageLists = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement> | undefined, item?: IContextualMenuItem | undefined) => {
+        
+        navigationStateVar({ ...navigationStateVar(), showSavedListsPanel: true })
 
+    }
+
+    
 
 
 
@@ -379,7 +422,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
                 key: 'ManageLists',
                 text: 'Manage Lists',
                 iconProps: { iconName: 'List' },
-                /*   onClick: {} */
+                  onClick: handleManageLists
             },
 
         ],
@@ -461,7 +504,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
                 <PrimaryButton
                     split
                     menuProps={menuPropsPDF}
-                    onClick={handlePreviewPDF} styles={saveListButtonStyles}>
+                    onClick={postPropertyListButton} styles={saveListButtonStyles}>
                     Save List
             </PrimaryButton>
 

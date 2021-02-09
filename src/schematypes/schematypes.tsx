@@ -26,6 +26,7 @@ export type Query = {
   landlords?: Maybe<Array<Maybe<Landlord>>>;
   landlordContacts?: Maybe<Array<Maybe<LandlordContact>>>;
   contactsByLandlord?: Maybe<Array<Maybe<LandlordContact>>>;
+  propertyLists?: Maybe<Array<Maybe<PropertyList>>>;
 
 };
 
@@ -112,6 +113,9 @@ export type Mutation = {
   updateLandlordContact: LandlordContact;
   deleteLandlord: Landlord;
   deleteLandlordContact: LandlordContact;
+  postPropertyList: PropertyList;
+  updatePropertyList: PropertyList;
+  deletePropertyList: PropertyList;
 };
 
 export type MutationPostLandlordArgs = {
@@ -265,6 +269,24 @@ export type MutationUpdateLandlordContactArgs = {
   mobileNo?: Maybe<Scalars['String']>;
 };
 
+export type MutationPostPropertyListArgs = {
+  enquiryName?: Maybe<Scalars['String']>;
+  enquiryDate?: Maybe<Scalars['DateTime']>;
+  propertyIdList?: Maybe<Array<Maybe<Scalars['Int']>>>;
+};
+
+
+export type MutationUpdatePropertyListArgs = {
+  propertyListId: Scalars['Int'];
+  enquiryName?: Maybe<Scalars['String']>;
+  enquiryDate?: Maybe<Scalars['DateTime']>;
+  propertyIdList?: Maybe<Array<Maybe<Scalars['Int']>>>;
+};
+
+export type MutationDeletePropertyListArgs = {
+  propertyListId?: Maybe<Scalars['Int']>;
+};
+
 export type MutationLoginArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -363,4 +385,11 @@ propertyIds: Scalars['Int'][]
     propertyList?: Maybe<Array<Maybe<Property>>>;
   };
   
+  export type PropertyList = {
+    __typename?: 'PropertyList';
+    propertyListId: Scalars['Int'];
+    enquiryName?: Maybe<Scalars['String']>;
+    enquiryDate?: Maybe<Scalars['DateTime']>;
+    properties?: Maybe<Array<Maybe<Property>>>;
+  };
   

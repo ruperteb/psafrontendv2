@@ -7,11 +7,11 @@ import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
 import { GET_SINGLE_PROPERTY, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, NEW_LANDLORD, GET_LANDLORDS } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationPostLandlordArgs, Query, NavigationState, Premises, Landlord } from "../schematypes/schematypes"
+import { Mutation, MutationPostLandlordArgs, Query, NavigationState, Premises, Landlord, PropertyList } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar } from "../reactivevariables/reactivevariables"
 import { Icon } from '@fluentui/react/lib/Icon';
 
-import LandlordListItem from "./LandlordListItem"
+import SavedListItem from "./SavedListItem"
 
 import { SearchBox, ISearchBoxStyles, } from 'office-ui-fabric-react/lib/SearchBox';
 
@@ -44,11 +44,11 @@ import {
 
 interface Props {
   showSavedListsPanel: boolean
-  
+  propertyLists: PropertyList[]
 
 }
 
-const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, }) => {
+const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, propertyLists }) => {
 
 
   const handlePanelDismiss = () => {
@@ -168,31 +168,25 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
     ],
   });
 
-  const [landlordSearch, setLandlordSearch] = React.useState<string | undefined> ("")
+  const [propertyListSearch, setPropertyListSearch] = React.useState<string | undefined>("")
 
 
   const onChangeLandlordSearch = React.useCallback(
     (event?: React.ChangeEvent<HTMLInputElement>, newValue?: string) => {
 
-    setLandlordSearch(newValue)
-  },[setLandlordSearch])
+      setPropertyListSearch(newValue)
+    }, [setPropertyListSearch])
 
-  
-  console.log(landlordSearch)
 
-  /* const searchSortedlandlords = landLordsList?.filter(landlord => {
-    if (landlord !== null && landlord !== undefined) {
-      if (landlord?.landlordName !== null && landlord?.landlordName !== undefined) {
-        if (landlord?.contactsList !== null && landlord?.contactsList !== undefined) {
+  console.log(propertyListSearch)
 
-         
-          
-              return landlord?.landlordName.toLowerCase().includes(landlordSearch!.toLowerCase())
-           
-        }
+  const searchSortedPropertyLists = propertyLists?.filter(propertyList => {
+    if (propertyList !== null && propertyList !== undefined) {
+      if (propertyList?.enquiryName !== null && propertyList?.enquiryName !== undefined) {
+        return propertyList?.enquiryName.toLowerCase().includes(propertyListSearch!.toLowerCase())
       }
     }
-  }) */
+  })
 
 
   const onRenderNavigationContent: IRenderFunction<IPanelProps> = React.useCallback(
@@ -204,7 +198,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
           ariaLabel="Close panel"
           onClick={handlePanelDismiss}
         />
-        
+
       </>
     ),
     [],
@@ -226,12 +220,12 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
         onRenderNavigationContent={onRenderNavigationContent}
         /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
         closeButtonAriaLabel="Close"
-        headerText={"Manage Landlords"}
+        headerText={"Manage Saved Lists"}
         styles={panelStyles}
         layerProps={layerProps}
       >
 
-        <Stack id="Landlord List Container" styles={{
+        <Stack id="Property List Container" styles={{
           root: {
             display: "flex",
             flexFlow: "column",
@@ -254,11 +248,11 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
             onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
           />
 
-         {/*  {searchSortedlandlords !== undefined ? searchSortedlandlords.map((landlord) => {
+          { searchSortedPropertyLists !== undefined ? searchSortedPropertyLists.map((propertyList) => {
 
-            return <LandlordListItem landlord={landlord} key={landlord.landlordId} expanded={expanded} setExpanded={setExpanded}></LandlordListItem>
+            return <SavedListItem propertyList={propertyList} key={propertyList.propertyListId} expanded={expanded} setExpanded={setExpanded}></SavedListItem>
 
-          }) : <Text></Text>} */}
+          }) : <Text></Text>}
 
 
         </Stack>

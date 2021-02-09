@@ -882,3 +882,127 @@ export const DELETE_LANDLORD_CONTACT = gql`
 }
   }
 `;
+
+export const GET_PROPERTY_LISTS = gql`
+    
+query{
+
+propertyLists{
+  propertyListId
+ enquiryName
+ enquiryDate
+ properties{
+   propertyId
+   propertyName
+    address
+      suburb
+    coordinates
+      earliestOccupation
+      earliestExpiry
+      erfExtent
+      totalGLA
+      vacantArea
+      buildingType
+      province
+      region
+      notes
+      images
+    premisesList{
+      premisesId
+      floor
+      area
+      vacant
+      type
+      premisesIndex
+      occupation
+      premisesNotes
+      netRental
+      opCosts
+      other
+      grossRental
+      esc
+      openBays
+      openRate
+      coveredBays
+      coveredRate
+      shadedBays
+      shadedRate
+      parkingRatio
+      tenantName
+      leaseExpiry
+      tenantNotes
+      yard
+      height
+      doors
+      loading
+      sprinklered
+      canopies
+      power
+    }
+  }
+ }
+}
+
+
+`
+
+export const NEW_PROPERTY_LIST = gql`
+  mutation PostPropertyList (
+ 
+  $enquiryName: String,
+  $enquiryDate: DateTime,
+  $propertyIdList: [Int],
+  
+      ) {
+
+    postPropertyList (
+      enquiryName: $enquiryName
+      enquiryDate: $enquiryDate
+      propertyIdList: $propertyIdList,
+) {
+ propertyListId
+ enquiryName
+ enquiryDate
+ properties{
+   propertyId
+ }
+}
+  }
+`;
+
+export const UPDATE_PROPERTY_LIST = gql`
+  mutation UpdatePropertyList (
+  $propertyListId: Int!,
+  $enquiryName: String,
+  $enquiryDate: DateTime,
+  $propertyIdList: [Int],
+  
+      ) {
+
+    updatePropertyList (
+      propertyListId: $propertyListId
+      enquiryName:    $enquiryName
+      enquiryDate:    $enquiryDate
+      propertyIdList: $propertyIdList,
+) {
+ propertyListId
+ enquiryName
+ enquiryDate
+ properties{
+   propertyId
+ }
+}
+  }
+`;
+
+export const DELETE_PROPERTY_LIST = gql`
+  mutation DeletePropertyList (
+  $propertyListId: Int!,
+      ) {
+    deletePropertyList (
+      propertyListId: $propertyListId,
+) {
+  propertyListId
+}
+  }
+`;
