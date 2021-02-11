@@ -4,7 +4,7 @@ import { Pivot, PivotItem, IPivotStyles } from 'office-ui-fabric-react/lib/Pivot
 import { SearchBox, ISearchBoxStyles, } from 'office-ui-fabric-react/lib/SearchBox';
 import { Image, IImageProps, ImageFit } from 'office-ui-fabric-react/lib/Image';
 
-import { CommandBarButton, IContextualMenuProps, IIconProps, Stack, IStackStyles, initializeIcons, Toggle, IToggleStyles, DefaultButton, IButtonStyles } from 'office-ui-fabric-react';
+import { CommandBarButton, IContextualMenuProps, IIconProps, Stack, IStackStyles, initializeIcons, Toggle, IToggleStyles, DefaultButton, IButtonStyles, BaseButton, Button } from 'office-ui-fabric-react';
 
 import { isLoggedInVar } from "../cache/cache";
 import HeaderImage from "../assets/EBLogoHeader.png"
@@ -15,6 +15,8 @@ import {NavigationState} from "../schematypes/schematypes"
 const addIcon: IIconProps = { iconName: 'Add' };
 
 const filterIcon: IIconProps = { iconName: 'Filter' };
+const checkListIcon: IIconProps = { iconName: 'CheckList' };
+const listIcon: IIconProps = { iconName: 'List' };
 
 const pivotStyles: Partial<IPivotStyles> = {
   root: { /* width: "100vw", backgroundColor: "#20314b", marginBottom: "10px" */ },
@@ -38,7 +40,7 @@ const headerImageStyles: Partial<IStackStyles> = { root: { marginLeft: "37.5%", 
 const stackStyles: Partial<IStackStyles> = { root: { height: 44 } };
 const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 300, height: 44 } };
 const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
-const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);" } };
+const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);" , padding: 15}, icon: { fontSize: 24}};
 const signoutIcon: IIconProps = { iconName: 'SignOut' };
 
 const getTabId = (itemKey: string | undefined) => {
@@ -52,10 +54,11 @@ interface Props {
   selectedPropertyType: string | undefined,
   setSearch: React.Dispatch<React.SetStateAction<string | undefined>>,
   showSelectedPropertyListPanel: boolean,
+  showSavedListsPanel: boolean,
 
 }
 
-export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,  showSelectedPropertyListPanel }) => {
+export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,  showSelectedPropertyListPanel, showSavedListsPanel }) => {
   initializeIcons();
 
 
@@ -91,6 +94,30 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
 
     setSearch(newValue)
   },[setSearch])
+
+
+  const handleSelectedPropertiesClick = React.useCallback((event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button | HTMLSpanElement, MouseEvent>) => {
+    if (showSelectedPropertyListPanel === false) {
+      navigationState ( {...navigationState(), showSelectedPropertyListPanel: true})
+     
+    } else {
+      navigationState ( {...navigationState(), showSelectedPropertyListPanel: false})
+    }
+
+  },[showSelectedPropertyListPanel])
+
+  const handleManageListsClick = React.useCallback((event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button | HTMLSpanElement, MouseEvent>) => {
+    if (showSavedListsPanel === false) {
+      navigationState ( {...navigationState(), showSavedListsPanel: true})
+     
+    } else {
+      navigationState ( {...navigationState(), showSavedListsPanel: false})
+    }
+
+  },[showSavedListsPanel])
+
+
+  
 
 
 
@@ -129,6 +156,7 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
           text="New Property"
           onClick={() =>navigationState ( {...navigationState(), showNewPropertyModal: true})}
           styles={commandBarStyles}
+          style={{width: 110}}
         // Set split=true to render a SplitButton instead of a regular button with a menu
         // split={true}
 
@@ -139,6 +167,7 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
           text="Filter"
           onClick={() => navigationState ( {...navigationState(), showFilterModal: true})}
           styles={commandBarStyles}
+          style={{width: 90}}
         // Set split=true to render a SplitButton instead of a regular button with a menu
         // split={true}
 
@@ -157,9 +186,28 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
           onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
         />
 
-        <Toggle inlineLabel styles={toggleStyles} label="Selected Properties" checked={showSelectedPropertyListPanel} onChange={onChangeSelectedPropertyListToggle} />
+        {/* <Toggle inlineLabel styles={toggleStyles} label="Selected Properties" checked={showSelectedPropertyListPanel} onChange={onChangeSelectedPropertyListToggle} /> */}
 
+        <CommandBarButton
+          iconProps={checkListIcon}
+          text="Selected Properties"
+          onClick={handleSelectedPropertiesClick}
+          styles={commandBarStyles}
+          style={{width: 120}}
+        // Set split=true to render a SplitButton instead of a regular button with a menu
+        // split={true}
 
+        />
+        <CommandBarButton
+          iconProps={listIcon}
+          text="Manage Lists"
+          onClick={handleManageListsClick}
+          styles={commandBarStyles}
+          style={{width: 110}}
+        // Set split=true to render a SplitButton instead of a regular button with a menu
+        // split={true}
+
+        />
 
       </Stack >
 

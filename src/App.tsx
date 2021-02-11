@@ -253,14 +253,14 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
       }}
       gap={15}
     >
-      <Navigation selectedPropertyType={navigationState.selectedPropertyType} setSearch={setSearch} showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel}  > </Navigation>
+      <Navigation selectedPropertyType={navigationState.selectedPropertyType} setSearch={setSearch} showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel} showSavedListsPanel={navigationState.showSavedListsPanel} > </Navigation>
       <PropertyList propertyData={propertyData} search={search}></PropertyList>
       <NewProperyModal showNewPropertyModal={navigationState.showNewPropertyModal} distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></NewProperyModal>
       <SelectedPropertyPanel distinctSuburbsOptions={distinctSuburbsOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></SelectedPropertyPanel>
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
       <ManageLandlordsPanel showManageLandlordsPanel={navigationState.showManageLandlordsPanel} landLordsList={landLordsList}></ManageLandlordsPanel>
-     <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel} propertyLists={propertyLists}></SavedListsPanel>
+     <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel} propertyLists={propertyLists} propertyIdList={propertyIdList!}></SavedListsPanel>
     
     </Stack>
 

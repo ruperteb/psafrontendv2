@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { getTheme } from '@fluentui/react';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
-import { Query, Mutation, MutationDeletePropertyListArgs, MutationUpdatePropertyListArgs, MutationPostPropertyListArgs, PropertyList, Property } from "../schematypes/schematypes"
+import { Query, Mutation, MutationDeletePropertyListArgs, MutationUpdatePropertyListArgs, MutationPostPropertyListArgs, PropertyList, SelectedPropertyList } from "../schematypes/schematypes"
 import { DELETE_PROPERTY_LIST, GET_PROPERTY_LISTS, UPDATE_PROPERTY_LIST, NEW_PROPERTY_LIST } from "../gql/gql"
 import { useMutation, } from '@apollo/client';
 import { mergeStyles } from 'office-ui-fabric-react/lib/Styling';
-import {IContextualMenuProps, Stack, Text, FontWeights, IconButton, IIconProps, DefaultButton, FocusTrapCallout, FocusZone, PrimaryButton, mergeStyleSets, TextField, ITextFieldStyles } from 'office-ui-fabric-react';
+import { IContextualMenuProps, Stack, Text, FontWeights, IconButton, IIconProps, DefaultButton, FocusTrapCallout, FocusZone, PrimaryButton, mergeStyleSets, TextField, ITextFieldStyles, Checkbox, ICheckboxProps, ICheckboxStyles } from 'office-ui-fabric-react';
 import { useBoolean } from '@uifabric/react-hooks';
 import { motion, AnimatePresence } from "framer-motion";
 import ContactListItem from "./ContactListItem"
 
-import { selectedPropertyList } from "../reactivevariables/reactivevariables"
+import { selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
 
 
 interface Props {
@@ -18,9 +18,10 @@ interface Props {
   key: any
   expanded: number | false
   setExpanded: React.Dispatch<React.SetStateAction<number | false>>
+  propertyIdList: number[]
 }
 
-export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, expanded, setExpanded }) => {
+export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, expanded, setExpanded, propertyIdList }) => {
 
   const [isOpen, setIsOpen] = React.useState(false)
 
@@ -39,10 +40,10 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
   /* const [isAddContactCalloutVisible, { toggle: toggleIsAddContactCalloutVisible }] = useBoolean(false); */
 
   const [editPropertyList, setEditPropertyList] = React.useState<MutationUpdatePropertyListArgs>({
-      propertyListId: propertyList.propertyListId,
-      enquiryName: propertyList.enquiryName,
-      enquiryDate: propertyList.enquiryDate,
-      propertyIdList: propertyList.properties?.map((property) => {return property.propertyId})
+    propertyListId: propertyList.propertyListId,
+    enquiryName: propertyList.enquiryName,
+    enquiryDate: propertyList.enquiryDate,
+    propertyIdList: propertyList.properties?.map((property) => { return property.propertyId })
   })
 
   /* const [addContact, setAddContact] = React.useState({
@@ -131,57 +132,57 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
     toggleIsEditCalloutVisible()
   }
 
- /*  const [postContact, { data }] = useMutation<Mutation, MutationPostLandlordContactArgs>(NEW_LANDLORD_CONTACT);
-
-  const saveNewContactButton = () => {
-
-    postContact({
-      variables: {
-        landlordId: landlord.landlordId,
-        name: addContact.name,
-        email: addContact.email,
-        mobileNo: addContact.mobileNo,
-        officeNo: addContact.officeNo,
-
-      },
-
-      update(cache, { data }) {
-
-        if (!data) {
-          return null;
-        }
-
-        const getExistingLandlords = cache.readQuery<Query>({ query: GET_LANDLORDS });
-        
-        const existingLandlords = getExistingLandlords ? getExistingLandlords.landlords : [];
-        const selectedLandlord = existingLandlords!.find(t =>
-          t.landlordId === landlord.landlordId
-        )
-        const otherLandlords = existingLandlords!.filter(t => {
-          return t.landlordId !== landlord.landlordId
-        })
-        const existingContacts = selectedLandlord?.contactsList
-        const newContact = data.postLandlordContact!;
-        const updatedLandlord = { landlordId: selectedLandlord!.landlordId, landlordName: selectedLandlord!.landlordName, contactsList: [...existingContacts!, newContact] }
-        if (existingLandlords)
-          cache.writeQuery<Query>({
-            query: GET_LANDLORDS,
-            data: { landlords: [updatedLandlord!, ...otherLandlords] }
-          });
-      }
-
-
-    })
-
-    setAddContact({
-      name: "",
-      email: "",
-      mobileNo: "",
-      officeNo: ""
-    })
-    toggleIsAddContactCalloutVisible()
-    setIsOpen(true)
-  } */
+  /*  const [postContact, { data }] = useMutation<Mutation, MutationPostLandlordContactArgs>(NEW_LANDLORD_CONTACT);
+ 
+   const saveNewContactButton = () => {
+ 
+     postContact({
+       variables: {
+         landlordId: landlord.landlordId,
+         name: addContact.name,
+         email: addContact.email,
+         mobileNo: addContact.mobileNo,
+         officeNo: addContact.officeNo,
+ 
+       },
+ 
+       update(cache, { data }) {
+ 
+         if (!data) {
+           return null;
+         }
+ 
+         const getExistingLandlords = cache.readQuery<Query>({ query: GET_LANDLORDS });
+         
+         const existingLandlords = getExistingLandlords ? getExistingLandlords.landlords : [];
+         const selectedLandlord = existingLandlords!.find(t =>
+           t.landlordId === landlord.landlordId
+         )
+         const otherLandlords = existingLandlords!.filter(t => {
+           return t.landlordId !== landlord.landlordId
+         })
+         const existingContacts = selectedLandlord?.contactsList
+         const newContact = data.postLandlordContact!;
+         const updatedLandlord = { landlordId: selectedLandlord!.landlordId, landlordName: selectedLandlord!.landlordName, contactsList: [...existingContacts!, newContact] }
+         if (existingLandlords)
+           cache.writeQuery<Query>({
+             query: GET_LANDLORDS,
+             data: { landlords: [updatedLandlord!, ...otherLandlords] }
+           });
+       }
+ 
+ 
+     })
+ 
+     setAddContact({
+       name: "",
+       email: "",
+       mobileNo: "",
+       officeNo: ""
+     })
+     toggleIsAddContactCalloutVisible()
+     setIsOpen(true)
+   } */
 
 
 
@@ -189,7 +190,7 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
   const styles = mergeStyleSets({
 
     callout: {
-      maxWidth: 400,
+      maxWidth: 300,
     },
     header: {
       padding: '18px 24px 12px',
@@ -230,11 +231,12 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
   const chevronClass = mergeStyles({
     alignSelf: 'center',
-    marginLeft: 2,
+    marginLeft: "auto",
+    marginRight: "auto",
     /*  marginRight: 5, */
     marginTop: "0 !important",
     /* color: palette.neutralTertiary, */
-    fontSize: 20,
+    fontSize: 16,
     flexShrink: 0,
     cursor: "pointer",
     /* selectors: {
@@ -243,13 +245,13 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
   });
 
-  
+
 
   const chevronIconDiv = mergeStyles({
     /* fontSize: 50, */
-    height: 40,
-    width: 40,
-    lineHeight: 40,
+    height: 30,
+    width: 30,
+    lineHeight: 30,
     textAlign: "center",
     /* marginLeft: "auto !important",
     marginRight: 15, */
@@ -265,16 +267,18 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
   const chevronDiv = mergeStyles({
 
     marginTop: "0px !important",
-    marginRight: 15,
+    marginRight: 5,
     marginLeft: "auto !important",
   });
 
   const boldStyle = { root: { fontWeight: FontWeights.semibold } };
-  const propertyHeadingStyles = { alignSelf: "start", fontSize: "23px", padding: 5, paddingLeft: "25px" }
-  
+  const propertyHeadingStyles = { alignSelf: "start", fontSize: "18px", paddingLeft: 5, paddingBottom: 2 }
+
+  const checkboxStyles: Partial<ICheckboxStyles> = { root: { marginTop: 5, marginRight: 30, marginLeft: "auto", width: "fit-content" }, label: { marginLeft: 4 } };
+
   const theme = getTheme();
- 
-  
+
+
 
   const menuProps: IContextualMenuProps = {
     items: [
@@ -298,17 +302,17 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
       }, */
     ],
     directionalHintFixed: false,
-    styles: {container: {width: 175}}
+    styles: { container: { width: 175 } }
   };
 
   const iconButtonStyles = {
     root: {
       color: theme.palette.neutralPrimary,
-      marginLeft: 5,
+      /* marginLeft: 5, */
       marginTop: '0px !important',
-      marginRight: 5,
-      width: 35,
-      height: 35,
+      /* marginRight: 5, */
+      /*  width: 35,
+       height: 35, */
       /*  visibility: isChecked() ? "visible" : "hidden", */
 
     },
@@ -320,21 +324,21 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
     },
     icon: {
-      fontSize: "24px",
-      marginLeft: 6
+      fontSize: "20px",
+      marginLeft: 2
 
     }
   };
 
-  
+
   const menuIcon: IIconProps = { iconName: 'SingleColumnEdit' };
 
-  const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300 } };
+  const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200 } };
   const textFieldContactStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 250 } };
 
   const onChangeEnquiryName = React.useCallback(
     (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-      setEditPropertyList({...editPropertyList, enquiryName: newValue!});
+      setEditPropertyList({ ...editPropertyList, enquiryName: newValue! });
     },
     [setEditPropertyList],
   );
@@ -371,27 +375,55 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
   const handleSetSelectedProperties = () => {
 
-    selectedPropertyList(propertyList.properties)
+    selectedPropertyListVar(propertyList.properties)
 
   }
 
+  const [isCurrentListChecked, setIsCurrentListChecked] = React.useState(false);
+
+  const onChangeSetCurrentListToggle = React.useCallback((ev?: React.FormEvent<HTMLInputElement | HTMLElement> | undefined, checked?: boolean | undefined) => {
+    if (isCurrentListChecked) {
+      setIsCurrentListChecked(false)
+      setEditPropertyList({ ...editPropertyList, propertyIdList: propertyList.properties?.map((property) => { return property.propertyId }) })
+    } else {
+      setIsCurrentListChecked(true)
+      setEditPropertyList({ ...editPropertyList, propertyIdList: propertyIdList })
+    }
+
+
+  }, [editPropertyList, propertyIdList, isCurrentListChecked, setIsCurrentListChecked, propertyList.properties])
+
+  const [isCurrentDateChecked, setIsCurrentDateChecked] = React.useState(false);
+
+  const onChangeSetCurrentDateToggle = React.useCallback((ev?: React.FormEvent<HTMLInputElement | HTMLElement> | undefined, checked?: boolean | undefined) => {
+    if (isCurrentDateChecked) {
+      setIsCurrentDateChecked(false)
+      setEditPropertyList({ ...editPropertyList, enquiryDate: propertyList.enquiryDate })
+    } else {
+      setIsCurrentDateChecked(true)
+      setEditPropertyList({ ...editPropertyList, enquiryDate: new Date() })
+    }
+
+
+  }, [editPropertyList, isCurrentDateChecked, setIsCurrentDateChecked, propertyList.enquiryDate])
+
   const getPropertyListDate = () => {
 
-   
+
     var date: Date = new Date()
-    
+
     if (propertyList.enquiryDate !== undefined) {
-        date = new Date(propertyList.enquiryDate)
+      date = new Date(propertyList.enquiryDate)
     }
     return date.toLocaleDateString(
-        'en-gb',
-        {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        }
+      'en-gb',
+      {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }
     );
-}
+  }
 
   return (
 
@@ -404,10 +436,10 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
         styles={{
           root: {
-            width: 580,
+            /* width: 580, */
             marginBottom: 10,
             marginTop: 10,
-            padding: '10px',
+            padding: '5px',
             textAlign: 'center',
             color: '#605e5c',
             alignItems: "center",
@@ -426,7 +458,7 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
         }}
         gap={15}>
 
-<div className={chevronIconDiv} onClick={handleSetSelectedProperties}><Icon className={chevronClass} iconName={'ChevronLeft'} /></div>
+        <div className={chevronIconDiv} onClick={handleSetSelectedProperties}><Icon className={chevronClass} iconName={'ChevronLeft'} /></div>
 
         <IconButton
           styles={iconButtonStyles}
@@ -437,8 +469,8 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
         />
 
         <Stack styles={{ root: { paddingTop: 0, marginTop: "0 !important", marginBottom: "auto" } }} verticalFill>
-          <Text styles={boldStyle} style={propertyHeadingStyles}>{propertyList.enquiryName} - {getPropertyListDate()}</Text>
-
+          <Text styles={boldStyle} style={propertyHeadingStyles}>{propertyList.enquiryName} </Text>
+          <Text style={{ paddingLeft: 5 }}>{getPropertyListDate()}</Text>
 
 
         </Stack>
@@ -473,7 +505,7 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
             </FocusTrapCallout>
           </div>
         ) : null}
-       
+
         {isEditCalloutVisible ? (
           <div>
             <FocusTrapCallout
@@ -496,6 +528,8 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
                     value={editPropertyList.enquiryName}
                     onChange={onChangeEnquiryName}></TextField>
+                  <Checkbox boxSide="end" styles={checkboxStyles} label="Set Current List?" checked={isCurrentListChecked} onChange={onChangeSetCurrentListToggle} />
+                  <Checkbox boxSide="end" styles={checkboxStyles} label="Set Current Date?" checked={isCurrentDateChecked} onChange={onChangeSetCurrentDateToggle} />
                 </div>
               </div>
               <FocusZone>
@@ -598,28 +632,30 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
           >
             <Stack verticalFill styles={{
               root: {
-                width: 580,
+                /* width: 580, */
                 display: "flex",
-               /*  flexFlow: "row wrap" */
+                /*  flexFlow: "row wrap" */
 
               }
             }} >
 
               {propertyList.properties?.map((property) => {
                 return (
-                
-                    <Stack styles={{ root: { marginLeft: 10, marginTop: "10px !important", alignItems: "center" } }} horizontal>
-                    {property.propertyName}
+
+                  <Stack styles={{ root: { marginLeft: 20, marginTop: "10px !important", alignItems: "center" } }} horizontal>
+
+                    <Text styles={boldStyle} style={propertyHeadingStyles}>{property.propertyName} </Text>
+                    
                     {/* <IconButton
                         styles={deleteIconStyles}
                         iconProps={deleteIcon}
                         ariaLabel="Remove Property"
                         onClick={() => handleRemoveProperty(property.propertyId)}
                     /> */}
-    
-                </Stack>
-                
-                
+
+                  </Stack>
+
+
                 )
 
               })}

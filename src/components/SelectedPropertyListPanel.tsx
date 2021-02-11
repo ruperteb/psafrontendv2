@@ -347,6 +347,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         },
         header: {},
         headerText: { fontSize: 24, marginLeft: 5 },
+        
 
     }
 

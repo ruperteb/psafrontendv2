@@ -7,7 +7,7 @@ import { Link } from 'office-ui-fabric-react/lib/Link';
 import { useBoolean } from '@uifabric/react-hooks';
 import { GET_SINGLE_PROPERTY, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, NEW_LANDLORD, GET_LANDLORDS } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
-import { Mutation, MutationPostLandlordArgs, Query, NavigationState, Premises, Landlord, PropertyList } from "../schematypes/schematypes"
+import { Mutation, MutationPostLandlordArgs, Query, NavigationState, Premises, Landlord, PropertyList, SelectedPropertyList } from "../schematypes/schematypes"
 import { navigationState as navigationStateVar } from "../reactivevariables/reactivevariables"
 import { Icon } from '@fluentui/react/lib/Icon';
 
@@ -45,10 +45,10 @@ import {
 interface Props {
   showSavedListsPanel: boolean
   propertyLists: PropertyList[]
-
+  propertyIdList: number[]
 }
 
-const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, propertyLists }) => {
+const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, propertyLists, propertyIdList }) => {
 
 
   const handlePanelDismiss = () => {
@@ -107,6 +107,10 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
     },
     header: { marginBottom: 10 },
     headerText: { fontSize: 24, marginLeft: 15 },
+    content:{
+    paddingLeft:12,
+    paddingRight:20},
+    scrollableContent:{overflowY: "hidden"}
 
   }
 
@@ -215,8 +219,8 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
       <Panel
         isOpen={showSavedListsPanel}
         onDismiss={handlePanelDismiss}
-
-        type={PanelType.medium}
+        isBlocking={false}
+        type={PanelType.smallFixedFar}
         onRenderNavigationContent={onRenderNavigationContent}
         /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
         closeButtonAriaLabel="Close"
@@ -250,7 +254,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
 
           { searchSortedPropertyLists !== undefined ? searchSortedPropertyLists.map((propertyList) => {
 
-            return <SavedListItem propertyList={propertyList} key={propertyList.propertyListId} expanded={expanded} setExpanded={setExpanded}></SavedListItem>
+            return <SavedListItem propertyList={propertyList} key={propertyList.propertyListId} expanded={expanded} setExpanded={setExpanded} propertyIdList={propertyIdList}></SavedListItem>
 
           }) : <Text></Text>}
 
