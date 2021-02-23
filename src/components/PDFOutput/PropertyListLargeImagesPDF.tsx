@@ -496,6 +496,130 @@ Font.register({
     ]
 });
 
+const getParkingRowsLength = (premises: Premises[]) => {
+    var count = 0
+    if(premises.reduce((acc, premises) => {
+        return acc + premises.openRate!
+    }, 0) > 0 ) {
+        count += 1
+    }
+
+    if(premises.reduce((acc, premises) => {
+        return acc + premises.coveredRate!
+    }, 0) > 0 ) {
+        count += 1
+    }
+
+    if(premises.reduce((acc, premises) => {
+        return acc + premises.shadedRate!
+    }, 0) > 0 ) {
+        count += 1
+    }
+    return count
+}
+
+const getParkingRowsOrder = (premises: Premises[], rowType: string) => {
+    var parking = {covered: false, shaded: false, open: false}
+    
+
+    if(premises.reduce((acc, premises) => {
+        return acc + premises.coveredRate!
+    }, 0) > 0 ) {
+        parking.covered = true
+    } else {parking.covered = false}
+
+    if(premises.reduce((acc, premises) => {
+        return acc + premises.shadedRate!
+    }, 0) > 0 ) {
+        parking.shaded = true
+    } else {parking.shaded = false}
+
+    if(premises.reduce((acc, premises) => {
+        return acc + premises.openRate!
+    }, 0) > 0 ) {
+        parking.open = true
+    } else {parking.open = false}
+
+    //true true true
+
+    if(parking.covered === true && parking.shaded === true && parking.open === true && rowType === "covered" )
+    return true
+
+    if(parking.covered === true && parking.shaded === true && parking.open === true && rowType === "shaded" )
+    return false
+
+    if(parking.covered === true && parking.shaded === true && parking.open === true && rowType === "open" )
+    return true
+
+    //false true true
+
+    if(parking.covered === false && parking.shaded === true && parking.open === true && rowType === "covered" )
+    return true
+
+    if(parking.covered === false && parking.shaded === true && parking.open === true && rowType === "shaded" )
+    return true
+
+    if(parking.covered === false && parking.shaded === true && parking.open === true && rowType === "open" )
+    return false
+
+    //false false true
+
+    if(parking.covered === false && parking.shaded === false && parking.open === true && rowType === "covered" )
+    return false
+
+    if(parking.covered === false && parking.shaded === false && parking.open === true && rowType === "shaded" )
+    return false
+
+    if(parking.covered === false && parking.shaded === false && parking.open === true && rowType === "open" )
+    return true
+
+    //true false true
+
+    if(parking.covered === true && parking.shaded === false && parking.open === true && rowType === "covered" )
+    return true
+
+    if(parking.covered === true && parking.shaded === false && parking.open === true && rowType === "shaded" )
+    return false
+
+    if(parking.covered === true && parking.shaded === false && parking.open === true && rowType === "open" )
+    return false
+
+    //true true false
+
+    if(parking.covered === true && parking.shaded === true && parking.open === false && rowType === "covered" )
+    return true
+
+    if(parking.covered === true && parking.shaded === true && parking.open === false && rowType === "shaded" )
+    return false
+
+    if(parking.covered === true && parking.shaded === true && parking.open === false && rowType === "open" )
+    return false
+
+    //false true false
+
+    if(parking.covered === false && parking.shaded === true && parking.open === false && rowType === "covered" )
+    return false
+
+    if(parking.covered === false && parking.shaded === true && parking.open === false && rowType === "shaded" )
+    return true
+
+    if(parking.covered === false && parking.shaded === true && parking.open === false && rowType === "open" )
+    return false
+
+    //true false false
+
+    if(parking.covered === true && parking.shaded === false && parking.open === false && rowType === "covered" )
+    return true
+
+    if(parking.covered === true && parking.shaded === false && parking.open === false && rowType === "shaded" )
+    return false
+
+    if(parking.covered === true && parking.shaded === false && parking.open === false && rowType === "open" )
+    return false
+
+
+}
+
 
 const getEarliestOccDate = (premises: Premises[]) => {
 
@@ -819,7 +943,8 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             ))}
 
-                            <View style={(selectedPropertyList[index].premisesList!.length) % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                            {selectedPropertyList[index].premisesList!.length>1?
+                            <View style={(selectedPropertyList[index].premisesList!.length) % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" , borderTop: 0.5}]}>
                                 <View style={[styles.premisesContainer, { width: 80 }]}>
                                     {/*  <Text style={styles.premisesText} >{premises.floor}</Text> */}
                                 </View>
@@ -833,9 +958,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
                                     {/*  <Text style={[styles.premisesText, { width: 50 }]} >{premises.grossRental}</Text> */}
                                 </View>
-
-
-                            </View>
+                            </View>: <Text></Text>}
 
                             <Text style={styles.parkingDetailsHeading} >Parking Details</Text>
 
@@ -862,7 +985,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                 return acc + premises.coveredRate!
                             }, 0) > 0 && property.buildingType !== "Industrial" ?
-                                <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                                <View style={getParkingRowsOrder(selectedPropertyList[index].premisesList!,"covered")?[styles.premisesDetails, { backgroundColor: "#ede6e6" }]:[styles.premisesDetails]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={[styles.premisesText, { textAlign: "left" }]} >Covered</Text>
                                     </View>
@@ -872,7 +995,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }, 0) > 0 ?
                                             selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.coveredBays!
-                                            }, 0).toFixed(1) : "-"
+                                            }, 0).toFixed(0) : "-"
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -908,7 +1031,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                 return acc + premises.shadedRate!
                             }, 0) > 0 && property.buildingType !== "Industrial" ?
-                                <View style={[styles.premisesDetails]}>
+                            <View style={getParkingRowsOrder(selectedPropertyList[index].premisesList!,"shaded")?[styles.premisesDetails, { backgroundColor: "#ede6e6" }]:[styles.premisesDetails]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={[styles.premisesText, { textAlign: "left" }]} >Shaded</Text>
                                     </View>
@@ -918,7 +1041,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }, 0) > 0 ?
                                             selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.shadedBays!
-                                            }, 0).toFixed(1) : "-"
+                                            }, 0).toFixed(0) : "-"
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -954,7 +1077,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             {selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                 return acc + premises.openRate!
                             }, 0) > 0 && property.buildingType !== "Industrial" ?
-                                <View style={[styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
+                            <View style={getParkingRowsOrder(selectedPropertyList[index].premisesList!,"open")?[styles.premisesDetails, { backgroundColor: "#ede6e6" }]:[styles.premisesDetails]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={[styles.premisesText, { textAlign: "left" }]} >Open</Text>
                                     </View>
@@ -965,7 +1088,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                             }, 0) > 0 ?
                                                 selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                     return acc + premises.openBays!
-                                                }, 0).toFixed(1) : "-"
+                                                }, 0).toFixed(0) : "-"
                                             }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -998,7 +1121,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                     </View>
                                 </View> : <Text></Text>}
 
-                            <View style={[styles.premisesDetails]}>
+                            {getParkingRowsLength(selectedPropertyList[index].premisesList!)>1? <View style={getParkingRowsLength(selectedPropertyList[index].premisesList!)!==3?[styles.premisesDetails, { backgroundColor: "#ede6e6", borderTop: 0.5 }]: [styles.premisesDetails, {borderTop: 0.5}]}>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
                                     <Text style={[styles.premisesText, { textAlign: "left" }]} >Overall</Text>
                                 </View>
@@ -1010,7 +1133,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                             } else {
                                                 return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
                                             }
-                                        }, 0) : 0
+                                        }, 0).toFixed(0) : 0
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -1039,7 +1162,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }, 0)).toFixed(2) : "-"
                                     }</Text>
                                 </View>
-                            </View>
+                            </View> : <Text></Text>}
 
 
 

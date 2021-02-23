@@ -58,7 +58,7 @@ interface Props {
 
 export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesModal, propertyId, premisesId }) => {
 
-    
+
 
     const {
         data: propertyData,
@@ -72,7 +72,7 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
     const getPremises = propertyData?.singleProperty?.premisesList!.find(premises => premises?.premisesId === premisesId);
     const handlePremisesData = React.useCallback(() => {
         if (getPremises !== undefined && getPremises !== null) {
-            return getPremises
+            return { ...getPremises, openRatio: getPremises.openBays! / (getPremises.area! / 100), coveredRatio: getPremises.coveredBays! / (getPremises.area! / 100), shadedRatio: getPremises.shadedBays! / (getPremises.area! / 100), }
         } else {
             return {
                 floor: "",
@@ -89,10 +89,13 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
                 esc: 0,
                 openBays: 0,
                 openRate: 0,
+                openRatio: 0,
                 coveredBays: 0,
                 coveredRate: 0,
+                coveredRatio: 0,
                 shadedBays: 0,
                 shadedRate: 0,
+                shadedRatio: 0,
                 parkingRatio: 0,
                 tenantName: "-",
                 leaseExpiry: getNextMonth(),
@@ -110,20 +113,20 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
     }, [getPremises])
 
 
-    React.useEffect(()=> {
-setDuplicatedPremises(handlePremisesData)
-setSelectedPremisesType({ key: handlePremisesData().type!, text: handlePremisesData().type! })
-setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: String(handlePremisesData().premisesIndex!) }))
+    React.useEffect(() => {
+        setDuplicatedPremises(handlePremisesData)
+        setSelectedPremisesType({ key: handlePremisesData().type!, text: handlePremisesData().type! })
+        setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: String(handlePremisesData().premisesIndex!) }))
 
-    },[handlePremisesData])
+    }, [handlePremisesData])
 
-    
-   
+
+
 
     const hideDuplicatePremisesModal = () => {
-        
+
         navigationState({ ...navigationState(), showDuplicatePremisesModal: false })
-        
+
     }
 
     const getNextMonth = () => {
@@ -137,7 +140,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     }
 
 
-    const [duplicatedPremises, setDuplicatedPremises] = React.useState<Premises>(
+    const [duplicatedPremises, setDuplicatedPremises] = React.useState<any>(
         {
             floor: "",
             area: 0,
@@ -153,10 +156,13 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
             esc: 0,
             openBays: 0,
             openRate: 0,
+            openRatio: 0,
             coveredBays: 0,
             coveredRate: 0,
+            coveredRatio: 0,
             shadedBays: 0,
             shadedRate: 0,
+            shadedRatio: 0,
             parkingRatio: 0,
             tenantName: "-",
             leaseExpiry: getNextMonth(),
@@ -171,8 +177,8 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
 
         });
 
-   
-    
+
+
 
     const [postPremises, { data }] = useMutation<Mutation, MutationPostPremisesArgs>(NEW_PREMISES);
 
@@ -236,7 +242,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
 
         })
         hideDuplicatePremisesModal()
-       
+
 
 
     }
@@ -261,6 +267,10 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     const dropdownSectorStyles: Partial<IDropdownStyles> = { dropdown: { width: 420, marginRight: 20 } };
     const dropdownProvinceStyles: Partial<IDropdownStyles> = { dropdown: { width: 140, marginRight: 20 } };
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
+
+    const textFieldParkingBaysStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100, marginRight: 20 } };
+    const textFieldParkingRateStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 185, marginRight: 20 } };
+    const textFieldParkingRatioStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 140, marginRight: 20 } };
 
     const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
     const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
@@ -397,7 +407,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     const onSelectOccupationDate = React.useCallback(
         (date: Date | null | undefined) => {
             if (date !== undefined && date !== null)
-            setDuplicatedPremises({ ...duplicatedPremises, occupation: date.toISOString() });
+                setDuplicatedPremises({ ...duplicatedPremises, occupation: date.toISOString() });
         },
         [duplicatedPremises])
 
@@ -456,9 +466,33 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
         [duplicatedPremises],
     );
 
+    const getOpenBays = (ratio: number) => {
+        return (ratio * (duplicatedPremises.area / 100))
+    }
+
+    const getOpenRatio = (bays: number) => {
+        return (bays / (duplicatedPremises.area / 100))
+    }
+
+    const getCoveredBays = (ratio: number) => {
+        return (ratio * (duplicatedPremises.area / 100))
+    }
+
+    const getCoveredRatio = (bays: number) => {
+        return (bays / (duplicatedPremises.area / 100))
+    }
+
+    const getShadedBays = (ratio: number) => {
+        return (ratio * (duplicatedPremises.area / 100))
+    }
+
+    const getShadedRatio = (bays: number) => {
+        return (bays / (duplicatedPremises.area / 100))
+    }
+
     const onChangeOpenBays = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDuplicatedPremises({ ...duplicatedPremises, openBays: parseFloat(newValue!) || 0 });
+            setDuplicatedPremises({ ...duplicatedPremises, openBays: parseFloat(newValue!) || 0, openRatio: getOpenRatio(parseFloat(newValue!)) });
         },
         [duplicatedPremises],
     );
@@ -470,9 +504,17 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
         [duplicatedPremises],
     );
 
+
+    const onChangeOpenRatio = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setDuplicatedPremises({ ...duplicatedPremises, openRatio: parseFloat(newValue!) || 0, openBays: getOpenBays(parseFloat(newValue!)) });
+        },
+        [duplicatedPremises],
+    );
+
     const onChangeCoveredBays = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDuplicatedPremises({ ...duplicatedPremises, coveredBays: parseFloat(newValue!) || 0 });
+            setDuplicatedPremises({ ...duplicatedPremises, coveredBays: parseFloat(newValue!) || 0, coveredRatio: getCoveredRatio(parseFloat(newValue!)) });
         },
         [duplicatedPremises],
     );
@@ -484,9 +526,16 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
         [duplicatedPremises],
     );
 
+    const onChangeCoveredRatio = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setDuplicatedPremises({ ...duplicatedPremises, coveredRatio: parseFloat(newValue!) || 0, coveredBays: getCoveredBays(parseFloat(newValue!)) });
+        },
+        [duplicatedPremises],
+    );
+
     const onChangeShadedBays = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDuplicatedPremises({ ...duplicatedPremises, shadedBays: parseFloat(newValue!) || 0 });
+            setDuplicatedPremises({ ...duplicatedPremises, shadedBays: parseFloat(newValue!) || 0, shadedRatio: getShadedRatio(parseFloat(newValue!)) });
         },
         [duplicatedPremises],
     );
@@ -494,6 +543,13 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     const onChangeShadedRate = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setDuplicatedPremises({ ...duplicatedPremises, shadedRate: parseFloat(newValue!) || 0 });
+        },
+        [duplicatedPremises],
+    );
+
+    const onChangeShadedRatio = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setDuplicatedPremises({ ...duplicatedPremises, shadedRatio: parseFloat(newValue!) || 0, shadedBays: getShadedBays(parseFloat(newValue!)) });
         },
         [duplicatedPremises],
     );
@@ -515,7 +571,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
     const onSelectLeaseExpiry = React.useCallback(
         (date: Date | null | undefined) => {
             if (date !== undefined && date !== null)
-            setDuplicatedPremises({ ...duplicatedPremises, leaseExpiry: date.toISOString() });
+                setDuplicatedPremises({ ...duplicatedPremises, leaseExpiry: date.toISOString() });
         },
         [duplicatedPremises])
 
@@ -807,7 +863,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                                 type="number"
                                 value={duplicatedPremises.openBays === 0 ? "" : String(duplicatedPremises.openBays)}
                                 onChange={onChangeOpenBays}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingBaysStyles}
                                 suffix="bays"
                             />
                             <TextField
@@ -815,9 +871,19 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                                 type="number"
                                 value={duplicatedPremises.openRate === 0 ? "" : String(duplicatedPremises.openRate)}
                                 onChange={onChangeOpenRate}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingRateStyles}
                                 prefix="R"
                                 suffix="/bay/month"
+                            />
+
+                            <TextField
+                                label="Open Ratio"
+                                type="number"
+                                value={duplicatedPremises.openRatio === 0 ? "" : String(duplicatedPremises.openRatio)}
+                                onChange={onChangeOpenRatio}
+                                styles={textFieldParkingRatioStyles}
+
+                                suffix="bays/100m²"
                             />
 
                         </Stack>
@@ -841,7 +907,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                                 type="number"
                                 value={duplicatedPremises.coveredBays === 0 ? "" : String(duplicatedPremises.coveredBays)}
                                 onChange={onChangeCoveredBays}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingBaysStyles}
                                 suffix="bays"
                             />
                             <TextField
@@ -849,9 +915,19 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                                 type="number"
                                 value={duplicatedPremises.coveredRate === 0 ? "" : String(duplicatedPremises.coveredRate)}
                                 onChange={onChangeCoveredRate}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingRateStyles}
                                 prefix="R"
                                 suffix="/bay/month"
+                            />
+
+                            <TextField
+                                label="Covered Ratio"
+                                type="number"
+                                value={duplicatedPremises.coveredRatio === 0 ? "" : String(duplicatedPremises.coveredRatio)}
+                                onChange={onChangeCoveredRatio}
+                                styles={textFieldParkingRatioStyles}
+
+                                suffix="bays/100m²"
                             />
 
 
@@ -879,7 +955,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                                 type="number"
                                 value={duplicatedPremises.shadedBays === 0 ? "" : String(duplicatedPremises.shadedBays)}
                                 onChange={onChangeShadedBays}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingBaysStyles}
                                 suffix="bays"
                             />
                             <TextField
@@ -887,9 +963,19 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
                                 type="number"
                                 value={duplicatedPremises.shadedRate === 0 ? "" : String(duplicatedPremises.shadedRate)}
                                 onChange={onChangeShadedRate}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingRateStyles}
                                 prefix="R"
                                 suffix="/bay/month"
+                            />
+
+                            <TextField
+                                label="Shaded Ratio"
+                                type="number"
+                                value={duplicatedPremises.shadedRatio === 0 ? "" : String(duplicatedPremises.shadedRatio)}
+                                onChange={onChangeShadedRatio}
+                                styles={textFieldParkingRatioStyles}
+
+                                suffix="bays/100m²"
                             />
 
                         </Stack>
@@ -1001,7 +1087,7 @@ setSelectedPremisesIndex(({ key: handlePremisesData().premisesIndex!, text: Stri
 
                 titleAriaId={titleId}
                 isOpen={showDuplicatePremisesModal}
-               /*  onDismiss={hideDuplicatePremisesModal} */
+                /*  onDismiss={hideDuplicatePremisesModal} */
                 isBlocking={false}
                 containerClassName={contentStyles.container}
             /* dragOptions={dragOptions} */
