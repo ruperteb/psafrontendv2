@@ -72,7 +72,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     const getPremises = propertyData?.singleProperty?.premisesList!.find(premises => premises?.premisesId === premisesId);
     const handlePremisesData = React.useCallback(() => {
         if (getPremises !== undefined && getPremises !== null) {
-            return getPremises
+            return { ...getPremises, openRatio: getPremises.openBays! / (getPremises.area! / 100), coveredRatio: getPremises.coveredBays! / (getPremises.area! / 100), shadedRatio: getPremises.shadedBays! / (getPremises.area! / 100), }
         } else {
             return {
                 floor: "",
@@ -89,10 +89,13 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                 esc: 0,
                 openBays: 0,
                 openRate: 0,
+                openRatio: 0,
                 coveredBays: 0,
                 coveredRate: 0,
+                coveredRatio: 0,
                 shadedBays: 0,
                 shadedRate: 0,
+                shadedRatio: 0,
                 parkingRatio: 0,
                 tenantName: "-",
                 leaseExpiry: getNextMonth(),
@@ -137,7 +140,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     }
 
 
-    const [updatedPremises, setUpdatedPremises] = React.useState<Premises>(
+    const [updatedPremises, setUpdatedPremises] = React.useState<any>(
         {
             floor: "",
             area: 0,
@@ -153,10 +156,13 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
             esc: 0,
             openBays: 0,
             openRate: 0,
+            openRatio: 0,
             coveredBays: 0,
             coveredRate: 0,
+            coveredRatio: 0,
             shadedBays: 0,
             shadedRate: 0,
+            shadedRatio: 0,
             parkingRatio: 0,
             tenantName: "-",
             leaseExpiry: getNextMonth(),
@@ -259,7 +265,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldFloorStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldAreaStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
-    const textFieldYardStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 125, marginRight: 20} };
+    const textFieldYardStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 125, marginRight: 20 } };
     const textFieldPowerStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 200, marginRight: 20 } };
     const textFieldEscStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
     const textFieldCoordinatesStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 150, marginRight: 20 } };
@@ -269,6 +275,10 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     const dropdownSectorStyles: Partial<IDropdownStyles> = { dropdown: { width: 420, marginRight: 20 } };
     const dropdownProvinceStyles: Partial<IDropdownStyles> = { dropdown: { width: 140, marginRight: 20 } };
     const comboBoxStyles: Partial<IComboBoxStyles> = { root: { width: 140, marginRight: 20 } }
+
+    const textFieldParkingBaysStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 100, marginRight: 20 } };
+    const textFieldParkingRateStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 185, marginRight: 20 } };
+    const textFieldParkingRatioStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 140, marginRight: 20 } };
 
     const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
     const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, };
@@ -463,9 +473,33 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
         [updatedPremises],
     );
 
+    const getOpenBays = (ratio: number) => {
+        return (ratio * (updatedPremises.area / 100))
+    }
+
+    const getOpenRatio = (bays: number) => {
+        return (bays / (updatedPremises.area / 100))
+    }
+
+    const getCoveredBays = (ratio: number) => {
+        return (ratio * (updatedPremises.area / 100))
+    }
+
+    const getCoveredRatio = (bays: number) => {
+        return (bays / (updatedPremises.area / 100))
+    }
+
+    const getShadedBays = (ratio: number) => {
+        return (ratio * (updatedPremises.area / 100))
+    }
+
+    const getShadedRatio = (bays: number) => {
+        return (bays / (updatedPremises.area / 100))
+    }
+
     const onChangeOpenBays = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setUpdatedPremises({ ...updatedPremises, openBays: parseFloat(newValue!) || 0 });
+            setUpdatedPremises({ ...updatedPremises, openBays: parseFloat(newValue!) || 0, openRatio: getOpenRatio(parseFloat(newValue!)) });
         },
         [updatedPremises],
     );
@@ -477,9 +511,17 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
         [updatedPremises],
     );
 
+
+    const onChangeOpenRatio = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, openRatio: parseFloat(newValue!) || 0, openBays: getOpenBays(parseFloat(newValue!)) });
+        },
+        [updatedPremises],
+    );
+
     const onChangeCoveredBays = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setUpdatedPremises({ ...updatedPremises, coveredBays: parseFloat(newValue!) || 0 });
+            setUpdatedPremises({ ...updatedPremises, coveredBays: parseFloat(newValue!) || 0, coveredRatio: getCoveredRatio(parseFloat(newValue!)) });
         },
         [updatedPremises],
     );
@@ -491,9 +533,16 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
         [updatedPremises],
     );
 
+    const onChangeCoveredRatio = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, coveredRatio: parseFloat(newValue!) || 0, coveredBays: getCoveredBays(parseFloat(newValue!)) });
+        },
+        [updatedPremises],
+    );
+
     const onChangeShadedBays = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setUpdatedPremises({ ...updatedPremises, shadedBays: parseFloat(newValue!) || 0 });
+            setUpdatedPremises({ ...updatedPremises, shadedBays: parseFloat(newValue!) || 0, shadedRatio: getShadedRatio(parseFloat(newValue!)) });
         },
         [updatedPremises],
     );
@@ -501,6 +550,13 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
     const onChangeShadedRate = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setUpdatedPremises({ ...updatedPremises, shadedRate: parseFloat(newValue!) || 0 });
+        },
+        [updatedPremises],
+    );
+
+    const onChangeShadedRatio = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setUpdatedPremises({ ...updatedPremises, shadedRatio: parseFloat(newValue!) || 0, shadedBays: getShadedBays(parseFloat(newValue!)) });
         },
         [updatedPremises],
     );
@@ -863,7 +919,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                                 type="number"
                                 value={updatedPremises.openBays === 0 ? "" : String(updatedPremises.openBays)}
                                 onChange={onChangeOpenBays}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingBaysStyles}
                                 suffix="bays"
                             />
                             <TextField
@@ -871,9 +927,19 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                                 type="number"
                                 value={updatedPremises.openRate === 0 ? "" : String(updatedPremises.openRate)}
                                 onChange={onChangeOpenRate}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingRateStyles}
                                 prefix="R"
                                 suffix="/bay/month"
+                            />
+
+                            <TextField
+                                label="Open Ratio"
+                                type="number"
+                                value={updatedPremises.openRatio === 0 ? "" : String(updatedPremises.openRatio)}
+                                onChange={onChangeOpenRatio}
+                                styles={textFieldParkingRatioStyles}
+
+                                suffix="bays/100m²"
                             />
 
                         </Stack>
@@ -897,7 +963,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                                 type="number"
                                 value={updatedPremises.coveredBays === 0 ? "" : String(updatedPremises.coveredBays)}
                                 onChange={onChangeCoveredBays}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingBaysStyles}
                                 suffix="bays"
                             />
                             <TextField
@@ -905,9 +971,19 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                                 type="number"
                                 value={updatedPremises.coveredRate === 0 ? "" : String(updatedPremises.coveredRate)}
                                 onChange={onChangeCoveredRate}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingRateStyles}
                                 prefix="R"
                                 suffix="/bay/month"
+                            />
+
+                            <TextField
+                                label="Covered Ratio"
+                                type="number"
+                                value={updatedPremises.coveredRatio === 0 ? "" : String(updatedPremises.coveredRatio)}
+                                onChange={onChangeCoveredRatio}
+                                styles={textFieldParkingRatioStyles}
+
+                                suffix="bays/100m²"
                             />
 
 
@@ -935,7 +1011,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                                 type="number"
                                 value={updatedPremises.shadedBays === 0 ? "" : String(updatedPremises.shadedBays)}
                                 onChange={onChangeShadedBays}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingBaysStyles}
                                 suffix="bays"
                             />
                             <TextField
@@ -943,9 +1019,19 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                                 type="number"
                                 value={updatedPremises.shadedRate === 0 ? "" : String(updatedPremises.shadedRate)}
                                 onChange={onChangeShadedRate}
-                                styles={textFieldFloorStyles}
+                                styles={textFieldParkingRateStyles}
                                 prefix="R"
                                 suffix="/bay/month"
+                            />
+
+                            <TextField
+                                label="Shaded Ratio"
+                                type="number"
+                                value={updatedPremises.shadedRatio === 0 ? "" : String(updatedPremises.shadedRatio)}
+                                onChange={onChangeShadedRatio}
+                                styles={textFieldParkingRatioStyles}
+
+                                suffix="bays/100m²"
                             />
 
                         </Stack>
@@ -1192,7 +1278,7 @@ export const UpdatePremisesModal: React.FC<Props> = ({ showUpdatePremisesModal, 
                             onLinkClick={handleLinkClick}
                             headersOnly={true}
                             getTabId={getTabId}
-                            styles={{link:{/* padding:0, margin:0, fontSize:14 */  marginRight: 20}, linkIsSelected:{/* padding:0, margin:0, fontSize:14 */marginRight: 20}, root: {marginLeft: "auto", marginRight: "auto"}}}
+                            styles={{ link: {/* padding:0, margin:0, fontSize:14 */  marginRight: 20 }, linkIsSelected: {/* padding:0, margin:0, fontSize:14 */marginRight: 20 }, root: { marginLeft: "auto", marginRight: "auto" } }}
                         >
                             <PivotItem headerText="Premises" itemKey="Premises Details" />
                             <PivotItem headerText="Rental" itemKey="Rental Details" />
@@ -1222,7 +1308,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-         width: 525,
+        width: 525,
 
     },
 

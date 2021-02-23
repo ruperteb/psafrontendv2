@@ -872,7 +872,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }, 0) > 0 ?
                                             selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.coveredBays!
-                                            }, 0) : "-"
+                                            }, 0).toFixed(1) : "-"
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -918,7 +918,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }, 0) > 0 ?
                                             selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.shadedBays!
-                                            }, 0) : "-"
+                                            }, 0).toFixed(1) : "-"
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -965,7 +965,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                             }, 0) > 0 ?
                                                 selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                     return acc + premises.openBays!
-                                                }, 0) : "-"
+                                                }, 0).toFixed(1) : "-"
                                             }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
