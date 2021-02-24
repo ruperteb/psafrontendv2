@@ -470,13 +470,13 @@ export const PremisesListItem: React.FunctionComponent<Props> = ({ premises, pro
             <Text styles={tableCellStyles}>{premises.other}</Text>
             <Text styles={tableCellStyles}>{premises.grossRental}</Text>
             <Text styles={tableCellStyles} style={{borderRight: "3px solid rgba(63, 55, 189, 0.42) ", marginRight:2 }}>{premises.esc}</Text>
-            <Text styles={tableCellStyles} style={{ borderLeft: "3px solid rgba(61, 177, 123, 0.42) " , marginLeft:2}}>{premises.openBays}</Text>
+            <Text styles={tableCellStyles} style={{ borderLeft: "3px solid rgba(61, 177, 123, 0.42) " , marginLeft:2}}>{premises.openBays?.toFixed(1).replace(/[.,]0$/, "")}</Text>
             <Text styles={tableCellStyles}>{premises.openRate}</Text>
-            <Text styles={tableCellStyles} style={{ width: 50 }}>{premises.coveredBays}</Text>
+            <Text styles={tableCellStyles} style={{ width: 50 }}>{premises.coveredBays?.toFixed(1).replace(/[.,]0$/, "")}</Text>
             <Text styles={tableCellStyles} style={{ width: 50 }}>{premises.coveredRate}</Text>
-            <Text styles={tableCellStyles} style={{ width: 50 }}>{premises.shadedBays}</Text>
+            <Text styles={tableCellStyles} style={{ width: 50 }}>{premises.shadedBays?.toFixed(1).replace(/[.,]0$/, "")}</Text>
             <Text styles={tableCellStyles} style={{ width: 50 }}>{premises.shadedRate}</Text>
-            <Text styles={tableCellStyles} style={{ width: 50, borderRight: "3px solid rgba(61, 177, 123, 0.42) ", marginRight:2 }}>{premises.parkingRatio}</Text>
+            <Text styles={tableCellStyles} style={{ width: 50, borderRight: "3px solid rgba(61, 177, 123, 0.42) ", marginRight:2 }}>{premises.parkingRatio?.toFixed(1).replace(/[.,]0$/, "")}</Text>
             <Text styles={tableCellStyles}  style={{ width: 125, borderLeft: "3px solid rgba(212, 236, 10, 0.42) " , marginLeft:2 }}>{premises.tenantName}</Text>
             <Text styles={tableCellStyles} style={{ width: 100, borderRight: "3px solid rgba(212, 236, 10, 0.42) ", marginRight:2 }}>{getExpDate()}</Text>
             <div style={{ width: 60, marginLeft: 10, marginRight: "auto", display: "flex" }}>

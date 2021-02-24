@@ -374,18 +374,75 @@ export const UPDATE_PROPERTY = gql`
 
 ) {
   propertyId
+    propertyName
+    address
+      suburb
+    coordinates
+      earliestOccupation
+      earliestExpiry
+      erfExtent
+      totalGLA
+      vacantArea
+      buildingType
+      province
+      region
+      notes
+      images
+    premisesList{
+      premisesId
+      floor
+      area
+      vacant
+      type
+      premisesIndex
+      occupation
+      premisesNotes
+      netRental
+      opCosts
+      other
+      grossRental
+      esc
+      openBays
+      openRate
+      coveredBays
+      coveredRate
+      shadedBays
+      shadedRate
+      parkingRatio
+      tenantName
+      leaseExpiry
+      tenantNotes
+      yard
+      height
+      doors
+      loading
+      sprinklered
+      canopies
+      power
+    }
+    contact{
+      name
+      email
+      mobileNo
+      officeNo
+      landlordName{
+        landlordName
+      }
+    }
 }
   }
 `;
 
 export const UPDATE_COORDINATES = gql`
   mutation UpdateProperty (
+  $contactId: Int,
   $propertyId: Int!,
   $coordinates: String,
   
       ) {
 
     updateProperty (
+    contactId: $contactId,
     propertyId: $propertyId,
     coordinates: $coordinates,
 ) {

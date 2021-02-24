@@ -870,7 +870,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
                             <TextField
                                 label="Open Ratio"
                                 type="number"
-                                value={newPremises.openRatio === 0 ? "" : String(newPremises.openRatio)}
+                                value={newPremises.openRatio === 0 ? "" : String(newPremises.openRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeOpenRatio}
                                 styles={textFieldParkingRatioStyles}
 
@@ -914,7 +914,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
                             <TextField
                                 label="Covered Ratio"
                                 type="number"
-                                value={newPremises.coveredRatio === 0 ? "" : String(newPremises.coveredRatio)}
+                                value={newPremises.coveredRatio === 0 ? "" : String(newPremises.coveredRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeCoveredRatio}
                                 styles={textFieldParkingRatioStyles}
 
@@ -962,7 +962,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
                             <TextField
                                 label="Shaded Ratio"
                                 type="number"
-                                value={newPremises.shadedRatio === 0 ? "" : String(newPremises.shadedRatio)}
+                                value={newPremises.shadedRatio === 0 ? "" : String(newPremises.shadedRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeShadedRatio}
                                 styles={textFieldParkingRatioStyles}
 
@@ -989,7 +989,7 @@ export const NewPremisesModal: React.FC<Props> = ({ showNewPremisesModal, proper
                             <TextField
                                 label="Overall Parking Ratio"
                                 type="number"
-                                value={newPremises.parkingRatio === 0 ? "" : String(newPremises.parkingRatio)}
+                                value={newPremises.parkingRatio === 0 ? "" : String(newPremises.parkingRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeParkingRatio}
                                 styles={textFieldFloorStyles}
 

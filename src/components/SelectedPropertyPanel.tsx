@@ -547,7 +547,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
 
                                                 <Text style={propertyDetailsStyles}>{`${propertyData?.singleProperty?.erfExtent} m²`}</Text>
                                                 <Text style={propertyDetailsStyles}>{`${propertyData?.singleProperty?.totalGLA} m²`}</Text>
-                                                <Text style={propertyDetailsStyles}>{`${getVacantGLA()} m²`}</Text>
+                                                <Text style={propertyDetailsStyles}>{`${getVacantGLA().toFixed(2).replace(/[.,]00$/, "")} m²`}</Text>
                                                 <Text style={propertyDetailsStyles}>{getEarliestOccDate()}</Text>
                                                 <Text style={propertyDetailsStyles}>{getEarliestExpDate()}</Text>
                                             </Stack>
@@ -750,7 +750,7 @@ const SelectedPropertyPanel: React.FunctionComponent<Props> = ({ distinctSuburbs
                         }
                     }}>
 
-                        <Map coordinatesArray={coordinatesArray} propertyId={propertyData?.singleProperty?.propertyId!}></Map>
+                        <Map coordinatesArray={coordinatesArray} propertyId={propertyData?.singleProperty?.propertyId!} contactId={propertyData?.singleProperty?.contact?.contactId!}></Map>
 
                     </Stack>
 

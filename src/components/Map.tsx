@@ -18,10 +18,11 @@ const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
 interface Props {
     coordinatesArray: string[] | undefined,
-    propertyId: number
+    propertyId: number,
+    contactId: number
 }
 
-export const Map: React.FC<Props> = ({ coordinatesArray, propertyId }) => {
+export const Map: React.FC<Props> = ({ coordinatesArray, propertyId, contactId }) => {
 
     const [updateProperty, { data }] = useMutation<Mutation, MutationUpdatePropertyArgs>(UPDATE_COORDINATES);
 
@@ -29,6 +30,7 @@ export const Map: React.FC<Props> = ({ coordinatesArray, propertyId }) => {
 
         updateProperty({
             variables: {
+                contactId: contactId,
                 propertyId: propertyId,
                 coordinates: `${marker.latitude},${marker.longitude}`
             },
@@ -58,6 +60,8 @@ export const Map: React.FC<Props> = ({ coordinatesArray, propertyId }) => {
 
     var latitude = -33.973564350686324
     var longitude = 18.456012615707248
+
+    console.log(coordinatesArray)
 
     if (coordinatesArray !== undefined && coordinatesArray !== null && isNaN(Number(coordinatesArray[0])) === false && isNaN(Number(coordinatesArray[1])) === false) {
         latitude = Number(coordinatesArray[0])

@@ -879,7 +879,7 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
                             <TextField
                                 label="Open Ratio"
                                 type="number"
-                                value={duplicatedPremises.openRatio === 0 ? "" : String(duplicatedPremises.openRatio)}
+                                value={duplicatedPremises.openRatio === 0 ? "" : String(duplicatedPremises.openRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeOpenRatio}
                                 styles={textFieldParkingRatioStyles}
 
@@ -923,7 +923,7 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
                             <TextField
                                 label="Covered Ratio"
                                 type="number"
-                                value={duplicatedPremises.coveredRatio === 0 ? "" : String(duplicatedPremises.coveredRatio)}
+                                value={duplicatedPremises.coveredRatio === 0 ? "" : String(duplicatedPremises.coveredRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeCoveredRatio}
                                 styles={textFieldParkingRatioStyles}
 
@@ -971,7 +971,7 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
                             <TextField
                                 label="Shaded Ratio"
                                 type="number"
-                                value={duplicatedPremises.shadedRatio === 0 ? "" : String(duplicatedPremises.shadedRatio)}
+                                value={duplicatedPremises.shadedRatio === 0 ? "" : String(duplicatedPremises.shadedRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeShadedRatio}
                                 styles={textFieldParkingRatioStyles}
 
@@ -998,7 +998,7 @@ export const DuplicatePremisesModal: React.FC<Props> = ({ showDuplicatePremisesM
                             <TextField
                                 label="Parking Ratio"
                                 type="number"
-                                value={duplicatedPremises.parkingRatio === 0 ? "" : String(duplicatedPremises.parkingRatio)}
+                                value={duplicatedPremises.parkingRatio === 0 ? "" : String(duplicatedPremises.parkingRatio.toFixed(1).replace(/[.,]0$/, ""))}
                                 onChange={onChangeParkingRatio}
                                 styles={textFieldFloorStyles}
 

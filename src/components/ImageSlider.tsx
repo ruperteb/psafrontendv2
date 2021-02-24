@@ -119,7 +119,19 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
 
     const onChange = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement> | undefined, item?: IContextualMenuItem | undefined) => {
         /* setSelectedItem(item); */
-        if (item?.key === "Primary") {
+
+        if (item?.key !== "Penultimate" && item?.key !== "Final"  ) {
+            var selectedImage = imagesArray[imageIndex]
+            var rest = imagesArray.filter(image => {
+                return image !== selectedImage
+            })
+
+            var beforeSelectedImage = rest.slice(0, parseInt(item?.key!) -1)
+            var afterSelectedImage = rest.slice(parseInt(item?.key!) -1)
+            imagesArray = [...beforeSelectedImage, selectedImage, ...afterSelectedImage]
+        }
+
+      /*   if (item?.key === "Primary") {
             var primary = imagesArray[imageIndex]
             var rest = imagesArray.filter(image => {
                 return image !== primary
@@ -145,7 +157,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
             var firstTwo = rest.slice(0, 2)
             var remaining = rest.slice(2)
             imagesArray = [...firstTwo, tertiary, ...remaining]
-        }
+        } */
         if (item?.key === "Penultimate") {
             var penultimate = imagesArray[imageIndex]
 
@@ -215,18 +227,43 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         },
         items: [
             {
-                key: 'Primary',
-                text: 'Primary',
+                key: '1',
+                text: '1',
                 onClick: onChange
             },
             {
-                key: 'Secondary',
-                text: 'Secondary',
+                key: '2',
+                text: '2',
                 onClick: onChange
             },
             {
-                key: 'Tertiary',
-                text: 'Tertiary',
+                key: '3',
+                text: '3',
+                onClick: onChange
+            },
+            {
+                key: '4',
+                text: '4',
+                onClick: onChange
+            },
+            {
+                key: '5',
+                text: '5',
+                onClick: onChange
+            },
+            {
+                key: '6',
+                text: '6',
+                onClick: onChange
+            },
+            {
+                key: '7',
+                text: '7',
+                onClick: onChange
+            },
+            {
+                key: '8',
+                text: '8',
                 onClick: onChange
             },
             {
@@ -246,15 +283,15 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
     const getImageName = () => {
 
 switch (imageIndex) {
-    case 0:
-      return "Primary"
+    /* case 0:
+      return "Image 1"
       break;
     case 1:
-        return "Secondary"
+        return "Image 2"
       break;
       case 2:
         return "Tertiary"
-      break;
+      break; */
       case imagesArray.length-2:
         return "Penultimate"
       break;
@@ -262,7 +299,7 @@ switch (imageIndex) {
         return "Final"
       break;
     default:
-      return `Image ${imageIndex}`
+      return `Image ${imageIndex +1}`
 
     }
 }
@@ -457,7 +494,7 @@ switch (imageIndex) {
                     }}
                 >
 
-                    <Image cloudName="drlfedqyz" publicId={imagesArray[imageIndex]} width="600" /* height="400" */ crop="fit" />
+                    <Image cloudName="drlfedqyz" publicId={imagesArray[imageIndex]} width="600" height="400" crop="fill_pad"  gravity="auto" />
 
 
                 </motion.div>
@@ -465,7 +502,7 @@ switch (imageIndex) {
 
 
 
-            <div className={chevronIconDivLeft} onClick={() => paginate(1)}><Icon className={chevronClassLeft} iconName={'ChevronRight'} /></div>
+            <div className={chevronIconDivLeft} onClick={() => paginate(-1)}><Icon className={chevronClassLeft} iconName={'ChevronRight'} /></div>
             <div className={chevronIconDivRight} onClick={() => paginate(1)}><Icon className={chevronClassRight} iconName={'ChevronRight'} /></div>
 
             <div style={{ display: "flex", position: "absolute", bottom: 5, left:20, zIndex:5 }}>
