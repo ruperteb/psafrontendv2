@@ -1182,7 +1182,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                     {getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== undefined ?
                                         <Text style={styles.premisesInfoText}>{getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1] ?
                                             `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}% to ${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[1]}% `
-                                            : `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}`}
+                                            : `${getLowestHighestEsc(selectedPropertyList[index].premisesList!)[0]}%`}
                                         </Text> : <Text></Text>}
 
                                 </View>
