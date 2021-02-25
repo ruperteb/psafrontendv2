@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     pageNumbers: {
         position: "absolute",
         top: 10,
-        right: 30,
+        right: 40,
         fontSize: 10,
         color: "white",
 
