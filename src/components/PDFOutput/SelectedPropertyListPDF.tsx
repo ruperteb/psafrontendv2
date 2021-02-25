@@ -257,8 +257,23 @@ const styles = StyleSheet.create({
         width: 20,
         borderWidth: 1,
         borderRadius: 20,
-        paddingLeft: 7,
-        paddingTop: 1.5,
+        paddingLeft: 6.95,
+        paddingTop: 1.4,
+        "backgroundColor": '#20314b',
+        color: "white",
+        fontFamily: "SegoeUI",
+        fontWeight: "bold",
+    },
+    propertyNumber10plus: {
+
+        fontSize: 10,
+        borderStyle: "solid",
+        height: 20,
+        width: 20,
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingLeft: 4.65,
+        paddingTop: 2.35,
         "backgroundColor": '#20314b',
         color: "white",
         fontFamily: "SegoeUI",
@@ -377,6 +392,62 @@ Font.register({
     ]
 });
 
+const getParkingRatio = (premises: Premises) => {
+
+    var totalBays = premises.openBays! + premises.shadedBays! + premises.coveredBays!
+
+    return (totalBays / (premises.area! / 100))
+}
+
+const getTotalArea = (premisesList: Premises[]) => {
+
+    var totalArea = premisesList!.reduce((acc, premises) => {
+        return acc + premises.area!
+    }, 0)
+
+    return totalArea
+}
+
+const getTotalOpenBays = (premisesList: Premises[]) => {
+
+    var totalBays = premisesList!.reduce((acc, premises) => {
+        return acc + premises.openBays!
+    }, 0)
+
+    return totalBays
+}
+
+const getTotalCoveredBays = (premisesList: Premises[]) => {
+
+    var totalBays = premisesList!.reduce((acc, premises) => {
+        return acc + premises.coveredBays!
+    }, 0)
+
+    return totalBays
+}
+
+const getTotalShadedBays = (premisesList: Premises[]) => {
+
+    var totalBays = premisesList!.reduce((acc, premises) => {
+        return acc + premises.shadedBays!
+    }, 0)
+
+    return totalBays
+}
+
+const getParkingRatioTotal = (premisesList: Premises[]) => {
+
+    var totalBays = premisesList!.reduce((acc, premises) => {
+        return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
+    }, 0)
+
+    var totalArea = premisesList!.reduce((acc, premises) => {
+        return acc + premises.area!
+    }, 0)
+
+    return (totalBays / (totalArea / 100))
+}
+
 interface Props {
 
     selectedPropertyList: SelectedPropertyList,
@@ -419,7 +490,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
 
                 <Text style={styles.pageNumbers} render={({ pageNumber, totalPages }) => (
-                    `${pageNumber-1} / ${totalPages-2}`
+                    `${pageNumber - 1} / ${totalPages - 2}`
                 )} fixed />
 
             </View>
@@ -436,7 +507,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
                     <View style={styles.detailsSection}>
 
                         <View style={styles.propertyNumberColumn}>
-                            <Text style={styles.propertyNumber}>{index + 1}</Text>
+                        <Text style={index < 9 ? styles.propertyNumber : styles.propertyNumber10plus}>{index + 1}</Text>
                         </View>
 
                         <View style={styles.propertyDetails}>
@@ -528,11 +599,11 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                                 <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={styles.premisesText} >{premises.floor}</Text>
+                                        <Text style={[styles.premisesText, {textAlign: "left"}]} >{premises.floor}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.area}</Text>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.area?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     {/*  <View style={[styles.premisesContainer, {width: 40}]}>
@@ -557,56 +628,129 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
                                     </View>
 
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.netRental}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.netRental?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.opCosts}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.opCosts?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.other}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.other?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.grossRental}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.grossRental?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 30 }]}>
-                                        <Text style={[styles.premisesText, { width: 30 }]} >{premises.esc}</Text>
+                                        <Text style={[styles.premisesText, { width: 30 }]} >{premises.esc?.toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.openBays}</Text>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.openBays?.toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.openRate}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.openRate?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.coveredBays}</Text>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.coveredBays?.toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.coveredRate}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.coveredRate?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.shadedBays}</Text>
+                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.shadedBays?.toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 45 }]}>
-                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.shadedRate}</Text>
+                                        <Text style={[styles.premisesText, { width: 45 }]} >{premises.shadedRate?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 50 }]}>
-                                        <Text style={[styles.premisesText, { width: 50 }]} >{premises.parkingRatio}</Text>
+                                        <Text style={[styles.premisesText, { width: 50 }]} >{getParkingRatio(premises).toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                     </View>
                                 </View>
 
                             ))}
+
+                            {selectedPropertyList[index].premisesList!.length > 1?<View style={selectedPropertyList[index].premisesList!.length % 2 !== 0 ? [styles.premisesDetails, {borderTop: 0.5 , borderTopColor: "black" }] : [styles.premisesDetails, { backgroundColor: "#ede6e6", borderTop: 0.5 , borderTopColor: "black" }]}>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={styles.premisesText} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{getTotalArea(selectedPropertyList[index].premisesList!).toFixed(2).replace(/[.,]00$/, "")}</Text>
+
+                                </View>
+                                {/*  <View style={[styles.premisesContainer, {width: 40}]}>
+<Text style={styles.premisesHeadingText} >Vacant?</Text>
+<Text style={styles.premisesHeadingSubText} ></Text>
+</View> */}
+                                <View style={[styles.premisesContainer, { width: 30 }]}>
+                                    <Text style={styles.premisesText} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 55 }]}>
+                                    <Text style={[styles.premisesText, { width: 55 }]} >
+                                        </Text>
+
+                                </View>
+
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 30 }]}>
+                                    <Text style={[styles.premisesText, { width: 30 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{getTotalOpenBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{getTotalCoveredBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={[styles.premisesText, { width: 40 }]} >{getTotalShadedBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 45 }]}>
+                                    <Text style={[styles.premisesText, { width: 45 }]} ></Text>
+
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 50 }]}>
+                                    <Text style={[styles.premisesText, { width: 50 }]} >{getParkingRatioTotal(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+
+                                </View>
+                            </View>:<Text></Text>}
 
                         </View>
 
@@ -622,7 +766,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
                                 <Image style={styles.image} src={cl.url(`${image}`, { width: 600, crop: "fit" })}></Image>
                             </View>
 
-                        )): <Text></Text>}
+                        )) : <Text></Text>}
 
 
 
@@ -653,9 +797,9 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
             <Image style={styles.contactPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610357459/lion_light_dptptx.jpg"></Image>
 
             <Text style={styles.contactPageText1} >For further information, please contact:</Text>
-            <Text style={styles.contactPageText2} >{agent !== undefined? agent.name : "" }</Text>
-            <Text style={styles.contactPageText2} >{agent !== undefined? agent.mobile : ""}</Text>
-            <Text style={styles.contactPageText2} >{agent !== undefined? agent.email : ""}</Text>
+            <Text style={styles.contactPageText2} >{agent !== undefined ? agent.name : ""}</Text>
+            <Text style={styles.contactPageText2} >{agent !== undefined ? agent.mobile : ""}</Text>
+            <Text style={styles.contactPageText2} >{agent !== undefined ? agent.email : ""}</Text>
 
             <Text style={styles.contactPageText3} >Whilst every effort has been made to ensure accuracy, no liability will be accepted for any errors or omissions and the prospective tenant/ purchaser is required to verify details prior to contract</Text>
 
