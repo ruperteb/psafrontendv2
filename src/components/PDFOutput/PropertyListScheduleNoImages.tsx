@@ -151,9 +151,9 @@ const styles = StyleSheet.create({
     },
     pageNumbers: {
         position: "absolute",
-        top: 20,
-        right: 20,
-        fontSize: 8,
+        top: 15,
+        right: 40,
+        fontSize: 10,
         color: "white",
     },
     enquiryHeading: {
@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     premisesDetailsContainer: {
         display: "flex",
         flexDirection: "column",
+        marginLeft: 5
     },
     premisesHeadings: {
         display: "flex",
@@ -238,8 +239,8 @@ const styles = StyleSheet.create({
     premisesContainer: {
         display: "flex",
         flexDirection: "column",
-        borderLeft:  0.5, 
-        borderLeftStyle: "dotted", 
+        borderLeft: 0.5,
+        borderLeftStyle: "dotted",
         borderLeftColor: "black"
     },
     premisesContainerTotals: {
@@ -258,6 +259,10 @@ const styles = StyleSheet.create({
         marginTop: "auto",
         marginBottom: "auto",
         textAlign: 'center',
+        height: 15,
+        paddingTop:"2",
+        paddingBottom: "2"
+        
     },
     premisesHeadingSubText: {
         fontSize: 6,
@@ -356,7 +361,7 @@ interface Props {
 }
 
 
-const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent, imageLimit, showImages }) => (
+const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent, imageLimit, showImages }) => (
 
 
 
@@ -389,7 +394,79 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
                 )} fixed />
 
             </View>
+            <View fixed style={[styles.detailsSection, {marginTop: 10}]}>
+                <View style={{width: 140}}>
+                </View>
+                <View style={styles.premisesDetailsContainer}>
+                    <View style={styles.premisesHeadings}>
+                        <View style={[styles.premisesContainer, { width: 40 }]}>
+                            <Text style={styles.premisesHeadingText} >Floor/ Unit</Text>
+                            <Text style={styles.premisesHeadingSubText} ></Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 40 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Area</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>m²</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 30 }]}>
+                            <Text style={styles.premisesHeadingText} >Type</Text>
+                            <Text style={styles.premisesHeadingSubText} ></Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 55 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Occupation Date</Text>
+                            <Text style={styles.premisesHeadingSubText} ></Text>
+                        </View>
 
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Net Rental</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Op Costs</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Other</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Gross Rental</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 30 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Esc</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>%</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 40 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Open Bays</Text>
+                            <Text style={[styles.premisesHeadingSubText]}></Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Open Rate</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 40 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Covered Bays</Text>
+                            <Text style={[styles.premisesHeadingSubText]}></Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Covered Rate</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 40 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Shaded Bays</Text>
+                            <Text style={[styles.premisesHeadingSubText]}></Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 45 }]}>
+                            <Text style={[styles.premisesHeadingText]} >Shaded Rate</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
+                        </View>
+                        <View style={[styles.premisesContainer, { width: 50, borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]}>
+                            <Text style={[styles.premisesHeadingText]} >Parking Ratio</Text>
+                            <Text style={[styles.premisesHeadingSubText]}>bays/100m²</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
 
 
 
@@ -397,95 +474,25 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
             {selectedPropertyList.map((property, index) => (
 
-                <View minPresenceAhead={50} wrap={false} key={property.propertyId} style={styles.overallContainer}>
+                <View minPresenceAhead={60} wrap={false} key={property.propertyId} style={styles.overallContainer}>
 
                     <View style={styles.detailsSection}>
 
                         <View style={styles.propertyNumberColumn}>
-                        <Text style={index < 9 ? styles.propertyNumber : styles.propertyNumber10plus}>{index + 1}</Text>
+                            <Text style={index < 9 ? styles.propertyNumber : styles.propertyNumber10plus}>{index + 1}</Text>
                         </View>
 
                         <View style={styles.propertyDetails}>
-
-
                             <Text style={styles.propertyHeading}>{property.propertyName}</Text>
                             <Text style={styles.propertyText}>{property.address}</Text>
                             <Text style={styles.propertyText}>{property.suburb}</Text>
-                           
-
-
-
                         </View>
+
+
 
                         <View style={styles.premisesDetailsContainer}>
 
-                            <View style={styles.premisesHeadings}>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text  style={styles.premisesHeadingText} >Floor/ Unit</Text>
-                                    <Text  style={styles.premisesHeadingSubText} ></Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text  style={[styles.premisesHeadingText]} >Area</Text>
-                                    <Text  style={[styles.premisesHeadingSubText]}>m²</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 30 }]}>
-                                    <Text style={styles.premisesHeadingText} >Type</Text>
-                                    <Text style={styles.premisesHeadingSubText} ></Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 55 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Occupation Date</Text>
-                                    <Text style={styles.premisesHeadingSubText} ></Text>
-                                </View>
 
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Net Rental</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Op Costs</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Other</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Gross Rental</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 30 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Esc</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>%</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Open Bays</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}></Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Open Rate</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Covered Bays</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}></Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Covered Rate</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Shaded Bays</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}></Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 45 }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Shaded Rate</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
-                                </View>
-                                <View style={[styles.premisesContainer, { width: 50, borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black" }]}>
-                                    <Text style={[styles.premisesHeadingText]} >Parking Ratio</Text>
-                                    <Text style={[styles.premisesHeadingSubText]}>bays/100m²</Text>
-                                </View>
-                            </View>
                             {selectedPropertyList[index].premisesList!.map((premises, index) => (
 
                                 <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
@@ -494,7 +501,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText ]} >{premises.area?.toFixed(2).replace(/[.,]00$/, "")}</Text>
+                                        <Text style={[styles.premisesText]} >{premises.area?.toFixed(2).replace(/[.,]00$/, "")}</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 30 }]}>
                                         <Text style={styles.premisesText} >{premises.type === "Warehouse" ? "W/H" : premises.type}</Text>
@@ -557,7 +564,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
                                         <Text style={[styles.premisesText]} >{premises.shadedRate?.toFixed(2).replace(/[.,]00$/, "")}</Text>
 
                                     </View>
-                                    <View style={[styles.premisesContainer, { width: 50, borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black"}]}>
+                                    <View style={[styles.premisesContainer, { width: 50, borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]}>
                                         <Text style={[styles.premisesText]} >{getParkingRatio(premises).toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                     </View>
@@ -565,13 +572,13 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                             ))}
 
-                            {selectedPropertyList[index].premisesList!.length > 1?<View style={selectedPropertyList[index].premisesList!.length % 2 !== 0 ? [styles.premisesDetails, {borderTop: 0.5 , borderTopColor: "black" }] : [styles.premisesDetails, { backgroundColor: "#ede6e6", borderTop: 0.5 , borderTopColor: "black" }]}>
+                            {selectedPropertyList[index].premisesList!.length > 1 ? <View style={selectedPropertyList[index].premisesList!.length % 2 !== 0 ? [styles.premisesDetails, { borderTop: 0.5, borderTopColor: "black" }] : [styles.premisesDetails, { backgroundColor: "#ede6e6", borderTop: 0.5, borderTopColor: "black" }]}>
                                 <View style={[styles.premisesContainerTotals, { width: 40 }]}>
                                     <Text style={[styles.premisesText]} ></Text>
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { borderLeft:  0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalArea(selectedPropertyList[index].premisesList!).toFixed(2).replace(/[.,]00$/, "")}</Text>
+                                    <Text style={[styles.premisesText, { borderLeft: 0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalArea(selectedPropertyList[index].premisesList!).toFixed(2).replace(/[.,]00$/, "")}</Text>
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 30 }]}>
                                     <Text style={styles.premisesText} ></Text>
@@ -579,7 +586,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 55 }]}>
                                     <Text style={[styles.premisesText]} >
-                                        </Text>
+                                    </Text>
 
                                 </View>
 
@@ -604,7 +611,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { borderLeft:  0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalOpenBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+                                    <Text style={[styles.premisesText, { borderLeft: 0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalOpenBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 45 }]}>
@@ -612,7 +619,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { borderLeft:  0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalCoveredBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+                                    <Text style={[styles.premisesText, { borderLeft: 0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalCoveredBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 45 }]}>
@@ -620,7 +627,7 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { borderLeft:  0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalShadedBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+                                    <Text style={[styles.premisesText, { borderLeft: 0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getTotalShadedBays(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 45 }]}>
@@ -628,26 +635,15 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
 
                                 </View>
                                 <View style={[styles.premisesContainerTotals, { width: 50 }]}>
-                                    <Text style={[styles.premisesText, { borderLeft:  0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight:  0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getParkingRatioTotal(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
+                                    <Text style={[styles.premisesText, { borderLeft: 0.5, borderLeftStyle: "dotted", borderLeftColor: "black", borderRight: 0.5, borderRightStyle: "dotted", borderRightColor: "black" }]} >{getParkingRatioTotal(selectedPropertyList[index].premisesList!).toFixed(1).replace(/[.,]0$/, "")}</Text>
 
                                 </View>
-                            </View>:<Text></Text>}
+                            </View> : <Text></Text>}
 
                         </View>
 
                     </View>
 
-                    <View style={styles.imagesSection}>
-
-                        {showImages === true ? selectedPropertyList[index].images!.slice(0, 3).map((image, index) => (
-
-                            <View style={styles.imagesContainer} >
-                                <Image style={styles.image} src={cl.url(`${image}`, { width: 600, crop: "fit" })}></Image>
-                            </View>
-
-                        )) : <Text></Text>}
-
-                    </View>
                 </View>
             ))}
 
@@ -685,4 +681,4 @@ const SelectedPropertyListPDF: React.FC<Props> = ({ selectedPropertyList, enquir
     </Document>
 );
 
-export default SelectedPropertyListPDF
+export default PropertyListScheduleNoImages

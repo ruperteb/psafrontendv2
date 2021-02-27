@@ -14,6 +14,7 @@ import { Icon } from '@fluentui/react/lib/Icon';
 
 import SelectedPropertyListPDF from "./PDFOutput/SelectedPropertyListPDF"
 import PropertyListLargeImagesPDF from "./PDFOutput/PropertyListLargeImagesPDF"
+import PropertyListScheduleNoImages from "./PDFOutput/PropertyListScheduleNoImages"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
 
@@ -73,11 +74,11 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
     var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
 
     var filteredPropertyList = selectedPropertyList?.map((property) => {
-        if(pdfVariables?.pdfVariables?.onlyShowVacant === true) {
+        if (pdfVariables?.pdfVariables?.onlyShowVacant === true) {
             let filteredPremises = property.premisesList!.filter((premises) => {
                 return premises.vacant === "true"
             })
-           let premisesFilteredProperty = {...property, premisesList: filteredPremises }
+            let premisesFilteredProperty = { ...property, premisesList: filteredPremises }
             return premisesFilteredProperty
         } else {
             return property
@@ -184,7 +185,46 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
 
 
+    const showPDF = () => {
 
+        switch (pdfVariables?.pdfVariables?.outputType) {
+            case "Large Images":
+
+                return (
+
+                    <div style={{ height: '85vh' }}>
+                        <PDFViewer width="100%" height="100%">
+                            <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables.pdfVariables.imageLimit} showImages={pdfVariables.pdfVariables.showImages} />
+                        </PDFViewer>
+
+                    </div>
+
+                )
+
+            case "Schedule":
+
+                return (
+
+                    <div style={{ height: '85vh' }}>
+                        <PDFViewer width="100%" height="100%">
+                            <PropertyListScheduleNoImages enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages} />
+                        </PDFViewer>
+
+                    </div>
+
+                )
+
+            default:
+
+                <div style={{ height: '85vh' }}>
+                    <PDFViewer width="100%" height="100%">
+                        <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages} />
+                    </PDFViewer>
+
+                </div>
+        }
+
+    }
 
 
 
@@ -218,15 +258,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
 
 
-                    {<div style={{ height: '85vh' }}>
-                        <PDFViewer width="100%" height="100%">
-                            {pdfVariables?.pdfVariables?.outputType === "Large Images" ?
-                            <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables.pdfVariables.imageLimit} showImages={pdfVariables.pdfVariables.showImages}/>:
-                            <SelectedPropertyListPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages}/>
-                            }
-                        </PDFViewer>
-
-                    </div>}
+                    {showPDF()}
 
 
                 </Stack>

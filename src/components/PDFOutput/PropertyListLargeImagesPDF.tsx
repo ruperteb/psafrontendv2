@@ -308,11 +308,10 @@ const styles = StyleSheet.create({
     },
     pageNumbers: {
         position: "absolute",
-        top: 10,
+        top: 15,
         right: 40,
         fontSize: 10,
         color: "white",
-
     },
     enquiryHeading: {
         fontFamily: 'SegoeUI',
@@ -431,8 +430,8 @@ const styles = StyleSheet.create({
     },
     premisesContainer: {
         /* width: "20%", */
-        paddingLeft: 5,
-        paddingRight: 5,
+      /*   paddingLeft: 5,
+        paddingRight: 5, */
         display: "flex",
         flexDirection: "column",
         /* borderBottomWidth: 1,
@@ -442,28 +441,20 @@ const styles = StyleSheet.create({
     },
     premisesHeadingText: {
         fontSize: 10,
-        /*  height: 15, */
         marginTop: "auto",
         marginBottom: "auto",
-        marginLeft: "auto",
-        marginRight: 'auto',
         textAlign: 'center',
         color: "white",
     },
     premisesText: {
         fontSize: 8,
-        /*  height: 15, */
         marginTop: "auto",
         marginBottom: "auto",
-        marginLeft: "auto",
-        marginRight: 'auto',
         textAlign: 'center',
 
     },
     premisesHeadingSubText: {
         fontSize: 6,
-        marginLeft: "auto",
-        marginRight: 'auto',
         textAlign: 'center',
         height: 10,
         color: "white",
@@ -910,16 +901,16 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             <View style={styles.premisesHeadings}>
                                 <View style={[styles.premisesContainer, { width: 80 }]}>
-                                    <Text style={[styles.premisesHeadingText, { width: 80, textAlign: "left", marginLeft: 5 }]} >Floor/ Unit</Text>
+                                    <Text style={[styles.premisesHeadingText, { textAlign: "left", marginLeft: 5 }]} >Floor/ Unit</Text>
                                     <Text style={styles.premisesHeadingSubText} ></Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
                                     <Text style={styles.premisesHeadingText} >Area</Text>
-                                    <Text style={[styles.premisesHeadingSubText, { width: 40 }]}>m²</Text>
+                                    <Text style={[styles.premisesHeadingSubText]}>m²</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
                                     <Text style={styles.premisesHeadingText} >Gross Rental</Text>
-                                    <Text style={[styles.premisesHeadingSubText, { width: 50 }]}>R/m²/month</Text>
+                                    <Text style={[styles.premisesHeadingSubText]}>R/m²/month</Text>
                                 </View>
 
                             </View>
@@ -928,13 +919,13 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             {selectedPropertyList[index].premisesList!.map((premises, index) => (
                                 <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                     <View style={[styles.premisesContainer, { width: 80 }]}>
-                                        <Text style={[styles.premisesText, { width: 80, textAlign: "left", marginLeft: 5 }]} >{premises.floor}</Text>
+                                        <Text style={[styles.premisesText, { textAlign: "left", marginLeft: 5 }]} >{premises.floor}</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{premises.area}</Text>
+                                        <Text style={[styles.premisesText]} >{premises.area}</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 50 }]}>
-                                        <Text style={[styles.premisesText, { width: 50 }]} >{premises.grossRental}</Text>
+                                        <Text style={[styles.premisesText]} >{premises.grossRental}</Text>
                                     </View>
 
 
@@ -944,12 +935,12 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             ))}
 
                             {selectedPropertyList[index].premisesList!.length>1?
-                            <View style={(selectedPropertyList[index].premisesList!.length) % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" , borderTop: 0.5}]}>
+                            <View style={(selectedPropertyList[index].premisesList!.length) % 2 !== 0 ? [styles.premisesDetails, {borderTop: 0.5}] : [styles.premisesDetails, { backgroundColor: "#ede6e6" , borderTop: 0.5}]}>
                                 <View style={[styles.premisesContainer, { width: 80 }]}>
                                     {/*  <Text style={styles.premisesText} >{premises.floor}</Text> */}
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} > {selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText]} > {selectedPropertyList[index].premisesList!.length !== 0 ?
                                         selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.area!
                                         }, 0) : 0
@@ -964,20 +955,20 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             <View style={styles.premisesHeadings}>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesHeadingText, { width: 40, textAlign: "left", marginLeft: 5 }]} >Type</Text>
-                                    {<Text style={[styles.premisesHeadingSubText, { width: 40 }]} ></Text>}
+                                    <Text style={[styles.premisesHeadingText, { textAlign: "left", marginLeft: 5 }]} >Type</Text>
+                                    {<Text style={[styles.premisesHeadingSubText]} ></Text>}
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesHeadingText, { width: 40 }]} >Bays</Text>
-                                    <Text style={[styles.premisesHeadingSubText, { width: 40 }]}></Text>
+                                    <Text style={[styles.premisesHeadingText]} >Bays</Text>
+                                    <Text style={[styles.premisesHeadingSubText]}></Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesHeadingText, { width: 40 }]} >Ratio</Text>
-                                    <Text style={[styles.premisesHeadingSubText, { width: 40 }]}>bays/100m²</Text>
+                                    <Text style={[styles.premisesHeadingText]} >Ratio</Text>
+                                    <Text style={[styles.premisesHeadingSubText]}>bays/100m²</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
-                                    <Text style={[styles.premisesHeadingText, { width: 50 }]} >Avg Rate</Text>
-                                    <Text style={[styles.premisesHeadingSubText, { width: 50 }]}>R/bay/month</Text>
+                                    <Text style={[styles.premisesHeadingText]} >Avg Rate</Text>
+                                    <Text style={[styles.premisesHeadingSubText]}>R/bay/month</Text>
                                 </View>
 
                             </View>
@@ -987,10 +978,10 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             }, 0) > 0 && property.buildingType !== "Industrial" ?
                                 <View style={getParkingRowsOrder(selectedPropertyList[index].premisesList!,"covered")?[styles.premisesDetails, { backgroundColor: "#ede6e6" }]:[styles.premisesDetails]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { textAlign: "left" }]} >Covered</Text>
+                                        <Text style={[styles.premisesText, { textAlign: "left", marginLeft: 5  }]} >Covered</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.coveredBays!
                                         }, 0) > 0 ?
                                             selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
@@ -999,7 +990,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.coveredBays!
                                         }, 0) > 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
@@ -1010,7 +1001,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 50 }]}>
-                                        <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 if (premises.coveredBays! === 0) {
                                                     return acc + premises.coveredRate!
@@ -1033,10 +1024,10 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             }, 0) > 0 && property.buildingType !== "Industrial" ?
                             <View style={getParkingRowsOrder(selectedPropertyList[index].premisesList!,"shaded")?[styles.premisesDetails, { backgroundColor: "#ede6e6" }]:[styles.premisesDetails]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { textAlign: "left" }]} >Shaded</Text>
+                                        <Text style={[styles.premisesText, { textAlign: "left", marginLeft: 5  }]} >Shaded</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.shadedBays!
                                         }, 0) > 0 ?
                                             selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
@@ -1045,7 +1036,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.shadedBays!
                                         }, 0) > 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
@@ -1056,7 +1047,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 50 }]}>
-                                        <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 if (premises.shadedBays! === 0) {
                                                     return acc + premises.shadedRate!
@@ -1079,10 +1070,10 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                             }, 0) > 0 && property.buildingType !== "Industrial" ?
                             <View style={getParkingRowsOrder(selectedPropertyList[index].premisesList!,"open")?[styles.premisesDetails, { backgroundColor: "#ede6e6" }]:[styles.premisesDetails]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { textAlign: "left" }]} >Open</Text>
+                                        <Text style={[styles.premisesText, { textAlign: "left", marginLeft: 5  }]} >Open</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >
+                                        <Text style={[styles.premisesText]} >
                                             {selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 return acc + premises.openBays!
                                             }, 0) > 0 ?
@@ -1092,7 +1083,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                             }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             return acc + premises.openBays!
                                         }, 0) > 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
@@ -1103,7 +1094,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                         }</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 50 }]}>
-                                        <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                        <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                             (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                                 if (premises.openBays! === 0) {
                                                     return acc + premises.openRate!
@@ -1123,10 +1114,10 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             {getParkingRowsLength(selectedPropertyList[index].premisesList!)>1? <View style={getParkingRowsLength(selectedPropertyList[index].premisesList!)!==3?[styles.premisesDetails, { backgroundColor: "#ede6e6", borderTop: 0.5 }]: [styles.premisesDetails, {borderTop: 0.5}]}>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { textAlign: "left" }]} >Overall</Text>
+                                    <Text style={[styles.premisesText, { textAlign: "left", marginLeft: 5  }]} >Overall</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                         selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             if (premises.openBays! === 0 && premises.shadedBays! === 0 && premises.coveredBays! === 0) {
                                                 return acc + premises.parkingRatio! * (premises.area! / 100)
@@ -1137,7 +1128,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
-                                    <Text style={[styles.premisesText, { width: 40 }]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
+                                    <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                             if (premises.openBays! === 0 && premises.shadedBays! === 0 && premises.coveredBays! === 0) {
                                                 return acc + premises.parkingRatio! * (premises.area! / 100)
@@ -1151,7 +1142,7 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
                                     }</Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 50 }]}>
-                                    <Text style={[styles.premisesText, { width: 50 }]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
+                                    <Text style={[styles.premisesText]} >{selectedPropertyList[index].premisesList!.length !== 0 && selectedPropertyList[index].premisesList!.reduce((acc, premises) => {
                                         return acc + premises.openBays! + premises.shadedBays! + premises.coveredBays!
                                     }, 0) > 0 ?
                                         (selectedPropertyList[index].premisesList!.reduce((acc, premises) => {

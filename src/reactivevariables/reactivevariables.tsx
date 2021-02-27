@@ -45,7 +45,6 @@ const PDFVariablesInitiallState: PDFVariables =
     onlyShowVacant: true,
     showImages: true,
     imageLimit: "All",
-
   }
 
 

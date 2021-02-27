@@ -98,6 +98,7 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
 
   const handleSelectedPropertiesClick = React.useCallback((event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button | HTMLSpanElement, MouseEvent>) => {
     if (showSelectedPropertyListPanel === false) {
+      navigationState ( {...navigationState(), showSavedListsPanel: false})
       navigationState ( {...navigationState(), showSelectedPropertyListPanel: true})
      
     } else {
@@ -108,6 +109,7 @@ export const Navigation: React.FC<Props> = ({  selectedPropertyType,  setSearch,
 
   const handleManageListsClick = React.useCallback((event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button | HTMLSpanElement, MouseEvent>) => {
     if (showSavedListsPanel === false) {
+      navigationState ( {...navigationState(), showSelectedPropertyListPanel: false})
       navigationState ( {...navigationState(), showSavedListsPanel: true})
      
     } else {

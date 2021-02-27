@@ -129,7 +129,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
 
 
-    const [enquiryName, setEnquiryName] = React.useState('');
+    const [enquiryName, setEnquiryName] = React.useState(pdfVariables?.pdfVariables?.enquiryName);
 
     const onChangeEnquiryName = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
@@ -265,6 +265,11 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
     }
 
+    const handleClearSelectedProperties = () => {
+        selectedPropertyListVar([])
+
+    }
+
     const handleRemoveProperty = (propertyId: number) => {
         var updatedPropertyList = propertyListData!.multiProperty!.filter(property => {
             return property.propertyId !== propertyId
@@ -315,6 +320,19 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         }
     };
 
+    const clearIconStyles = {
+        root: {
+            color: theme.palette.neutralPrimary,
+              marginLeft: "10px !important",
+        },
+        rootHovered: {
+            color: theme.palette.neutralDark,
+        },
+        icon: {
+            fontSize: "24px",
+        }
+    };
+
     const deleteIconStyles = {
         root: {
             color: theme.palette.neutralPrimary,
@@ -332,8 +350,8 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     };
 
     const cancelIcon: IIconProps = { iconName: 'Cancel' };
-    const addIcon: IIconProps = { iconName: 'Add' };
-    const editIcon: IIconProps = { iconName: 'Edit' };
+    const clearIcon: IIconProps = { iconName: 'RemoveFromShoppingList' };
+    
     const deleteIcon: IIconProps = { iconName: 'Delete' };
 
     const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);", padding: 10 } };
@@ -398,12 +416,12 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
                     ariaLabel="Close panel"
                     onClick={handlePanelDismiss}
                 />
-                {/* <IconButton
-                    styles={editIconStyles}
-                    iconProps={editIcon}
+                {<IconButton
+                    styles={clearIconStyles}
+                    iconProps={clearIcon}
                     ariaLabel="Edit Property Details"
-                    onClick={handleEditProperty}
-                /> */}
+                    onClick={handleClearSelectedProperties}
+                />}
 
 
 
@@ -488,7 +506,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
             }>
                 <TextField
                     label="Enquiry Name"
-                    value={enquiryName}
+                    value={pdfVariables?.pdfVariables?.enquiryName}
                     onChange={onChangeEnquiryName}
 
                     styles={textFieldStyles}
@@ -533,7 +551,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
             </Stack>
         ),
-        [enquiryName],
+        [pdfVariables?.pdfVariables?.enquiryName],
     );
 
 

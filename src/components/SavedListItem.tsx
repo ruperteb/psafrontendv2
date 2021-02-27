@@ -10,7 +10,7 @@ import { useBoolean } from '@uifabric/react-hooks';
 import { motion, AnimatePresence } from "framer-motion";
 import ContactListItem from "./ContactListItem"
 
-import { selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
+import { selectedPropertyList as selectedPropertyListVar, pdfVariables } from "../reactivevariables/reactivevariables"
 
 
 interface Props {
@@ -23,9 +23,9 @@ interface Props {
 
 export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, expanded, setExpanded, propertyIdList }) => {
 
+ var sortedPropertyList = propertyList.properties?.slice().sort((a,b) => {return (a.propertyName < b.propertyName) ? -1 : (a.propertyName > b.propertyName) ? 1 : 0})
+
   const [isOpen, setIsOpen] = React.useState(false)
-
-
 
   React.useEffect(() => {
 
@@ -376,6 +376,18 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
   const handleSetSelectedProperties = () => {
 
     selectedPropertyListVar(propertyList.properties)
+    pdfVariables({
+      enquiryName: editPropertyList.enquiryName!,
+      agent: {
+        name: "",
+        mobile: "",
+        email: ""
+      },
+      outputType: "Large Images",
+      onlyShowVacant: true,
+      showImages: true,
+      imageLimit: "All",
+    })
 
   }
 
@@ -424,6 +436,18 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
       }
     );
   }
+
+
+
+  const [height, setHeight] = React.useState<number>()
+
+
+  const heightRef = React.useCallback((heightRef) => {
+
+    setHeight(heightRef?.getBoundingClientRect().y - 300);
+  }, []);
+
+
 
   return (
 
@@ -630,37 +654,41 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
             }}
             transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
-            <Stack verticalFill styles={{
-              root: {
-                /* width: 580, */
-                display: "flex",
-                /*  flexFlow: "row wrap" */
+            <div ref={heightRef} >
+              <Stack verticalFill styles={{
+                root: {
+                  /* width: 580, */
+                  display: "flex",
+                  maxHeight: height,
+                  overflowY: "auto"
+                  /*  flexFlow: "row wrap" */
 
-              }
-            }} >
+                }
+              }} >
 
-              {propertyList.properties?.map((property) => {
-                return (
+                {sortedPropertyList?.map((property) => {
+                  return (
 
-                  <Stack styles={{ root: { marginLeft: 20, marginTop: "10px !important", alignItems: "center" } }} horizontal>
+                    <Stack styles={{ root: { marginLeft: 20, marginTop: "10px !important", alignItems: "center" } }} horizontal>
 
-                    <Text styles={boldStyle} style={propertyHeadingStyles}>{property.propertyName} </Text>
-                    
-                    {/* <IconButton
+                      <Text styles={boldStyle} style={propertyHeadingStyles}>{property.propertyName} </Text>
+
+                      {/* <IconButton
                         styles={deleteIconStyles}
                         iconProps={deleteIcon}
                         ariaLabel="Remove Property"
                         onClick={() => handleRemoveProperty(property.propertyId)}
                     /> */}
 
-                  </Stack>
+                    </Stack>
 
 
-                )
+                  )
 
-              })}
+                })}
 
-            </Stack>
+              </Stack>
+            </div>
           </motion.section>
         )}
       </AnimatePresence>

@@ -8,7 +8,7 @@ import { useBoolean } from '@uifabric/react-hooks';
 import { GET_SINGLE_PROPERTY, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, UPDATE_IMAGES, NEW_LANDLORD, GET_LANDLORDS } from "../gql/gql"
 import { useMutation, useQuery } from '@apollo/client';
 import { Mutation, MutationPostLandlordArgs, Query, NavigationState, Premises, Landlord, PropertyList, SelectedPropertyList } from "../schematypes/schematypes"
-import { navigationState as navigationStateVar } from "../reactivevariables/reactivevariables"
+import { navigationState as navigationStateVar, selectedPropertyList as selectedPropertyListVar } from "../reactivevariables/reactivevariables"
 import { Icon } from '@fluentui/react/lib/Icon';
 
 import SavedListItem from "./SavedListItem"
@@ -56,6 +56,11 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
 
   }
 
+  const handleClearSelectedProperties = () => {
+    selectedPropertyListVar([])
+
+  }
+
 
 
 
@@ -77,6 +82,19 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
     }
   };
 
+  const clearIconStyles = {
+    root: {
+      color: theme.palette.neutralPrimary,
+      marginLeft: "10px !important",
+    },
+    rootHovered: {
+      color: theme.palette.neutralDark,
+    },
+    icon: {
+      fontSize: "24px",
+    }
+  };
+
   const addIconStyles = {
     root: {
       color: theme.palette.neutralPrimary,
@@ -93,6 +111,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
   };
 
   const cancelIcon: IIconProps = { iconName: 'Cancel' };
+  const clearIcon: IIconProps = { iconName: 'RemoveFromShoppingList' };
   const addIcon: IIconProps = { iconName: 'Add' };
   const editIcon: IIconProps = { iconName: 'Edit' };
   const photoCollectionIcon: IIconProps = { iconName: 'PhotoCollection' };
@@ -107,10 +126,11 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
     },
     header: { marginBottom: 10 },
     headerText: { fontSize: 24, marginLeft: 15 },
-    content:{
-    paddingLeft:12,
-    paddingRight:20},
-    scrollableContent:{overflowY: "hidden"}
+    content: {
+      paddingLeft: 12,
+      paddingRight: 20
+    },
+    scrollableContent: { overflowY: "hidden" }
 
   }
 
@@ -203,6 +223,13 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
           onClick={handlePanelDismiss}
         />
 
+        <IconButton
+          styles={clearIconStyles}
+          iconProps={clearIcon}
+          ariaLabel="Close panel"
+          onClick={handleClearSelectedProperties}
+        />
+
       </>
     ),
     [],
@@ -252,7 +279,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
             onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
           />
 
-          { searchSortedPropertyLists !== undefined ? searchSortedPropertyLists.map((propertyList) => {
+          {searchSortedPropertyLists !== undefined ? searchSortedPropertyLists.map((propertyList) => {
 
             return <SavedListItem propertyList={propertyList} key={propertyList.propertyListId} expanded={expanded} setExpanded={setExpanded} propertyIdList={propertyIdList}></SavedListItem>
 
