@@ -352,6 +352,7 @@ interface Props {
 
     selectedPropertyList: SelectedPropertyList,
     enquiryName: string,
+    customTitle: null | string,
     agent: Agent,
     imageLimit: string | number,
     showImages: boolean

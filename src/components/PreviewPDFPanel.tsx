@@ -194,7 +194,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
                     <div style={{ height: '85vh' }}>
                         <PDFViewer width="100%" height="100%">
-                            <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables.pdfVariables.imageLimit} showImages={pdfVariables.pdfVariables.showImages} />
+                            <PropertyListLargeImagesPDF enquiryName={enquiryName} customTitle={pdfVariables.pdfVariables.customTitle} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables.pdfVariables.imageLimit} showLocality={pdfVariables.pdfVariables.showLocality} showAerial={pdfVariables.pdfVariables.showAerial} showImages={pdfVariables.pdfVariables.showImages} />
                         </PDFViewer>
 
                     </div>
@@ -207,7 +207,7 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
                     <div style={{ height: '85vh' }}>
                         <PDFViewer width="100%" height="100%">
-                            <PropertyListScheduleNoImages enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages} />
+                            <PropertyListScheduleNoImages enquiryName={enquiryName} customTitle={pdfVariables.pdfVariables.customTitle} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages} />
                         </PDFViewer>
 
                     </div>
@@ -216,12 +216,12 @@ const PreviewPDFPanel: React.FunctionComponent<Props> = ({ showPreviewPDFPanel, 
 
             default:
 
-                <div style={{ height: '85vh' }}>
+                {/* <div style={{ height: '85vh' }}>
                     <PDFViewer width="100%" height="100%">
-                        <PropertyListLargeImagesPDF enquiryName={enquiryName} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showImages={pdfVariables!.pdfVariables!.showImages} />
+                        <PropertyListLargeImagesPDF enquiryName={enquiryName} customTitle={pdfVariables!.pdfVariables!.customTitle} agent={agent} selectedPropertyList={filteredPropertyList} imageLimit={pdfVariables!.pdfVariables!.imageLimit} showLocality={pdfVariables!.pdfVariables!.showLocality} showAerial={pdfVariables!.pdfVariables!.showAerial} showImages={pdfVariables!.pdfVariables!.showImages} />
                     </PDFViewer>
 
-                </div>
+                </div> */}
         }
 
     }

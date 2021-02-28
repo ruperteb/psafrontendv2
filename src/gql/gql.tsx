@@ -18,6 +18,8 @@ export const GET_PROPERTIES = gql`
       province
       region
       notes
+      locality
+      aerial
       images
     premisesList{
       premisesId
@@ -85,6 +87,8 @@ export const GET_SINGLE_PROPERTY = gql`
       province
       region
       notes
+      locality
+      aerial
       images
     premisesList{
       premisesId
@@ -162,6 +166,8 @@ export const GET_MULTI_PROPERTY = gql`
       province
       region
       notes
+      locality
+      aerial
       images
     premisesList{
       premisesId
@@ -249,6 +255,8 @@ query GetSelectedProperties {
       province
       region
       notes
+      locality
+      aerial
       images
     premisesList{
       premisesId
@@ -454,6 +462,8 @@ export const UPDATE_COORDINATES = gql`
 export const UPDATE_IMAGES = gql`
   mutation UpdateProperty (
   $propertyId: Int!,
+  $locality: String,
+  $aerial: String,
   $images: [String],
   $contactId: Int!,
   
@@ -461,6 +471,8 @@ export const UPDATE_IMAGES = gql`
 
     updateProperty (
     propertyId: $propertyId,
+    locality: $locality,
+    aerial: $aerial,
     images: $images,
     contactId: $contactId,
 ) {
@@ -478,6 +490,8 @@ export const UPDATE_IMAGES = gql`
       province
       region
       notes
+      locality
+      aerial
       images
     premisesList{
       premisesId
@@ -527,7 +541,6 @@ export const UPDATE_IMAGES = gql`
           mobileNo
           officeNo
         }
-
       }
     }
 }
@@ -782,6 +795,7 @@ export const GET_PDF_VARIABLES = gql`
   query GetPDFVariables {
     pdfVariables @client { 
         enquiryName
+        customTitle
         agent{
           name
           mobile
@@ -791,6 +805,8 @@ export const GET_PDF_VARIABLES = gql`
         onlyShowVacant
         showImages
         imageLimit
+        showAerial
+        showLocality
 
     }
   }
@@ -947,6 +963,7 @@ query{
 propertyLists{
   propertyListId
  enquiryName
+ customTitle
  enquiryDate
  properties{
    propertyId
@@ -963,6 +980,8 @@ propertyLists{
       province
       region
       notes
+      locality
+      aerial
       images
     premisesList{
       premisesId
@@ -1007,6 +1026,7 @@ export const NEW_PROPERTY_LIST = gql`
   mutation PostPropertyList (
  
   $enquiryName: String,
+  $customTitle: String,
   $enquiryDate: DateTime,
   $propertyIdList: [Int],
   
@@ -1014,12 +1034,14 @@ export const NEW_PROPERTY_LIST = gql`
 
     postPropertyList (
       enquiryName: $enquiryName
+      customTitle: $customTitle
       enquiryDate: $enquiryDate
       propertyIdList: $propertyIdList,
 ) {
  propertyListId
  enquiryName
  enquiryDate
+ customTitle
  properties{
    propertyId
  }
@@ -1031,6 +1053,7 @@ export const UPDATE_PROPERTY_LIST = gql`
   mutation UpdatePropertyList (
   $propertyListId: Int!,
   $enquiryName: String,
+  $customTitle: String,
   $enquiryDate: DateTime,
   $propertyIdList: [Int],
   
@@ -1039,11 +1062,13 @@ export const UPDATE_PROPERTY_LIST = gql`
     updatePropertyList (
       propertyListId: $propertyListId
       enquiryName:    $enquiryName
+      customTitle:    $customTitle
       enquiryDate:    $enquiryDate
       propertyIdList: $propertyIdList,
 ) {
  propertyListId
  enquiryName
+ customTitle
  enquiryDate
  properties{
    propertyId

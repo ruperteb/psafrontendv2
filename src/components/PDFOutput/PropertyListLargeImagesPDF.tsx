@@ -818,9 +818,12 @@ interface Props {
 
     selectedPropertyList: SelectedPropertyList,
     enquiryName: string,
+    customTitle: null | string
     agent: Agent,
     imageLimit: number | string,
-    showImages: boolean
+    showLocality: boolean,
+    showAerial: boolean,
+    showImages: boolean,
 
     /* enquiryName: string */
 
@@ -828,7 +831,7 @@ interface Props {
 
 
 
-const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, agent, imageLimit, showImages }) => (
+const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enquiryName, customTitle, agent, imageLimit, showImages, showLocality, showAerial }) => (
 
 
 

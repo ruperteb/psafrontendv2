@@ -56,6 +56,9 @@ export type Property = {
   region?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   premisesList?: Maybe<Array<Maybe<Premises>>>;
+
+  locality?: Maybe<Scalars['String']>;
+  aerial?: Maybe<Scalars['String']>;
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
 
   contact?: Maybe<LandlordContact>;
@@ -219,6 +222,9 @@ export type MutationUpdatePropertyArgs = {
   province?: Maybe<Scalars['String']>;
   region?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
+
+  locality?: Maybe<Scalars['String']>;
+  aerial?: Maybe<Scalars['String']>;
   images?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -271,6 +277,7 @@ export type MutationUpdateLandlordContactArgs = {
 
 export type MutationPostPropertyListArgs = {
   enquiryName?: Maybe<Scalars['String']>;
+  customTitle?: Maybe<Scalars['String']>;
   enquiryDate?: Maybe<Scalars['DateTime']>;
   propertyIdList?: Maybe<Array<Maybe<Scalars['Int']>>>;
 };
@@ -279,6 +286,7 @@ export type MutationPostPropertyListArgs = {
 export type MutationUpdatePropertyListArgs = {
   propertyListId: Scalars['Int'];
   enquiryName?: Maybe<Scalars['String']>;
+  customTitle?: Maybe<Scalars['String']>;
   enquiryDate?: Maybe<Scalars['DateTime']>;
   propertyIdList?: Maybe<Array<Maybe<Scalars['Int']>>>;
 };
@@ -359,9 +367,12 @@ propertyIds: Scalars['Int'][]
 
    export type PDFVariables = {
     enquiryName: string,
+    customTitle: null | string,
     agent: Agent,
     outputType: string,
     onlyShowVacant: boolean,
+    showLocality: boolean,
+    showAerial: boolean,
     showImages: boolean,
     imageLimit: number | string,
 
@@ -389,6 +400,7 @@ propertyIds: Scalars['Int'][]
     __typename?: 'PropertyList';
     propertyListId: Scalars['Int'];
     enquiryName?: Maybe<Scalars['String']>;
+    customTitle?: Maybe<Scalars['String']>;
     enquiryDate?: Maybe<Scalars['DateTime']>;
     properties?: Maybe<Array<Maybe<Property>>>;
   };

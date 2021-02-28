@@ -41,8 +41,11 @@ const PDFVariablesInitiallState: PDFVariables =
       mobile: "",
       email: ""
     },
+    customTitle: "",
     outputType: "Large Images",
     onlyShowVacant: true,
+    showLocality: true,
+    showAerial: true,
     showImages: true,
     imageLimit: "All",
   }

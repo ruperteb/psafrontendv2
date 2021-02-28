@@ -39,9 +39,12 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
   const [isEditCalloutVisible, { toggle: toggleIsEditCalloutVisible }] = useBoolean(false);
   /* const [isAddContactCalloutVisible, { toggle: toggleIsAddContactCalloutVisible }] = useBoolean(false); */
 
+  console.log(propertyList)
+
   const [editPropertyList, setEditPropertyList] = React.useState<MutationUpdatePropertyListArgs>({
     propertyListId: propertyList.propertyListId,
     enquiryName: propertyList.enquiryName,
+    customTitle: propertyList.customTitle,
     enquiryDate: propertyList.enquiryDate,
     propertyIdList: propertyList.properties?.map((property) => { return property.propertyId })
   })
@@ -102,6 +105,7 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
       variables: {
         propertyListId: propertyList.propertyListId,
         enquiryName: editPropertyList.enquiryName,
+        customTitle: editPropertyList.customTitle,
         enquiryDate: editPropertyList.enquiryDate,
         propertyIdList: editPropertyList.propertyIdList
 
@@ -371,25 +375,20 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
     [addContact],
   ); */
 
-  console.log(propertyList.properties)
 
-  const handleSetSelectedProperties = () => {
+  const handleSetSelectedProperties = React.useCallback( () => {
 
     selectedPropertyListVar(propertyList.properties)
-    pdfVariables({
+    pdfVariables({...pdfVariables(),
       enquiryName: editPropertyList.enquiryName!,
-      agent: {
-        name: "",
-        mobile: "",
-        email: ""
-      },
-      outputType: "Large Images",
-      onlyShowVacant: true,
-      showImages: true,
-      imageLimit: "All",
+      
     })
+    /* pdfVariables({...pdfVariables(),
+      
+      customTitle: editPropertyList.customTitle!,
+    }) */
 
-  }
+  },[editPropertyList.enquiryName, propertyList.properties, editPropertyList.customTitle ])
 
   const [isCurrentListChecked, setIsCurrentListChecked] = React.useState(false);
 
@@ -440,11 +439,11 @@ export const SavedListItem: React.FunctionComponent<Props> = ({ propertyList, ex
 
 
   const [height, setHeight] = React.useState<number>()
-
+console.log(height)
 
   const heightRef = React.useCallback((heightRef) => {
 
-    setHeight(heightRef?.getBoundingClientRect().y - 300);
+    setHeight(heightRef?.getBoundingClientRect().bottom - heightRef?.getBoundingClientRect().top -100);
   }, []);
 
 

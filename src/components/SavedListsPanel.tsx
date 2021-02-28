@@ -13,6 +13,8 @@ import { Icon } from '@fluentui/react/lib/Icon';
 
 import SavedListItem from "./SavedListItem"
 
+import "./SavedListsPanel.css"
+
 import { SearchBox, ISearchBoxStyles, } from 'office-ui-fabric-react/lib/SearchBox';
 
 import {
@@ -128,9 +130,10 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
     headerText: { fontSize: 24, marginLeft: 15 },
     content: {
       paddingLeft: 12,
-      paddingRight: 20
+      paddingRight: 20,
+      
     },
-    scrollableContent: { overflowY: "hidden" }
+    /* scrollableContent: { overflowY: "hidden"} */
 
   }
 
@@ -254,6 +257,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
         headerText={"Manage Saved Lists"}
         styles={panelStyles}
         layerProps={layerProps}
+        className="savedListsPanel"
       >
 
         <Stack id="Property List Container" styles={{

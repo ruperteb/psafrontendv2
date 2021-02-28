@@ -64,24 +64,13 @@ interface Props {
 
 const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelectedPropertyListPanel, propertyIdList = [] }) => {
 
-
-    /* const {
-        data: propertyIdListData,
-        loading: propertyIdListLoading,
-        error: propertyIdListError
-    } = useQuery<Query>(GET_SELECTED_PROPERTIES);
-
-    var propertyIdList = propertyIdListData?.selectedPropertyList?.map((property) => {
-        return property.propertyId
-    })
-
-    console.log(propertyIdList) */
-
     const {
         data: pdfVariables,
         loading: pdfLoading,
         error: pdfError
     } = useQuery<Query>(GET_PDF_VARIABLES);
+
+   
 
     const {
         data: propertyListData,
@@ -91,6 +80,13 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         variables: { propertyIdList: propertyIdList },
     });
 
+    const [enquiryName, setEnquiryName] = React.useState<string|undefined>(pdfVariables?.pdfVariables?.enquiryName);
+
+    React.useEffect(()=> {
+        setEnquiryName(pdfVariables?.pdfVariables?.enquiryName)
+
+    },[pdfVariables?.pdfVariables?.enquiryName])
+
     const [postPropertyList, { data: postPropertyListData }] = useMutation<Mutation, MutationPostPropertyListArgs>(NEW_PROPERTY_LIST);
 
   const postPropertyListButton = () => {
@@ -99,6 +95,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
       variables: {
         
         enquiryName: enquiryName,
+        customTitle: "",
         enquiryDate: new Date(),
         propertyIdList: propertyIdList
 
@@ -127,14 +124,15 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
     
   }
 
+console.log(pdfVariables?.pdfVariables?.enquiryName)
 
-
-    const [enquiryName, setEnquiryName] = React.useState(pdfVariables?.pdfVariables?.enquiryName);
+    
+    console.log(enquiryName)
 
     const onChangeEnquiryName = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setEnquiryName(newValue || '');
-            /* pdfVariablesVar({ ...pdfVariablesVar(), enquiryName: (newValue || '') }) */
+            pdfVariablesVar({ ...pdfVariablesVar(), enquiryName: (newValue || '') })
         },
         [],
     );
@@ -506,7 +504,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
             }>
                 <TextField
                     label="Enquiry Name"
-                    value={pdfVariables?.pdfVariables?.enquiryName}
+                    value={enquiryName}
                     onChange={onChangeEnquiryName}
 
                     styles={textFieldStyles}
@@ -551,7 +549,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
             </Stack>
         ),
-        [pdfVariables?.pdfVariables?.enquiryName],
+        [enquiryName],
     );
 
 

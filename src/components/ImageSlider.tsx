@@ -52,8 +52,12 @@ interface Props {
 export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
 
 
-
+    var locality: Maybe<string> = ""
+    var aerial: Maybe<string> = ""
     var imagesArray: Maybe<string>[] = []
+    var combinedArray: Maybe<string>[] = []
+
+    
 
     /* const {
         data: navigationStateData,
@@ -72,8 +76,27 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
     });
 
     if (propertyData?.singleProperty) {
+        locality = propertyData?.singleProperty?.locality!
+        aerial = propertyData?.singleProperty?.aerial!
         imagesArray = propertyData?.singleProperty?.images!
+
+        if (locality !== "" && locality !== null && locality !== undefined) {
+            combinedArray = [locality]
+        }
+        if (aerial !== "" && aerial !== null && aerial !== undefined) {
+            combinedArray = [...combinedArray, aerial]
+        }
+        combinedArray = [...combinedArray, ...imagesArray]
     }
+
+    const [[page, direction], setPage] = useState([0, 0]);
+
+    const imageIndex = wrap(0, combinedArray.length, page);
+
+    const paginate = (newDirection: number) => {
+        setPage([page + newDirection, newDirection]);
+
+    };
 
 
 
@@ -92,6 +115,8 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         updateProperty({
             variables: {
                 propertyId: propertyId,
+                locality: locality,
+                aerial: aerial,
                 images: imagesArray,
                 contactId: getContactId()
             },
@@ -120,46 +145,35 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
     const onChange = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement> | undefined, item?: IContextualMenuItem | undefined) => {
         /* setSelectedItem(item); */
 
-        if (item?.key !== "Penultimate" && item?.key !== "Final"  ) {
-            var selectedImage = imagesArray[imageIndex]
+        if (item?.key !== "Penultimate" && item?.key !== "Final") {
+            var selectedImage = combinedArray[imageIndex]
             var rest = imagesArray.filter(image => {
                 return image !== selectedImage
             })
 
-            var beforeSelectedImage = rest.slice(0, parseInt(item?.key!) -1)
-            var afterSelectedImage = rest.slice(parseInt(item?.key!) -1)
+            var beforeSelectedImage = rest.slice(0, parseInt(item?.key!) - 1)
+            var afterSelectedImage = rest.slice(parseInt(item?.key!) - 1)
             imagesArray = [...beforeSelectedImage, selectedImage, ...afterSelectedImage]
         }
 
-      /*   if (item?.key === "Primary") {
-            var primary = imagesArray[imageIndex]
+        if (item?.key === "Locality") {
+            var selectedImage = combinedArray[imageIndex]
             var rest = imagesArray.filter(image => {
-                return image !== primary
+                return image !== selectedImage
             })
-            imagesArray = [primary, ...rest]
+            imagesArray = rest
+            locality = selectedImage
         }
-        if (item?.key === "Secondary") {
-            var secondary = imagesArray[imageIndex]
+        if (item?.key === "Aerial") {
+            var selectedImage = combinedArray[imageIndex]
             var rest = imagesArray.filter(image => {
-                return image !== secondary
+                return image !== selectedImage
             })
-            var first = rest.slice(0, 1)
-            var remaining = rest.slice(1)
-            imagesArray = [...first, secondary, ...remaining]
+            imagesArray = rest
+            aerial = selectedImage
         }
-        if (item?.key === "Tertiary") {
-            var tertiary = imagesArray[imageIndex]
-
-            var rest = imagesArray.filter(image => {
-                return image !== tertiary
-            })
-
-            var firstTwo = rest.slice(0, 2)
-            var remaining = rest.slice(2)
-            imagesArray = [...firstTwo, tertiary, ...remaining]
-        } */
         if (item?.key === "Penultimate") {
-            var penultimate = imagesArray[imageIndex]
+            var penultimate = combinedArray[imageIndex]
 
             var rest = imagesArray.filter(image => {
                 return image !== penultimate
@@ -170,7 +184,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
             imagesArray = [...restLessFinal, penultimate, final]
         }
         if (item?.key === "Final") {
-            var final = imagesArray[imageIndex]
+            var final = combinedArray[imageIndex]
 
             var rest = imagesArray.filter(image => {
                 return image !== final
@@ -182,35 +196,102 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         saveUpdatedImages()
     };
 
+    
+
     const deleteImage = () => {
 
-        updateProperty({
-            variables: {
-                propertyId: propertyId,
-                images: imagesArray.filter(image => {
-                    return image !== imagesArray[imageIndex]
-                }),
-                contactId: getContactId()
-            },
+        switch (getImageName()) {
 
-            update(cache, { data }) {
+            case "Aerial":
 
-                if (!data) {
-                    return null;
-                }
+                updateProperty({
+                    variables: {
+                        propertyId: propertyId,
+                        aerial: "",
+                        contactId: getContactId()
+                    },
 
-                const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: propertyId } })
+                    update(cache, { data }) {
 
-                const updatedProperty = data.updateProperty!;
-                console.log(updatedProperty)
-                if (getExistingProperty)
-                    cache.writeQuery<Query>({
-                        query: GET_SINGLE_PROPERTY,
-                        variables: { propertyId: propertyId },
-                        data: { singleProperty: updatedProperty }
-                    });
-            }
-        })
+                        if (!data) {
+                            return null;
+                        }
+
+                        const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: propertyId } })
+
+                        const updatedProperty = data.updateProperty!;
+                        console.log(updatedProperty)
+                        if (getExistingProperty)
+                            cache.writeQuery<Query>({
+                                query: GET_SINGLE_PROPERTY,
+                                variables: { propertyId: propertyId },
+                                data: { singleProperty: updatedProperty }
+                            });
+                    }
+                })
+
+                break;
+            case "Locality":
+
+                updateProperty({
+                    variables: {
+                        propertyId: propertyId,
+                        locality: "",
+                        contactId: getContactId()
+                    },
+
+                    update(cache, { data }) {
+
+                        if (!data) {
+                            return null;
+                        }
+
+                        const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: propertyId } })
+
+                        const updatedProperty = data.updateProperty!;
+                        console.log(updatedProperty)
+                        if (getExistingProperty)
+                            cache.writeQuery<Query>({
+                                query: GET_SINGLE_PROPERTY,
+                                variables: { propertyId: propertyId },
+                                data: { singleProperty: updatedProperty }
+                            });
+                    }
+                })
+
+                break;
+
+            default:
+
+                updateProperty({
+                    variables: {
+                        propertyId: propertyId,
+                        images: imagesArray.filter(image => {
+                            return image !== combinedArray[imageIndex]
+                        }),
+                        contactId: getContactId()
+                    },
+
+                    update(cache, { data }) {
+
+                        if (!data) {
+                            return null;
+                        }
+
+                        const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: propertyId } })
+
+                        const updatedProperty = data.updateProperty!;
+                        console.log(updatedProperty)
+                        if (getExistingProperty)
+                            cache.writeQuery<Query>({
+                                query: GET_SINGLE_PROPERTY,
+                                variables: { propertyId: propertyId },
+                                data: { singleProperty: updatedProperty }
+                            });
+                    }
+                })
+
+        }
         toggleIsDeleteCalloutVisible()
     }
 
@@ -226,6 +307,16 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
             }
         },
         items: [
+            {
+                key: 'Locality',
+                text: 'Locality',
+                onClick: onChange
+            },
+            {
+                key: 'Aerial',
+                text: 'Aerial',
+                onClick: onChange
+            },
             {
                 key: '1',
                 text: '1',
@@ -282,27 +373,109 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
 
     const getImageName = () => {
 
-switch (imageIndex) {
-    /* case 0:
-      return "Image 1"
-      break;
-    case 1:
-        return "Image 2"
-      break;
-      case 2:
-        return "Tertiary"
-      break; */
-      case imagesArray.length-2:
-        return "Penultimate"
-      break;
-      case imagesArray.length-1:
-        return "Final"
-      break;
-    default:
-      return `Image ${imageIndex +1}`
+        if (locality !== "" && locality !== null && locality !== undefined && aerial !== "" && aerial !== null && aerial !== undefined) {
+            switch (imageIndex) {
+                /* case 0:
+                  return "Image 1"
+                  break;
+                case 1:
+                    return "Image 2"
+                  break;
+                  case 2:
+                    return "Tertiary"
+                  break; */
+                case 0:
+                    return "Locality"
+                    break;
+                case 1:
+                    return "Aerial"
+                    break;
+                case combinedArray.length - 2:
+                    return "Penultimate"
+                    break;
+                case combinedArray.length - 1:
+                    return "Final"
+                    break;
+                default:
+                    return `Image ${imageIndex - 1}`
+            }
+        }
 
+        if ((locality === "" || locality === null || locality === undefined) && (aerial === "" || aerial === null || aerial === undefined)) {
+            switch (imageIndex) {
+                /* case 0:
+                  return "Image 1"
+                  break;
+                case 1:
+                    return "Image 2"
+                  break;
+                  case 2:
+                    return "Tertiary"
+                  break; */
+
+                case combinedArray.length - 2:
+                    return "Penultimate"
+                    break;
+                case combinedArray.length - 1:
+                    return "Final"
+                    break;
+                default:
+                    return `Image ${imageIndex + 1}`
+            }
+        }
+
+        if (locality === "" || locality === null || locality === undefined) {
+            switch (imageIndex) {
+                /* case 0:
+                  return "Image 1"
+                  break;
+                case 1:
+                    return "Image 2"
+                  break;
+                  case 2:
+                    return "Tertiary"
+                  break; */
+                case 0:
+                    return "Aerial"
+                    break;
+                case combinedArray.length - 2:
+                    return "Penultimate"
+                    break;
+                case combinedArray.length - 1:
+                    return "Final"
+                    break;
+                default:
+                    return `Image ${imageIndex}`
+            }
+        }
+
+        if (aerial === "" || aerial === null || aerial === undefined) {
+            switch (imageIndex) {
+                /* case 0:
+                  return "Image 1"
+                  break;
+                case 1:
+                    return "Image 2"
+                  break;
+                  case 2:
+                    return "Tertiary"
+                  break; */
+                case 0:
+                    return "Locality"
+                    break;
+                case combinedArray.length - 2:
+                    return "Penultimate"
+                    break;
+                case combinedArray.length - 1:
+                    return "Final"
+                    break;
+                default:
+                    return `Image ${imageIndex}`
+            }
+        }
     }
-}
+
+    console.log(getImageName())
 
     function _getMenu(props: IContextualMenuProps): JSX.Element {
         // Customize contextual menu with menuAs
@@ -320,18 +493,7 @@ switch (imageIndex) {
     const deleteIcon: IIconProps = { iconName: 'Delete' };
 
 
-    const [[page, direction], setPage] = useState([0, 0]);
-
-    // We only have 3 images, but we paginate them absolutely (ie 1, 2, 3, 4, 5...) and
-    // then wrap that within 0-2 to find our image ID in the array below. By passing an
-    // absolute page index as the `motion` component's `key` prop, `AnimatePresence` will
-    // detect it as an entirely new image. So you can infinitely paginate as few as 1 images.
-    const imageIndex = wrap(0, imagesArray.length, page);
-
-    const paginate = (newDirection: number) => {
-        setPage([page + newDirection, newDirection]);
-
-    };
+    
 
     const sliderContainerClass: any = {
         "position": "relative",
@@ -373,8 +535,8 @@ switch (imageIndex) {
         marginRight: "auto",
         marginTop: "0px !important",
         zIndex: 2,
-       /*  backgroundColor: "rgb(208 209 230 / 50%)",
-        borderRadius: 30, */
+        /*  backgroundColor: "rgb(208 209 230 / 50%)",
+         borderRadius: 30, */
         /* padding: "5px", */
         selectors: {
             '&:hover': { backgroundColor: "rgb(208 209 230 / 81%)", borderRadius: 30, "transition": "all .2s ease-in-out", transform: "scale(1.2)" },
@@ -494,7 +656,7 @@ switch (imageIndex) {
                     }}
                 >
 
-                    <Image cloudName="drlfedqyz" publicId={imagesArray[imageIndex]} width="600" height="400" crop="fill_pad"  gravity="auto" />
+                    <Image cloudName="drlfedqyz" publicId={combinedArray[imageIndex]} width="600" height="400" crop="fill_pad" gravity="auto" />
 
 
                 </motion.div>
@@ -505,11 +667,11 @@ switch (imageIndex) {
             <div className={chevronIconDivLeft} onClick={() => paginate(-1)}><Icon className={chevronClassLeft} iconName={'ChevronRight'} /></div>
             <div className={chevronIconDivRight} onClick={() => paginate(1)}><Icon className={chevronClassRight} iconName={'ChevronRight'} /></div>
 
-            <div style={{ display: "flex", position: "absolute", bottom: 5, left:20, zIndex:5 }}>
+            <div style={{ display: "flex", position: "absolute", bottom: 5, left: 20, zIndex: 5 }}>
                 <Text styles={boldStyle} style={textStyles}> {getImageName()}</Text>
             </div>
 
-            <div style={{ display: "flex", position: "absolute", bottom: 0, right:0, zIndex:5 }}>
+            <div style={{ display: "flex", position: "absolute", bottom: 0, right: 0, zIndex: 5 }}>
 
                 <DefaultButton
                     id={`deleteImageButton_${propertyId}_Image_${imageIndex}`}
