@@ -348,6 +348,29 @@ const getParkingRatioTotal = (premisesList: Premises[]) => {
     return (totalBays / (totalArea / 100))
 }
 
+const sortPremises = (premises: Premises[]) => {
+
+    var indexSortedPremises = premises.slice().sort((a, b) => {
+        return (a.premisesIndex!) - (b.premisesIndex!)
+    });
+
+    var floorSortedPremises = indexSortedPremises.slice().sort((a, b) => {
+        var floorA = a.floor!.toUpperCase();
+        var floorB = b.floor!.toUpperCase();
+        if (floorA < floorB && a.premisesIndex=== b.premisesIndex) {
+            return -1;
+        }
+        if (floorA > floorB && a.premisesIndex=== b.premisesIndex) {
+            return 1;
+        }
+        return 0;
+    });
+
+    return floorSortedPremises
+}
+
+const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME
+
 interface Props {
 
     selectedPropertyList: SelectedPropertyList,
@@ -374,7 +397,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
 
         <Page orientation="landscape" size="A4" style={styles.frontPage}>
 
-            <Image style={styles.frontPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610358103/background_2_duzy8o.jpg"></Image>
+            <Image style={styles.frontPageBackground} src={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v1610358103/background_2_duzy8o.jpg`}></Image>
 
             <Text style={styles.frontPageText1} >Schedule of Accomodation:</Text>
             <Text style={styles.frontPageText2} >{enquiryName}</Text>
@@ -494,7 +517,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
                         <View style={styles.premisesDetailsContainer}>
 
 
-                            {selectedPropertyList[index].premisesList!.map((premises, index) => (
+                            {sortPremises(selectedPropertyList[index].premisesList!).map((premises, index) => (
 
                                 <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -650,7 +673,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
 
             <View fixed style={styles.footerSection}>
                 <View style={styles.footerImageSection}>
-                    <Image style={styles.footerImageStyles} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg"></Image>
+                    <Image style={styles.footerImageStyles} src={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg`}></Image>
                 </View>
             </View>
 
@@ -663,7 +686,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
 
 
             </View>
-            <Image style={styles.contactPageBackground} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610357459/lion_light_dptptx.jpg"></Image>
+            <Image style={styles.contactPageBackground} src={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v1610357459/lion_light_dptptx.jpg`}></Image>
 
             <Text style={styles.contactPageText1} >For further information, please contact:</Text>
             <Text style={styles.contactPageText2} >{agent !== undefined ? agent.name : ""}</Text>
@@ -674,7 +697,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
 
             <View fixed style={styles.footerSection}>
                 <View style={styles.footerImageSection}>
-                    <Image style={styles.footerImageStyles} src="https://res.cloudinary.com/drlfedqyz/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg"></Image>
+                    <Image style={styles.footerImageStyles} src={`https://res.cloudinary.com/${CLOUD_NAME}/image/upload/v1610187102/EBLogoHeader_ypjyj5.jpg`}></Image>
                 </View>
             </View>
 

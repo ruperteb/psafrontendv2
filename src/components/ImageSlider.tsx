@@ -42,6 +42,8 @@ const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity;
 };
 
+const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME
+
 type Maybe<T> = T /* | null */;
 
 interface Props {
@@ -656,7 +658,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
                     }}
                 >
 
-                    <Image cloudName="drlfedqyz" publicId={combinedArray[imageIndex]} width="600" height="400" crop="fill_pad" gravity="auto" />
+                    <Image cloudName={CLOUD_NAME} publicId={combinedArray[imageIndex]} width="600" height="400" crop="fill_pad" gravity="auto" />
 
 
                 </motion.div>

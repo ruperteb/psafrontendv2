@@ -367,7 +367,7 @@ propertyIds: Scalars['Int'][]
 
    export type PDFVariables = {
     enquiryName: string,
-    customTitle: null | string,
+    customTitle: string,
     agent: Agent,
     outputType: string,
     onlyShowVacant: boolean,

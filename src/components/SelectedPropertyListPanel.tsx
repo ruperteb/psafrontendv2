@@ -51,6 +51,9 @@ import {
     FocusTrapCallout,
     FocusZone,
     IContextualMenuItem,
+    Checkbox,
+    ICheckboxProps,
+    ICheckboxStyles
 
 } from 'office-ui-fabric-react';
 import SelectedPropertyListPDF from './PDFOutput/SelectedPropertyListPDF';
@@ -70,7 +73,7 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         error: pdfError
     } = useQuery<Query>(GET_PDF_VARIABLES);
 
-   
+console.log(pdfVariables)
 
     const {
         data: propertyListData,
@@ -80,59 +83,68 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         variables: { propertyIdList: propertyIdList },
     });
 
-    const [enquiryName, setEnquiryName] = React.useState<string|undefined>(pdfVariables?.pdfVariables?.enquiryName);
+    const [enquiryName, setEnquiryName] = React.useState<string | undefined>(pdfVariables?.pdfVariables?.enquiryName);
+    const [customTitle, setCustomTitle] = React.useState<string | undefined>(pdfVariables?.pdfVariables?.customTitle);
 
-    React.useEffect(()=> {
+    React.useEffect(() => {
         setEnquiryName(pdfVariables?.pdfVariables?.enquiryName)
-
-    },[pdfVariables?.pdfVariables?.enquiryName])
+        setCustomTitle(pdfVariables?.pdfVariables?.customTitle)
+    }, [pdfVariables?.pdfVariables?.enquiryName, pdfVariables?.pdfVariables?.customTitle])
 
     const [postPropertyList, { data: postPropertyListData }] = useMutation<Mutation, MutationPostPropertyListArgs>(NEW_PROPERTY_LIST);
 
-  const postPropertyListButton = () => {
+    const postPropertyListButton = () => {
 
-    postPropertyList({
-      variables: {
-        
-        enquiryName: enquiryName,
-        customTitle: "",
-        enquiryDate: new Date(),
-        propertyIdList: propertyIdList
+        postPropertyList({
+            variables: {
 
-      },
+                enquiryName: enquiryName,
+                customTitle: customTitle,
+                enquiryDate: new Date(),
+                propertyIdList: propertyIdList
 
-      update(cache, { data }) {
+            },
 
-        if (!data) {
-          return null;
-        }
+            update(cache, { data }) {
 
-        const getExistingPropertyLists = cache.readQuery<Query>({ query: GET_PROPERTY_LISTS });
+                if (!data) {
+                    return null;
+                }
 
-        const existingPropertyLists = getExistingPropertyLists ? getExistingPropertyLists.propertyLists : [];
-        const newPropertyList = data.postPropertyList!/* .returning[0] */;
-        
-        if (existingPropertyLists)
-          cache.writeQuery<Query>({
-            query: GET_PROPERTY_LISTS,
-            data: { propertyLists: [newPropertyList, ...existingPropertyLists] }
-          });
-      }
+                const getExistingPropertyLists = cache.readQuery<Query>({ query: GET_PROPERTY_LISTS });
 
-    })
-    
-    
-  }
+                const existingPropertyLists = getExistingPropertyLists ? getExistingPropertyLists.propertyLists : [];
+                const newPropertyList = data.postPropertyList!/* .returning[0] */;
 
-console.log(pdfVariables?.pdfVariables?.enquiryName)
+                if (existingPropertyLists)
+                    cache.writeQuery<Query>({
+                        query: GET_PROPERTY_LISTS,
+                        data: { propertyLists: [newPropertyList, ...existingPropertyLists] }
+                    });
+            }
 
-    
+        })
+
+
+    }
+
+    console.log(pdfVariables?.pdfVariables?.enquiryName)
+
+
     console.log(enquiryName)
 
     const onChangeEnquiryName = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
             setEnquiryName(newValue || '');
             pdfVariablesVar({ ...pdfVariablesVar(), enquiryName: (newValue || '') })
+        },
+        [],
+    );
+
+    const onChangeCustomTitle = React.useCallback(
+        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setCustomTitle(newValue || '');
+            pdfVariablesVar({ ...pdfVariablesVar(), customTitle: (newValue || '') })
         },
         [],
     );
@@ -199,7 +211,7 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
         }
     };
 
-    const onChangeOnlyShowVacantToggle = React.useCallback((ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
+    const onChangeOnlyShowVacantToggle = React.useCallback((ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined, checked?: boolean | undefined) => {
         if (pdfVariables?.pdfVariables?.onlyShowVacant === false) {
             pdfVariablesVar({ ...pdfVariablesVar(), onlyShowVacant: true })
 
@@ -247,7 +259,7 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
         }
     };
 
-    const onChangeShowImagesToggle = React.useCallback((ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
+    const onChangeShowImagesToggle = React.useCallback((ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined, checked?: boolean | undefined) => {
         if (pdfVariables?.pdfVariables?.showImages === false) {
             pdfVariablesVar({ ...pdfVariablesVar(), showImages: true })
 
@@ -256,6 +268,26 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
         }
 
     }, [pdfVariables?.pdfVariables?.showImages])
+
+    const onChangeShowLocalityToggle = React.useCallback((ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined, checked?: boolean | undefined) => {
+        if (pdfVariables?.pdfVariables?.showLocality === false) {
+            pdfVariablesVar({ ...pdfVariablesVar(), showLocality: true })
+
+        } else {
+            pdfVariablesVar({ ...pdfVariablesVar(), showLocality: false })
+        }
+
+    }, [pdfVariables?.pdfVariables?.showLocality])
+
+    const onChangeShowAerialToggle = React.useCallback((ev?: React.FormEvent<HTMLElement | HTMLInputElement> | undefined, checked?: boolean | undefined) => {
+        if (pdfVariables?.pdfVariables?.showAerial === false) {
+            pdfVariablesVar({ ...pdfVariablesVar(), showAerial: true })
+
+        } else {
+            pdfVariablesVar({ ...pdfVariablesVar(), showAerial: false })
+        }
+
+    }, [pdfVariables?.pdfVariables?.showAerial])
 
 
     const handlePanelDismiss = () => {
@@ -290,12 +322,12 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
 
 
     const handleManageLists = (ev?: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement> | undefined, item?: IContextualMenuItem | undefined) => {
-        
+
         navigationStateVar({ ...navigationStateVar(), showSavedListsPanel: true })
 
     }
 
-    
+
 
 
 
@@ -321,7 +353,7 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
     const clearIconStyles = {
         root: {
             color: theme.palette.neutralPrimary,
-              marginLeft: "10px !important",
+            marginLeft: "10px !important",
         },
         rootHovered: {
             color: theme.palette.neutralDark,
@@ -349,7 +381,7 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
 
     const cancelIcon: IIconProps = { iconName: 'Cancel' };
     const clearIcon: IIconProps = { iconName: 'RemoveFromShoppingList' };
-    
+
     const deleteIcon: IIconProps = { iconName: 'Delete' };
 
     const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);", padding: 10 } };
@@ -363,7 +395,7 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
         },
         header: {},
         headerText: { fontSize: 24, marginLeft: 5 },
-        
+
 
     }
 
@@ -400,10 +432,13 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
 
 
     const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { marginRight: 20, /* marginBottom: 10, */ }, root: { width: "100%", } };
+    const textFieldStylesCustomTitle: Partial<ITextFieldStyles> = { fieldGroup: { marginRight: 0, /* marginBottom: 10, */ }, root: { width: "100%", } };
 
-    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 135, marginRight: 10 } };
+    const dropdownStyles: Partial<IDropdownStyles> = { dropdown: { width: 130, marginRight: 10 } };
+    const dropdownStylesImageLimit: Partial<IDropdownStyles> = { dropdown: { width: 90, marginRight: 10 } };
 
-    const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
+    const checkboxStyles: Partial<ICheckboxStyles> = { root: { marginTop: "10px !important", marginRight: 10 }, label: { marginLeft: 0 } };
+
 
     const onRenderNavigationContent: IRenderFunction<IPanelProps> = React.useCallback(
         (props, defaultRender) => (
@@ -439,7 +474,7 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
                 key: 'ManageLists',
                 text: 'Manage Lists',
                 iconProps: { iconName: 'List' },
-                  onClick: handleManageLists
+                onClick: handleManageLists
             },
 
         ],
@@ -662,51 +697,113 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
 
                                         <Stack horizontal>
 
-                                        <Dropdown
-                                            label="Output Type"
-                                            selectedKey={selectedOutputType ? selectedOutputType.key : undefined}
-                                            // eslint-disable-next-line react/jsx-no-bind
-                                            onChange={onChangeOutputType}
-                                            placeholder="Output Type"
-                                            options={outputTypeOptions}
-                                            styles={dropdownStyles}
-                                        />
+                                            <Dropdown
+                                                label="Output Type"
+                                                selectedKey={selectedOutputType ? selectedOutputType.key : undefined}
+                                                // eslint-disable-next-line react/jsx-no-bind
+                                                onChange={onChangeOutputType}
+                                                placeholder="Output Type"
+                                                options={outputTypeOptions}
+                                                styles={dropdownStyles}
+                                            />
 
-                                        <Toggle
-                                            onText="Vacant"
-                                            offText="All"
-                                            styles={toggleStyles}
-                                            label="Display:"
-                                            checked={pdfVariables?.pdfVariables?.onlyShowVacant}
-                                            onChange={onChangeOnlyShowVacantToggle}
-                                        />
+                                            <Dropdown
+                                                label="Image Limit"
+                                                selectedKey={selectedImageLimit ? selectedImageLimit.key : undefined}
+                                                // eslint-disable-next-line react/jsx-no-bind
+                                                onChange={onChangeImageLimit}
+                                                placeholder="Image Limit"
+                                                options={imageLimitOptions}
+                                                styles={dropdownStylesImageLimit}
+                                            />
 
-                                        </Stack>
-
-                                        <Stack horizontal>
-
-                                        <Dropdown
-                                            label="Image Limit"
-                                            selectedKey={selectedImageLimit ? selectedImageLimit.key : undefined}
-                                            // eslint-disable-next-line react/jsx-no-bind
-                                            onChange={onChangeImageLimit}
-                                            placeholder="Image Limit"
-                                            options={imageLimitOptions}
-                                            styles={dropdownStyles}
-                                        />
-
-                                        <Toggle
-                                            onText="Yes"
-                                            offText="No"
-                                            styles={toggleStyles}
-                                            label="Show Images?"
-                                            checked={pdfVariables?.pdfVariables?.showImages}
-                                            onChange={onChangeShowImagesToggle}
-                                        />
+                                            {/*  <Toggle
+                                                onText="Vacant"
+                                                offText="All"
+                                                styles={toggleStyles}
+                                                label="Display:"
+                                                checked={pdfVariables?.pdfVariables?.onlyShowVacant}
+                                                onChange={onChangeOnlyShowVacantToggle}
+                                            /> */}
 
                                         </Stack>
 
-                                        
+                                        {/* <Stack horizontal>
+
+
+
+                                            <Toggle
+                                                onText="Yes"
+                                                offText="No"
+                                                styles={toggleStyles}
+                                                label="Show Images?"
+                                                checked={pdfVariables?.pdfVariables?.showImages}
+                                                onChange={onChangeShowImagesToggle}
+                                            />
+
+                                        </Stack> */}
+
+                                        {/* <Stack horizontal>
+
+                                            <Toggle
+                                                onText="Yes"
+                                                offText="No"
+                                                styles={toggleStyles}
+                                                label="Show Locality?"
+                                                checked={pdfVariables?.pdfVariables?.showLocality}
+                                                onChange={onChangeShowLocalityToggle}
+                                            />
+
+                                            <Toggle
+                                                onText="Yes"
+                                                offText="No"
+                                                styles={toggleStylesAerial}
+                                                label="Show Aerial?"
+                                                checked={pdfVariables?.pdfVariables?.showAerial}
+                                                onChange={onChangeShowAerialToggle}
+                                            />
+
+                                        </Stack> */}
+
+                                        <Stack horizontal styles={{ root: { marginTop: "5px !important" } }}>
+
+                                            <Stack verticalFill>
+
+                                                <Checkbox styles={checkboxStyles} label="Show Locality" checked={pdfVariables?.pdfVariables?.showLocality} onChange={onChangeShowLocalityToggle} />
+
+                                                <Checkbox styles={checkboxStyles} label="Show Aerial" checked={pdfVariables?.pdfVariables?.showAerial} onChange={onChangeShowAerialToggle} />
+
+
+                                            </Stack>
+
+                                            <Stack verticalFill>
+
+                                                <Checkbox styles={checkboxStyles} label="Show Images" checked={pdfVariables?.pdfVariables?.showImages} onChange={onChangeShowImagesToggle} />
+
+                                                <Checkbox styles={checkboxStyles} label="Vacant Only" checked={pdfVariables?.pdfVariables?.onlyShowVacant} onChange={onChangeOnlyShowVacantToggle} />
+
+                                            </Stack>
+
+
+
+                                        </Stack>
+
+                                        <Stack>
+
+                                            <TextField
+                                                label="Custom Title"
+                                                value={customTitle}
+                                                onChange={onChangeCustomTitle}
+                                                styles={textFieldStylesCustomTitle}
+                                                multiline rows={2}
+                                                
+                                            />
+
+                                        </Stack>
+
+
+
+
 
 
                                     </Stack>
@@ -717,8 +814,8 @@ console.log(pdfVariables?.pdfVariables?.enquiryName)
                             </div>
                             <FocusZone>
                                 <Stack className={outputOptionsStyles.buttons} gap={8} horizontal>
-                                    
-                                    <DefaultButton style={{marginLeft:0, marginRight: "auto"}} onClick={toggleIsOutputOptionsCalloutVisible}>Close</DefaultButton>
+
+                                    <DefaultButton style={{ marginLeft: 0, marginRight: "auto" }} onClick={toggleIsOutputOptionsCalloutVisible}>Close</DefaultButton>
                                 </Stack>
                             </FocusZone>
                         </FocusTrapCallout>

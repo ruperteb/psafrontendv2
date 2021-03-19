@@ -23,12 +23,11 @@ import SavedListsPanel from "./components/SavedListsPanel"
 import {Cloudinary} from "cloudinary-core"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
+const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
+
 function App() {
 
-  var cl = new Cloudinary({cloud_name: "drlfedqyz", secure: true});
-
- 
-
+  var cl = new Cloudinary({cloud_name: CLOUD_NAME, secure: true});
 
   const [search, setSearch] = React.useState<string | undefined>("");
 
@@ -240,7 +239,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
     <Stack
       horizontalAlign="center"
       verticalAlign="start"
-      verticalFill
+      
       styles={{
         root: {
           /*  width: '960px', */
