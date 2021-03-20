@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
-        width: 110,
+        width: 90,
     },
     premisesDetailsContainer: {
         display: "flex",
@@ -419,11 +419,11 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
 
             </View>
             <View fixed style={[styles.detailsSection, {marginTop: 10}]}>
-                <View style={{width: 140}}>
+                <View style={{width: 120}}>
                 </View>
                 <View style={styles.premisesDetailsContainer}>
                     <View style={styles.premisesHeadings}>
-                        <View style={[styles.premisesContainer, { width: 40 }]}>
+                        <View style={[styles.premisesContainer, { width: 60 }]}>
                             <Text style={styles.premisesHeadingText} >Floor/ Unit</Text>
                             <Text style={styles.premisesHeadingSubText} ></Text>
                         </View>
@@ -520,8 +520,8 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
                             {sortPremises(selectedPropertyList[index].premisesList!).map((premises, index) => (
 
                                 <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
-                                    <View style={[styles.premisesContainer, { width: 40 }]}>
-                                        <Text style={[styles.premisesText]} >{premises.floor}</Text>
+                                    <View style={[styles.premisesContainer, { width: 60 }]}>
+                                        <Text style={[styles.premisesText, {textAlign: "left", marginLeft: 5}]} >{premises.floor}</Text>
 
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -597,7 +597,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
                             ))}
 
                             {selectedPropertyList[index].premisesList!.length > 1 ? <View style={selectedPropertyList[index].premisesList!.length % 2 !== 0 ? [styles.premisesDetails, { borderTop: 0.5, borderTopColor: "black" }] : [styles.premisesDetails, { backgroundColor: "#ede6e6", borderTop: 0.5, borderTopColor: "black" }]}>
-                                <View style={[styles.premisesContainerTotals, { width: 40 }]}>
+                                <View style={[styles.premisesContainerTotals, { width: 60 }]}>
                                     <Text style={[styles.premisesText]} ></Text>
 
                                 </View>

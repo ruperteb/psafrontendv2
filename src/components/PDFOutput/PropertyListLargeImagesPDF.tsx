@@ -860,6 +860,24 @@ const getCustomTitle = (customTitle: string | null) => {
 
 }
 
+const getType = (type:string) => {
+
+if(type === "Warehouse") {
+    return "W/H"
+} else return type
+
+}
+
+const showIndFeatures =(buildingType:string, premisesList: Premises[]) => {
+var showFeatures = false
+if(buildingType === "Industrial") {
+    if (getLowestHighestYard(premisesList)[0] !==0 || getLowestHighestHeight(premisesList)[0] !==0 || getLowestHighestDoors(premisesList)[0] !==0 || getLoading(premisesList) !== "" || getSprinklered(premisesList) !== "" || getCanopies(premisesList) !== "" || getPower(premisesList) !== "" ) {
+        showFeatures = true
+    } 
+}
+return showFeatures
+}
+
 const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME
 
 interface Props {
@@ -951,8 +969,12 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
 
                             <View style={styles.premisesHeadings}>
-                                <View style={[styles.premisesContainer, { width: 80 }]}>
+                                <View style={[styles.premisesContainer, { width: 60 }]}>
                                     <Text style={[styles.premisesHeadingText, { textAlign: "left", marginLeft: 5 }]} >Floor/ Unit</Text>
+                                    <Text style={styles.premisesHeadingSubText} ></Text>
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
+                                    <Text style={[styles.premisesHeadingText, /* { textAlign: "left", marginLeft: 5 } */]} >Type</Text>
                                     <Text style={styles.premisesHeadingSubText} ></Text>
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -969,8 +991,11 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             {sortPremises(selectedPropertyList[index].premisesList!).map((premises, index) => (
                                 <View style={index % 2 !== 0 ? styles.premisesDetails : [styles.premisesDetails, { backgroundColor: "#ede6e6" }]}>
-                                    <View style={[styles.premisesContainer, { width: 80 }]}>
+                                    <View style={[styles.premisesContainer, { width: 60 }]}>
                                         <Text style={[styles.premisesText, { textAlign: "left", marginLeft: 5 }]} >{premises.floor}</Text>
+                                    </View>
+                                    <View style={[styles.premisesContainer, { width: 40 }]}>
+                                        <Text style={[styles.premisesText, /* { textAlign: "left", marginLeft: 5 } */]} >{getType(premises.type!)}</Text>
                                     </View>
                                     <View style={[styles.premisesContainer, { width: 40 }]}>
                                         <Text style={[styles.premisesText]} >{premises.area}</Text>
@@ -987,7 +1012,10 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                             {selectedPropertyList[index].premisesList!.length>1?
                             <View style={(selectedPropertyList[index].premisesList!.length) % 2 !== 0 ? [styles.premisesDetails, {borderTop: 0.5}] : [styles.premisesDetails, { backgroundColor: "#ede6e6" , borderTop: 0.5}]}>
-                                <View style={[styles.premisesContainer, { width: 80 }]}>
+                                <View style={[styles.premisesContainer, { width: 60 }]}>
+                                    {/*  <Text style={styles.premisesText} >{premises.floor}</Text> */}
+                                </View>
+                                <View style={[styles.premisesContainer, { width: 40 }]}>
                                     {/*  <Text style={styles.premisesText} >{premises.floor}</Text> */}
                                 </View>
                                 <View style={[styles.premisesContainer, { width: 40 }]}>
@@ -1229,32 +1257,32 @@ const PropertyListLargeImagesPDF: React.FC<Props> = ({ selectedPropertyList, enq
 
                                 </View>
 
-                                {property.buildingType === "Industrial" ? <View style={[styles.premisesInfo, { flexDirection: "column" }]}>
+                                {showIndFeatures(property.buildingType!, property.premisesList!) ? <View style={[styles.premisesInfo, { flexDirection: "column" }]}>
                                     <Text style={[styles.premisesInfoHeadings, { width: 75, marginLeft: 0 }]}>Features:</Text>
 
                                     <Text style={[styles.premisesInfoText, { marginLeft: 0, fontSize: 8 }]}>
                                         {getLowestHighestYard(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] || getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] !== 0  ? 
-                                        `Yard Size: ${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] ?
+                                        `• Yard Size: ${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestYard(selectedPropertyList[index].premisesList!)[1] ?
                                             `${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0]}m² to ${getLowestHighestYard(selectedPropertyList[index].premisesList!)[1]}m²`
-                                            : `${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0]}m²`} | `: ""} 
+                                            : `${getLowestHighestYard(selectedPropertyList[index].premisesList!)[0]}m²`} `: ""} 
 
                                          {getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] || getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] !== 0  ? 
-                                         `Floor to Eave Height:  ${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] ?
+                                         `• Floor to Eave Height:  ${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1] ?
                                             `${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0]}m to ${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[1]}m`
-                                            : `${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0]}m`} | `: ""} 
+                                            : `${getLowestHighestHeight(selectedPropertyList[index].premisesList!)[0]}m`} `: ""} 
                                             
                                             {getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] || getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] !== 0   ? 
-                                            `Doors: ${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] ?
+                                            `• Doors: ${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0] !== getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1] ?
                                             `${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0]} to ${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[1]}`
-                                            : `${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0]}`} | ` : ""}
+                                            : `${getLowestHighestDoors(selectedPropertyList[index].premisesList!)[0]}`} ` : ""}
 
-                                            {getLoading(property.premisesList!) !== "" ? `Loading Type: ${getLoading(property.premisesList!)} | `  : ""}
+                                            {getLoading(property.premisesList!) !== "" ? `• Loading Type: ${getLoading(property.premisesList!)} `  : ""}
 
-                                            {getSprinklered(property.premisesList!) !== "" ? `Sprinkler Type: ${getSprinklered(property.premisesList!)} | `  : ""}
+                                            {getSprinklered(property.premisesList!) !== "" ? `• Sprinkler Type: ${getSprinklered(property.premisesList!)} `  : ""}
 
-                                            {getCanopies(property.premisesList!) !== "" ? `Canopy Details: ${getCanopies(property.premisesList!)} | `  : ""}
+                                            {getCanopies(property.premisesList!) !== "" ? `• Canopy Details: ${getCanopies(property.premisesList!)} `  : ""}
 
-                                            {getPower(property.premisesList!) !== "" ? `Power: ${getPower(property.premisesList!)}`  : ""}
+                                            {getPower(property.premisesList!) !== "" ? `• Power: ${getPower(property.premisesList!)}`  : ""}
                                             
                                             </Text>
 

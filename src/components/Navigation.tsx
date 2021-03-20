@@ -178,7 +178,7 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
   return (
     <div>
 
-      <motion.div layout style={{ top: getHeaderTop(), left: 0, position: "fixed" }} >
+      <motion.div layout style={{ top: getHeaderTop(), left: 0, position: "fixed", zIndex:1 }} >
 
         <Stack styles={headerStackStyles} horizontal>
           <Image

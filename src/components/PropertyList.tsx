@@ -64,7 +64,7 @@ export const PropertyList: React.FunctionComponent<Props> = ({ propertyData, sea
   }; */
 
   return (
-    <div style={{marginTop: 180}}>
+    <div style={{marginTop: 180, zIndex:0}}>
       {searchSortedProperties.map(property => {
 
         return (
