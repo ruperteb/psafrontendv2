@@ -1,5 +1,5 @@
 import { makeVar } from '@apollo/client';
-import {NavigationState, SelectedPropertyList, PDFVariables} from "../schematypes/schematypes"
+import {NavigationState, SelectedPropertyList, PDFVariables, FilterVariables} from "../schematypes/schematypes"
 
 // Create the initial value
 const navigationStateInitialValues: NavigationState = 
@@ -54,4 +54,29 @@ const PDFVariablesInitiallState: PDFVariables =
 // Create the todos var and initialize it with the initial value
 export const pdfVariables = makeVar<PDFVariables>(
   PDFVariablesInitiallState
+);
+
+const filterVariablesInitialValues: FilterVariables = 
+  {
+    suburb: undefined,
+    region: undefined,
+    province: undefined,
+    buildingType: undefined,
+    erfExtentMin: undefined,
+    erfExtentMax: undefined,
+    totalGLAMin: undefined,
+    totalGLAMax: undefined,
+    vacantGLAMin: undefined,
+    vacantGLAMax: undefined,
+    earliestOccMin: undefined,
+    earliestOccMax: undefined,
+    earliestExpMin: undefined,
+    earliestExpMax: undefined,
+    landlord: undefined,
+  }
+
+
+// Create the todos var and initialize it with the initial value
+export const filterVariables = makeVar<FilterVariables>(
+  filterVariablesInitialValues
 );

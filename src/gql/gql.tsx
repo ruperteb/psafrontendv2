@@ -1088,3 +1088,26 @@ export const DELETE_PROPERTY_LIST = gql`
 }
   }
 `;
+
+export const GET_FILTER_VARIABLES = gql`
+  query GetFilterVariables {
+    filterVariables @client { 
+    suburb,
+    region,
+    province,
+    buildingType,
+    erfExtentMin,
+    erfExtentMax,
+    totalGLAMin,
+    totalGLAMax,
+    vacantGLAMin,
+    vacantGLAMax,
+    earliestOccMin,
+    earliestOccMax,
+    earliestExpMin,
+    earliestExpMax,
+    landlord,
+
+    }
+  }
+  `

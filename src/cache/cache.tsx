@@ -1,5 +1,5 @@
 import { InMemoryCache, Reference } from '@apollo/client';
-import {navigationState, pdfVariables, selectedPropertyList} from "../reactivevariables/reactivevariables"
+import {navigationState, pdfVariables, selectedPropertyList, filterVariables} from "../reactivevariables/reactivevariables"
 
 
 export const cache: InMemoryCache = new InMemoryCache({
@@ -26,6 +26,11 @@ export const cache: InMemoryCache = new InMemoryCache({
         pdfVariables: {
           read () {
             return pdfVariables();
+          }
+        },
+        filterVariables: {
+          read () {
+            return filterVariables();
           }
         },
 

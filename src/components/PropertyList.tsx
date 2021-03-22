@@ -3,9 +3,10 @@ import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Image, ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { Checkbox, ICheckboxProps } from 'office-ui-fabric-react/lib/Checkbox';
-import { Query, Property } from "../schematypes/schematypes"
+import { Query, Property, FilterVariables } from "../schematypes/schematypes"
 import { useQuery } from '@apollo/client';
 import { selectedPropertyList } from "../reactivevariables/reactivevariables"
+import { GET_FILTER_VARIABLES } from "../gql/gql"
 import PropertyListItem from "./PropertyListItem"
 
 
@@ -22,7 +23,11 @@ interface Props {
 
 export const PropertyList: React.FunctionComponent<Props> = ({ propertyData, search }) => {
 
-
+  const {
+    data: filterData,
+    loading: filterLoading,
+    error: filterError
+} = useQuery<Query>(GET_FILTER_VARIABLES);
 
 
 

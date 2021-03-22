@@ -20,6 +20,7 @@ import SelectedPropertyListPanel from "./components/SelectedPropertyListPanel"
 import PreviewPDFPanel from "./components/PreviewPDFPanel"
 import ManageLandlordsPanel from "./components/ManageLandlordsPanel"
 import SavedListsPanel from "./components/SavedListsPanel"
+import FilterModal from "./components/FilterModal"
 import {Cloudinary} from "cloudinary-core"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
 
@@ -72,6 +73,8 @@ var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
   return property.propertyId
 })
 
+console.log(suburbData?.distinctSuburbs)
+
   /* if(suburbData !== undefined) */
   const suburbWC = suburbData?.distinctSuburbs!.filter((suburb) => {
     return (suburb.province === "WC")
@@ -81,12 +84,20 @@ var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
     return { key: `${suburb.suburb} ${suburb.province} `, text: suburb.suburb }
   })
 
+  const suburbWCFilterFormatted = suburbWC?.map((suburb) => {
+    return { value: suburb.suburb, label: suburb.suburb }
+  })
+
   const suburbGau = suburbData?.distinctSuburbs!.filter((suburb) => {
-    return (suburb.province === "Gau")
+    return (suburb.province === "GAU")
   })
 
   const suburbGauFormatted = suburbGau?.map((suburb) => {
     return { key: `${suburb.suburb} ${suburb.province} `, text: suburb.suburb }
+  })
+
+  const suburbGauFilterFormatted = suburbGau?.map((suburb) => {
+    return { value: suburb.suburb, label: suburb.suburb }
   })
 
   const suburbKZN = suburbData?.distinctSuburbs!.filter((suburb) => {
@@ -97,12 +108,20 @@ var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
     return { key: `${suburb.suburb} ${suburb.province} `, text: suburb.suburb }
   })
 
+  const suburbKZNFilterFormatted = suburbKZN?.map((suburb) => {
+    return { value: suburb.suburb, label: suburb.suburb }
+  })
+
   const suburbOther = suburbData?.distinctSuburbs!.filter((suburb) => {
-    return (suburb.province !== "KZN" && suburb.province !== "Gau" && suburb.province !== "WC")
+    return (suburb.province !== "KZN" && suburb.province !== "GAU" && suburb.province !== "WC")
   })
 
   const suburbOtherFormatted = suburbOther?.map((suburb) => {
     return { key: `${suburb.suburb} ${suburb.province} `, text: suburb.suburb }
+  })
+
+  const suburbOtherFilterFormatted = suburbOther?.map((suburb) => {
+    return { value: suburb.suburb, label: suburb.suburb }
   })
 
   var distinctSuburbsOptions: IComboBoxOption[] = []
@@ -119,6 +138,38 @@ var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
       { key: 'divider3', text: '-', itemType: SelectableOptionMenuItemType.Divider },
       { key: 'Header4', text: 'Other Provinces', itemType: SelectableOptionMenuItemType.Header },
       ...suburbOtherFormatted
+    ]
+  }
+
+  type FilterFormattedOptions = {
+    value: string;
+    label: string;
+  }
+
+  type DistinctSuburbFilterOptions = {
+    label: string,
+    options: FilterFormattedOptions[],
+  }[]
+
+  var distinctSuburbsFilterOptions: DistinctSuburbFilterOptions  = []
+  if (suburbWCFormatted !== undefined && suburbGauFormatted !== undefined && suburbKZNFormatted !== undefined && suburbOtherFormatted !== undefined) {
+    distinctSuburbsFilterOptions = [
+      {
+        label: 'Western Cape',
+        options: suburbWCFilterFormatted!,
+      },
+      {
+        label: 'Gauteng',
+        options: suburbGauFilterFormatted!,
+      },
+      {
+        label: 'KwaZulu Natal',
+        options: suburbKZNFilterFormatted!,
+      },
+      {
+        label: 'Other',
+        options: suburbOtherFilterFormatted!,
+      },
     ]
   }
 
@@ -259,8 +310,8 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
       <SelectedPropertyListPanel showSelectedPropertyListPanel={navigationState.showSelectedPropertyListPanel } propertyIdList={propertyIdList!}></SelectedPropertyListPanel>
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
       <ManageLandlordsPanel showManageLandlordsPanel={navigationState.showManageLandlordsPanel} landLordsList={landLordsList}></ManageLandlordsPanel>
-     <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel} propertyLists={propertyLists} propertyIdList={propertyIdList!}></SavedListsPanel>
-    
+      <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel} propertyLists={propertyLists} propertyIdList={propertyIdList!}></SavedListsPanel>
+      <FilterModal showFilterModal={navigationState.showFilterModal} distinctSuburbsFilterOptions={distinctSuburbsFilterOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></FilterModal>
     </Stack>
 
 

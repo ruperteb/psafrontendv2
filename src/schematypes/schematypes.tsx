@@ -27,6 +27,7 @@ export type Query = {
   landlordContacts?: Maybe<Array<Maybe<LandlordContact>>>;
   contactsByLandlord?: Maybe<Array<Maybe<LandlordContact>>>;
   propertyLists?: Maybe<Array<Maybe<PropertyList>>>;
+  filterVariables?: FilterVariables;
 
 };
 
@@ -404,4 +405,22 @@ propertyIds: Scalars['Int'][]
     enquiryDate?: Maybe<Scalars['DateTime']>;
     properties?: Maybe<Array<Maybe<Property>>>;
   };
+
+  export type FilterVariables = {
+    suburb: string[] | undefined,
+    region: string[] | undefined,
+    province: string[] | undefined,
+    buildingType: string[] | undefined,
+    erfExtentMin: number | undefined,
+    erfExtentMax: number | undefined,
+    totalGLAMin: number | undefined,
+    totalGLAMax: number | undefined,
+    vacantGLAMin: number | undefined,
+    vacantGLAMax: number | undefined,
+    earliestOccMin: number | undefined,
+    earliestOccMax: number | undefined,
+    earliestExpMin: number | undefined,
+    earliestExpMax: number | undefined,
+    landlord: string | undefined,
+  }
   
