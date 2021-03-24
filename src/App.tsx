@@ -8,7 +8,7 @@ import {
   IComboBox,
   SelectableOptionMenuItemType,
 } from 'office-ui-fabric-react';
-import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES, GET_LANDLORDS, GET_PROPERTY_LISTS} from "./gql/gql"
+import { GET_PROPERTIES, GET_NAV_STATE, GET_DISTINCT_SUBURBS, GET_DISTINCT_REGIONS, GET_SELECTED_PROPERTIES , GET_PDF_VARIABLES, GET_LANDLORDS, GET_PROPERTY_LISTS, GET_FILTER_VARIABLES} from "./gql/gql"
 import { Query, NavigationState, SelectedPropertyList, Landlord, PropertyList as SavedPropertyList } from "./schematypes/schematypes"
 import { gql, useQuery, useApolloClient } from '@apollo/client';
 import Loading from "./components/Loading"
@@ -27,6 +27,7 @@ import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
 
 function App() {
+
 
   var cl = new Cloudinary({cloud_name: CLOUD_NAME, secure: true});
 
@@ -68,6 +69,14 @@ function App() {
     loading: propertyListLoading,
     error: propertyListError
 } = useQuery<Query>(GET_SELECTED_PROPERTIES);
+
+const {
+  data: filterData,
+  loading: filterLoading,
+  error: filterError
+} = useQuery<Query>(GET_FILTER_VARIABLES);
+
+console.log(filterData)
 
 var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
   return property.propertyId
@@ -181,12 +190,20 @@ console.log(suburbData?.distinctSuburbs)
     return { key: `${region.region} ${region.province} `, text: region.region }
   })
 
+  const regionWCFilterFormatted = regionWC?.map((region) => {
+    return { value: region.region, label: region.region }
+  })
+
   const regionGau = regionData?.distinctRegions!.filter((region) => {
     return (region.province === "Gau")
   })
 
   const regionGauFormatted = regionGau?.map((region) => {
     return { key: `${region.region} ${region.province} `, text: region.region }
+  })
+
+  const regionGauFilterFormatted = regionGau?.map((region) => {
+    return { value: region.region, label: region.region }
   })
 
   const regionKZN = regionData?.distinctRegions!.filter((region) => {
@@ -197,12 +214,20 @@ console.log(suburbData?.distinctSuburbs)
     return { key: `${region.region} ${region.province} `, text: region.region }
   })
 
+  const regionKZNFilterFormatted = regionKZN?.map((region) => {
+    return { value: region.region, label: region.region }
+  })
+
   const regionOther = regionData?.distinctRegions!.filter((region) => {
     return (region.province !== "KZN" && region.province !== "Gau" && region.province !== "WC")
   })
 
   const regionOtherFormatted = regionOther?.map((region) => {
     return { key: `${region.region} ${region.province} `, text: region.region }
+  })
+
+  const regionOtherFilterFormatted = regionOther?.map((region) => {
+    return { value: region.region, label: region.region }
   })
 
   var distinctRegionsOptions: IComboBoxOption[] = []
@@ -223,6 +248,34 @@ console.log(suburbData?.distinctSuburbs)
   }
 
 
+  type DistinctRegionFilterOptions = {
+    label: string,
+    options: FilterFormattedOptions[],
+  }[]
+
+  var distinctRegionFilterOptions: DistinctRegionFilterOptions  = []
+  if (regionWCFilterFormatted !== undefined && regionGauFilterFormatted !== undefined && regionKZNFilterFormatted !== undefined && regionOtherFormatted !== undefined) {
+    distinctRegionFilterOptions = [
+      {
+        label: 'Western Cape',
+        options: regionWCFilterFormatted!,
+      },
+      {
+        label: 'Gauteng',
+        options: regionGauFilterFormatted!,
+      },
+      {
+        label: 'KwaZulu Natal',
+        options: regionKZNFilterFormatted!,
+      },
+      {
+        label: 'Other',
+        options: regionOtherFilterFormatted!,
+      },
+    ]
+  }
+
+
 
   const {
     data: landlordData,
@@ -235,10 +288,21 @@ var landLordsList: Landlord[] = landlordData?.landlords!
 const landlordsFormatted = landLordsList?.map((landlord) => {
   return { key: landlord.landlordName!, text: landlord.landlordName!, data: landlord }
 })
+
+const landlordsFilterFormatted = landLordsList?.map((landlord) => {
+  return { value: landlord.landlordName!, label: landlord.landlordName! }
+})
+
 var landlordsOptions: IComboBoxOption[] = []
 
 if(landlordsFormatted !== undefined) {
   landlordsOptions = [...landlordsFormatted]
+}
+
+var landlordsFilterOptions: FilterFormattedOptions[] = []
+
+if(landlordsFilterFormatted !== undefined) {
+  landlordsFilterOptions = [...landlordsFilterFormatted]
 }
 
 const {
@@ -311,7 +375,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
       <PreviewPDFPanel showPreviewPDFPanel={navigationState.showPreviewPDFPanel} enquiryName={pdfVariables?.pdfVariables?.enquiryName!} agent={pdfVariables?.pdfVariables?.agent!} propertyIdList={propertyIdList!}></PreviewPDFPanel>
       <ManageLandlordsPanel showManageLandlordsPanel={navigationState.showManageLandlordsPanel} landLordsList={landLordsList}></ManageLandlordsPanel>
       <SavedListsPanel showSavedListsPanel={navigationState.showSavedListsPanel} propertyLists={propertyLists} propertyIdList={propertyIdList!}></SavedListsPanel>
-      <FilterModal showFilterModal={navigationState.showFilterModal} distinctSuburbsFilterOptions={distinctSuburbsFilterOptions} distinctRegionsOptions={distinctRegionsOptions} landlordsOptions={landlordsOptions}></FilterModal>
+      <FilterModal showFilterModal={navigationState.showFilterModal} distinctSuburbsFilterOptions={distinctSuburbsFilterOptions} distinctRegionFilterOptions={distinctRegionFilterOptions} landlordsFilterOptions={landlordsFilterOptions}></FilterModal>
     </Stack>
 
 

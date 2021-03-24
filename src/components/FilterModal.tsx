@@ -37,11 +37,10 @@ import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import { defaultDataIdFromObject, gql, useMutation, useQuery } from '@apollo/client';
 import { GET_SINGLE_PROPERTY, NEW_PREMISES, GET_NAV_STATE, GET_FILTER_VARIABLES } from "../gql/gql"
 import { Mutation, MutationPostPremisesArgs, Query, Property, Premises, FilterVariables } from "../schematypes/schematypes"
-import { navigationState, filterVariables } from "../reactivevariables/reactivevariables"
+import { navigationState, filterVariables as filterVariablesVar } from "../reactivevariables/reactivevariables"
 import Select from 'react-select';
 
 import "./NewPremisesModal.css"
-
 
 
 
@@ -52,6 +51,7 @@ const dragOptions: IDragOptions = {
 };
 const cancelIcon: IIconProps = { iconName: 'Cancel' };
 const filterIcon: IIconProps = { iconName: 'Filter' };
+const clearFilterIcon: IIconProps = { iconName: 'ClearFilter' };
 
 type FilterFormattedOptions = {
     value: string;
@@ -63,14 +63,19 @@ type DistinctSuburbFilterOptions = {
     options: FilterFormattedOptions[],
 }[]
 
+type DistinctRegionFilterOptions = {
+    label: string,
+    options: FilterFormattedOptions[],
+}[]
+
 interface Props {
     showFilterModal: boolean
     distinctSuburbsFilterOptions: DistinctSuburbFilterOptions;
-    distinctRegionsOptions: IComboBoxOption[];
-    landlordsOptions: IComboBoxOption[];
+    distinctRegionFilterOptions: DistinctRegionFilterOptions
+    landlordsFilterOptions: FilterFormattedOptions[];
 }
 
-export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsFilterOptions, distinctRegionsOptions, landlordsOptions }) => {
+export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsFilterOptions, distinctRegionFilterOptions, landlordsFilterOptions }) => {
 
 
 
@@ -80,7 +85,80 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
         error: filterError
     } = useQuery<Query>(GET_FILTER_VARIABLES);
 
+    const [filterVariables, setFilterVariables] = React.useState<FilterVariables>(filterData?.filterVariables!);
 
+    console.log(filterVariables)
+
+
+    const applyFilter = () => {
+        filterVariablesVar({
+            suburb: filterVariables.suburb,
+            region: filterVariables.region,
+            province: filterVariables.province,
+            buildingType: filterVariables.buildingType,
+            erfExtentMin: filterVariables.erfExtentMin,
+            erfExtentMax: filterVariables.erfExtentMax,
+            totalGLAMin: filterVariables.totalGLAMin,
+            totalGLAMax: filterVariables.totalGLAMax,
+            vacantGLAMin: filterVariables.vacantGLAMin,
+            vacantGLAMax: filterVariables.vacantGLAMax,
+            earliestOccMin: filterVariables.earliestOccMin,
+            earliestOccMax: filterVariables.earliestOccMax,
+            earliestExpMin: filterVariables.earliestExpMin,
+            earliestExpMax: filterVariables.earliestExpMax,
+            landlord: filterVariables.landlord,
+        })
+    }
+
+    const clearFilter = () => {
+        suburbRef.current.select.clearValue();
+        regionRef.current.select.clearValue();
+        provinceRef.current.select.clearValue();
+        buildingTypeRef.current.select.clearValue();
+        landlordRef.current.select.clearValue();
+
+        filterVariablesVar({
+            suburb: [],
+            region: [],
+            province: [],
+            buildingType: [],
+            erfExtentMin: 0,
+            erfExtentMax: 0,
+            totalGLAMin: 0,
+            totalGLAMax: 0,
+            vacantGLAMin: 0,
+            vacantGLAMax: 0,
+            earliestOccMin: new Date("01/01/2020"),
+            earliestOccMax: new Date("01/01/2020"),
+            earliestExpMin: new Date("01/01/2020"),
+            earliestExpMax: new Date("01/01/2020"),
+            landlord: [],
+        })
+
+        setFilterVariables({
+            suburb: [],
+            region: [],
+            province: [],
+            buildingType: [],
+            erfExtentMin: 0,
+            erfExtentMax: 0,
+            totalGLAMin: 0,
+            totalGLAMax: 0,
+            vacantGLAMin: 0,
+            vacantGLAMax: 0,
+            earliestOccMin: new Date("01/01/2020"),
+            earliestOccMax: new Date("01/01/2020"),
+            earliestExpMin: new Date("01/01/2020"),
+            earliestExpMax: new Date("01/01/2020"),
+            landlord: [],
+        })
+
+
+    }
+
+
+
+    console.log(filterData)
 
 
 
@@ -103,14 +181,105 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
     }
 
 
-    const [filterVariables, setFilterVariables] = React.useState<FilterVariables>(filterData?.filterVariables!);
+
+
+    const onSelectSuburb = React.useCallback(
+        (value: any) => {
+
+            setFilterVariables({ ...filterVariables, suburb: value.map((suburb: any) => { return suburb.value }) });
+        }, [filterVariables])
+
+    const onSelectRegion = React.useCallback(
+        (value: any) => {
+
+            setFilterVariables({ ...filterVariables, region: value.map((region: any) => { return region.value }) });
+        }, [filterVariables])
+
+    const onSelectProvince = React.useCallback(
+        (value: any) => {
+
+            setFilterVariables({ ...filterVariables, province: value.map((province: any) => { return province.value }) });
+        }, [filterVariables])
+
+    const onSelectBuildingType = React.useCallback(
+        (value: any) => {
+
+            setFilterVariables({ ...filterVariables, buildingType: value.map((buildingType: any) => { return buildingType.value }) });
+        }, [filterVariables])
+
+    const onSelectLandlord = React.useCallback(
+        (value: any) => {
+
+            setFilterVariables({ ...filterVariables, landlord: value.map((landlord: any) => { return landlord.value }) });
+        }, [filterVariables])
+
+
+    const getSliderMinGLAValue = React.useCallback(
+        () => {
+            if (filterData !== undefined) {
+                return filterVariables.vacantGLAMin
+            } else return undefined
+
+        }, [filterVariables, filterData])
+
+    const getSliderMaxGLAValue = () => {
+        if (filterData !== undefined) {
+            return filterVariables.vacantGLAMax
+        } else return undefined
+
+    }
+
+    const sliderMinGLAOnChange = React.useCallback(
+        (value: number) => {
+            setFilterVariables({ ...filterVariables, vacantGLAMin: value });
+        }, [filterVariables])
+
+    const sliderMaxGLAOnChange = React.useCallback(
+        (value: number) => {
+            setFilterVariables({ ...filterVariables, vacantGLAMax: value });
+        }, [filterVariables])
 
 
 
+    const sliderAriaValueText = (value: number) => `${value}m²`;
+    const sliderValueFormat = (value: number) => `${value}m²`;
 
+    const onSelectMinOccupationDate = React.useCallback(
+        (date: Date | null | undefined) => {
+            if (date !== undefined && date !== null)
+                setFilterVariables({ ...filterVariables, earliestOccMin: date });
+        },
+        [filterVariables])
 
+    const onSelectMaxOccupationDate = React.useCallback(
+        (date: Date | null | undefined) => {
+            if (date !== undefined && date !== null)
+                setFilterVariables({ ...filterVariables, earliestOccMax: date });
+        },
+        [filterVariables])
 
+    const onFormatDate = (date?: Date): string => {
+        return !date ? '' : date.toLocaleDateString(
+            'en-gb',
+            {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }
+        );
+    };
 
+    const checkDates = (first: Date | undefined, second: Date | undefined) => {
+        if (first && second)
+            if (first.getFullYear() === second.getFullYear() &&
+                first.getMonth() === second.getMonth() &&
+                first.getDate() === second.getDate()) {
+                return true
+            } else return false
+
+    }
+
+    var startDate = new Date("01/01/2020")
 
 
 
@@ -173,24 +342,57 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
             borderBottom: '1px dotted pink',
             color: state.selectProps.menuColor,
             padding: 5,
-
-
         }),
         menuList: (provided: any, state: any) => ({
             ...provided,
             height: "200px",
             width: "100%",
-
         }),
         container: (provided: any, state: any) => ({
             ...provided,
             width: "100%",
             height: "fit-content"
-
-
         }),
+    }
 
+    const customStylesProvince = {
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            width: "100%",
+            borderBottom: '1px dotted pink',
+            color: state.selectProps.menuColor,
+            padding: 5,
+        }),
+        menuList: (provided: any, state: any) => ({
+            ...provided,
+            height: "150px",
+            width: "100%",
+        }),
+        container: (provided: any, state: any) => ({
+            ...provided,
+            width: "100%",
+            height: "fit-content"
+        }),
+    }
 
+    const customStylesBuildingType = {
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            width: "100%",
+            borderBottom: '1px dotted pink',
+            color: state.selectProps.menuColor,
+            padding: 5,
+        }),
+        menuList: (provided: any, state: any) => ({
+            ...provided,
+            height: "150px",
+            width: "100%",
+        }),
+        container: (provided: any, state: any) => ({
+            ...provided,
+            width: "100%",
+            height: "fit-content"
+        }),
     }
 
 
@@ -237,95 +439,33 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
 
     });
 
-    const premisesTypeOptions = [
+    const provinceOptions = [
 
-        { key: 'Office', text: 'Office' },
-        { key: 'Warehouse', text: 'Warehouse' },
-        { key: 'Retail', text: 'Retail' },
-        { key: 'Stores', text: 'Stores' },
-        { key: 'Balcony', text: 'Balcony' },
+        { value: 'WC', label: 'Western Cape' },
+        { value: 'GAU', label: 'Gauteng' },
+        { value: 'KZN', label: 'KwaZulu Natal' },
+        { value: 'Other', label: 'Other' },
+
+    ];
+
+    const buildingTypeOptions = [
+
+        { value: 'Office', label: 'Office' },
+        { value: 'Industrial', label: 'Industrial' },
+        { value: 'Retail', label: 'Retail' },
+        { value: 'Mixed Use', label: 'Mixed Use' },
+
     ];
 
 
 
-
-
-    const [selectedPremisesType, setSelectedPremisesType] = React.useState<IDropdownOption>();
-    const [selectedPremisesIndex, setSelectedPremisesIndex] = React.useState<IDropdownOption>();
-
-
-
-    /* const onChangePremisesType = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
-        if (item !== undefined) {
-            setSelectedPremisesType(item);
-            setDuplicatedPremises({ ...duplicatedPremises, type: item.text });
-        }
-    };
-
-    const onChangePremisesIndex = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption | undefined): void => {
-        if (item !== undefined) {
-            setSelectedPremisesIndex(item);
-            setDuplicatedPremises({ ...duplicatedPremises, premisesIndex: parseInt(item.text) });
-        }
-    };
-
-
-    const stackTokens = { childrenGap: 15 };
-
-
-
-    const onChangeFloor = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDuplicatedPremises({ ...duplicatedPremises, floor: newValue || '' });
-        },
-        [duplicatedPremises],
-    );
-
-    const onChangeArea = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            console.log(newValue)
-            setDuplicatedPremises({ ...duplicatedPremises, area: parseFloat(newValue!) || 0 });
-        },
-        [duplicatedPremises],
-    );
-
-
-    
-
-   
-
-    const onSelectOccupationDate = React.useCallback(
-        (date: Date | null | undefined) => {
-            if (date !== undefined && date !== null)
-                setDuplicatedPremises({ ...duplicatedPremises, occupation: date.toISOString() });
-        },
-        [duplicatedPremises])
-
-    const onFormatDate = (date?: Date): string => {
-        return !date ? '' : date.toLocaleDateString(
-            'en-gb',
-            {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            }
-        );
-    };
-
-
-
-    
-
-    const onChangeNetRental = React.useCallback(
-        (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setDuplicatedPremises({ ...duplicatedPremises, netRental: parseFloat(newValue!) || 0 });
-        },
-        [duplicatedPremises],
-    );
- */
-
     console.log(distinctSuburbsFilterOptions)
 
+    const suburbRef: any = React.useRef()
+    const regionRef: any = React.useRef()
+    const provinceRef: any = React.useRef()
+    const buildingTypeRef: any = React.useRef()
+    const landlordRef: any = React.useRef()
 
     return (
         <div>
@@ -350,8 +490,14 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
                         <IconButton
                             styles={iconButtonStyles}
                             iconProps={filterIcon}
-                            ariaLabel="Save Premises"
-                        /*  onClick={filterProperties} */
+                            ariaLabel="Apply Filter"
+                            onClick={applyFilter}
+                        />
+                        <IconButton
+                            styles={iconButtonStyles}
+                            iconProps={clearFilterIcon}
+                            ariaLabel="Clear Filter"
+                            onClick={clearFilter}
                         />
                         <IconButton
                             styles={iconButtonStyles}
@@ -367,7 +513,7 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
 
                     <Stack /* tokens={stackTokens} */>
 
-                        <Stack verticalFill 
+                        <Stack verticalFill
                             styles={{
                                 root: {
                                     color: '#605e5c',
@@ -375,101 +521,166 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
                                 }
                             }}>
 
-                                <Label>Suburb</Label>
+                            <Label>Suburb</Label>
 
-                                <Select
-                                    isMulti
-                                    styles={customStyles}
-                                    /*  defaultValue={colourOptions[1]} */
-                                    options={distinctSuburbsFilterOptions}
-                                    formatGroupLabel={formatGroupLabel}
-                                />
+                            <Select
+                                ref={suburbRef}
+                                key="suburb"
+                                isMulti
+                                styles={customStyles}
+                                /*  defaultValue={colourOptions[1]} */
+                                options={distinctSuburbsFilterOptions}
+                                formatGroupLabel={formatGroupLabel}
+                                onChange={onSelectSuburb}
+                                values={filterVariables.suburb!.map((suburb) => { return { value: suburb, label: suburb } })}
+                                defaultValue={filterVariables.suburb!.map((suburb) => { return { value: suburb, label: suburb } })}
+
+                            />
                         </Stack>
 
-                        <Stack verticalFill 
+                        <Stack verticalFill
                             styles={{
                                 root: {
                                     color: '#605e5c',
                                     marginLeft: "0px",
+                                    marginTop: "5px !important"
                                 }
                             }}>
 
-                                <Label>Region</Label>
+                            <Label>Region</Label>
 
-                                <Select
-                                    isMulti
-                                    styles={customStyles}
-                                    /*  defaultValue={colourOptions[1]} */
-                                    options={distinctSuburbsFilterOptions}
-                                    formatGroupLabel={formatGroupLabel}
-                                />
+                            <Select
+                                ref={regionRef}
+                                key="region"
+                                isMulti
+                                styles={customStyles}
+                                /*  defaultValue={colourOptions[1]} */
+                                options={distinctRegionFilterOptions}
+                                formatGroupLabel={formatGroupLabel}
+                                onChange={onSelectRegion}
+                                values={filterVariables.region!.map((region) => { return { value: region, label: region } })}
+                                defaultValue={filterVariables.region!.map((region) => { return { value: region, label: region } })}
+                            />
                         </Stack>
 
-                        <Stack verticalFill 
+                        <Stack verticalFill
                             styles={{
                                 root: {
                                     color: '#605e5c',
                                     marginLeft: "0px",
+                                    marginTop: "5px !important"
                                 }
                             }}>
 
-                                <Label>Province</Label>
+                            <Label>Province</Label>
 
-                                <Select
-                                    isMulti
-                                    styles={customStyles}
-                                    /*  defaultValue={colourOptions[1]} */
-                                    options={distinctSuburbsFilterOptions}
-                                    formatGroupLabel={formatGroupLabel}
-                                />
+                            <Select
+                                ref={provinceRef}
+                                key="province"
+                                isMulti
+                                styles={customStylesProvince}
+                                /*  defaultValue={colourOptions[1]} */
+                                options={provinceOptions}
+                                formatGroupLabel={formatGroupLabel}
+                                onChange={onSelectProvince}
+                                values={filterVariables.province!.map((province) => { return { value: province, label: province } })}
+                                defaultValue={filterVariables.province!.map((province) => { return { value: province, label: province } })}
+                            />
                         </Stack>
 
                         <Stack horizontal>
 
-                        <Stack verticalFill 
-                            styles={{
-                                root: {
-                                    color: '#605e5c',
-                                    marginLeft: "0px",
-                                    width: "60%"
-                                }
-                            }}>
+                            <Stack verticalFill
+                                styles={{
+                                    root: {
+                                        color: '#605e5c',
+                                        marginLeft: "0px",
+                                        width: "60%",
+                                        marginTop: "5px !important"
+                                    }
+                                }}>
 
                                 <Label>Building Type</Label>
 
                                 <Select
+                                    ref={buildingTypeRef}
+                                    key="buildingType"
                                     isMulti
-                                    styles={customStyles}
+                                    styles={customStylesBuildingType}
                                     /*  defaultValue={colourOptions[1]} */
-                                    options={distinctSuburbsFilterOptions}
+                                    options={buildingTypeOptions}
                                     formatGroupLabel={formatGroupLabel}
+                                    onChange={onSelectBuildingType}
+                                    values={filterVariables.buildingType!.map((buildingType) => { return { value: buildingType, label: buildingType } })}
+                                    defaultValue={filterVariables.buildingType!.map((buildingType) => { return { value: buildingType, label: buildingType } })}
                                 />
-                        </Stack>
+                            </Stack>
 
-                        <Stack verticalFill 
-                            styles={{
-                                root: {
-                                    color: '#605e5c',
-                                    marginLeft: "auto !important",
-                                    marginRight: 0,
-                                    width: "35%"
-                                }
-                            }}>
+                            <Stack verticalFill
+                                styles={{
+                                    root: {
+                                        color: '#605e5c',
+                                        marginLeft: "auto !important",
+                                        marginRight: 0,
+                                        width: "35%",
+                                        marginTop: "5px !important"
+                                    }
+                                }}>
 
                                 <Label>Landlord</Label>
 
                                 <Select
+                                    ref={landlordRef}
+                                    key="landlord"
                                     isMulti
                                     styles={customStyles}
                                     /*  defaultValue={colourOptions[1]} */
-                                    options={distinctSuburbsFilterOptions}
+                                    options={landlordsFilterOptions}
                                     formatGroupLabel={formatGroupLabel}
+                                    onChange={onSelectLandlord}
+                                    values={filterVariables.landlord!.map((landlord) => { return { value: landlord, label: landlord } })}
+                                    defaultValue={filterVariables.landlord!.map((landlord) => { return { value: landlord, label: landlord } })}
                                 />
+                            </Stack>
+
+                        </Stack>
+
+                        <Stack styles={{ root: { marginTop: "10px !important" } }}>
+
+                            <Slider
+                                label="Minimum Vacant GLA"
+                                max={20000}
+                                value={getSliderMinGLAValue()}
+
+                                showValue
+                                step={20}
+                                ariaValueText={sliderAriaValueText}
+                                valueFormat={sliderValueFormat}
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onChange={sliderMinGLAOnChange}
+                            />
+
+                        </Stack>
+
+                        <Stack styles={{ root: { marginTop: "5px !important" } }}>
+
+                            <Slider
+                                label="Maximum Vacant GLA"
+                                max={20000}
+                                value={getSliderMaxGLAValue()}
+                                showValue
+                                step={20}
+                                ariaValueText={sliderAriaValueText}
+                                valueFormat={sliderValueFormat}
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onChange={sliderMaxGLAOnChange}
+                            />
+
                         </Stack>
 
 
 
-                        </Stack>
+
 
                         <Stack horizontal styles={{
                             root: {
@@ -480,64 +691,45 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
 
                                 marginLeft: "0px",
                                 marginRight: "auto",
+                                marginBottom: 10,
+                                marginTop: "5px !important"
                                 /* display: "block" */
 
                             }
 
                         }}>
 
-                            <Dropdown
-                                label="Premises Type"
-                                selectedKey={selectedPremisesType ? selectedPremisesType.key : undefined}
-                                // eslint-disable-next-line react/jsx-no-bind
-                                /*  onChange={onChangePremisesType} */
-                                placeholder="Select type"
-                                options={premisesTypeOptions}
-                                styles={dropdownStyles}
-                            />
 
-                            {/* <Dropdown
-                                label="Premises Index"
-                                selectedKey={selectedPremisesIndex ? selectedPremisesIndex.key : undefined}
-                                // eslint-disable-next-line react/jsx-no-bind
-                                 onChange={onChangePremisesIndex}
-                                placeholder="Select index"
-                                options={premisesIndexOptions}
-                                styles={dropdownStyles}
-                            /> */}
 
                             <DatePicker
-                                label="Occupation Date"
+                                label="Min Occupation Date"
                                 className={controlClass.control}
                                 firstDayOfWeek={DayOfWeek.Monday}
                                 strings={DayPickerStrings}
                                 placeholder="Select a date..."
                                 ariaLabel="Select a date"
-                                /*  value={new Date(duplicatedPremises.occupation)} */
-                                /* onSelectDate={onSelectOccupationDate} */
-                                /* formatDate={onFormatDate} */
+                                value={filterVariables === undefined || checkDates(filterVariables.earliestOccMin, startDate) ? undefined : filterVariables.earliestOccMin}
+                                onSelectDate={onSelectMinOccupationDate}
+                                formatDate={onFormatDate}
+                                styles={datePickerStyles}
+
+                            />
+
+                            <DatePicker
+                                label="Max Occupation Date"
+                                className={controlClass.control}
+                                firstDayOfWeek={DayOfWeek.Monday}
+                                strings={DayPickerStrings}
+                                placeholder="Select a date..."
+                                ariaLabel="Select a date"
+                                value={filterVariables === undefined || checkDates(filterVariables.earliestOccMax, startDate) ? undefined : filterVariables.earliestOccMax}
+                                onSelectDate={onSelectMaxOccupationDate}
+                                formatDate={onFormatDate}
                                 styles={datePickerStyles}
 
                             />
 
                         </Stack>
-
-                        <Stack horizontal>
-
-                            <TextField
-                                label="Premises Notes"
-                                /* value={duplicatedPremises.premisesNotes} */
-                                /*  onChange={onChangePremisesNotes} */
-                                styles={textFieldNotesStyles}
-                                multiline
-                                autoAdjustHeight
-                            />
-
-                        </Stack>
-
-
-
-
 
                     </Stack>
 
@@ -554,7 +746,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        /*  width: 525, */
+        width: 525,
 
     },
 

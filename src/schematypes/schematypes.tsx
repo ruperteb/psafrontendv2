@@ -417,10 +417,10 @@ propertyIds: Scalars['Int'][]
     totalGLAMax: number | undefined,
     vacantGLAMin: number | undefined,
     vacantGLAMax: number | undefined,
-    earliestOccMin: number | undefined,
-    earliestOccMax: number | undefined,
-    earliestExpMin: number | undefined,
-    earliestExpMax: number | undefined,
-    landlord: string | undefined,
+    earliestOccMin: Date | undefined,
+    earliestOccMax: Date | undefined,
+    earliestExpMin: Date | undefined,
+    earliestExpMax: Date | undefined,
+    landlord: string[] | undefined,
   }
   

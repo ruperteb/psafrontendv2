@@ -58,21 +58,21 @@ export const pdfVariables = makeVar<PDFVariables>(
 
 const filterVariablesInitialValues: FilterVariables = 
   {
-    suburb: undefined,
-    region: undefined,
-    province: undefined,
-    buildingType: undefined,
-    erfExtentMin: undefined,
-    erfExtentMax: undefined,
-    totalGLAMin: undefined,
-    totalGLAMax: undefined,
-    vacantGLAMin: undefined,
-    vacantGLAMax: undefined,
-    earliestOccMin: undefined,
-    earliestOccMax: undefined,
-    earliestExpMin: undefined,
-    earliestExpMax: undefined,
-    landlord: undefined,
+    suburb: [],
+    region: [],
+    province: [],
+    buildingType: [],
+    erfExtentMin: 0,
+    erfExtentMax: 0,
+    totalGLAMin: 0,
+    totalGLAMax: 0,
+    vacantGLAMin: 0,
+    vacantGLAMax: 0,
+    earliestOccMin: new Date("01/01/2020"),
+    earliestOccMax: new Date("01/01/2020"),
+    earliestExpMin: new Date("01/01/2020"),
+    earliestExpMax: new Date("01/01/2020"),
+    landlord: [],
   }
 
 
