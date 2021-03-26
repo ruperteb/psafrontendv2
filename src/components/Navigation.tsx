@@ -149,7 +149,7 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
       setScroll(latestY)
     )
 
-    if (scroll === 0) {
+    if (scroll <= 50) {
       setIsTop(true)
     } else setIsTop(false)
 

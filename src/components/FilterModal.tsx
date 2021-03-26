@@ -87,9 +87,6 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
 
     const [filterVariables, setFilterVariables] = React.useState<FilterVariables>(filterData?.filterVariables!);
 
-    console.log(filterVariables)
-
-
     const applyFilter = () => {
         filterVariablesVar({
             suburb: filterVariables.suburb,
@@ -276,8 +273,9 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
                 first.getDate() === second.getDate()) {
                 return true
             } else return false
-
     }
+
+   
 
     var startDate = new Date("01/01/2020")
 

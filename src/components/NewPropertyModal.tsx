@@ -118,7 +118,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
         });
 
-    
+
 
     const [postProperty, { data }] = useMutation<Mutation, MutationPostPropertyArgs>(NEW_PROPERTY);
 
@@ -209,7 +209,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
     const textFieldLandlordEmailStyles: Partial<ITextFieldStyles> = { root: { width: "100%", marginRight: 20, marginTop: "20px !important" } };
 
-    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: { zIndex: 5000 } };
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: { zIndex: 5000 }, };
 
     const buttonStyles = { root: { width: 100, marginRight: "auto !important", marginBottom: "auto", marginTop: "60px !important", marginLeft: "auto !important", height: 40 } };
 
@@ -324,7 +324,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
         [selectedLandlord],
     );
 
-   
+
 
     const contactsFormatted = selectedLandlord.landlordData?.contactsList?.map((contact) => {
         return { key: contact.name!, text: contact.name!, data: contact }
@@ -578,7 +578,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
                             <Stack horizontal>
 
-                                <Stack styles={{root: {width: "70%"}}} verticalFill>
+                                <Stack styles={{ root: { width: "70%" } }} verticalFill>
 
                                     <TextField
                                         underlined
@@ -656,7 +656,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
     return (
         <div>
-
+            
 
             <Modal
                 styles={modalStyles}
@@ -664,10 +664,12 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
                 titleAriaId={titleId}
                 isOpen={showNewPropertyModal}
                 onDismiss={hideNewPropertyModal}
-                isBlocking={false}
+                isBlocking={true}
+                /* isModeless={true} */
                 containerClassName={contentStyles.container}
             /* dragOptions={dragOptions} */
             >
+
                 <div className={contentStyles.header}>
                     <span id={titleId}>New Property</span>
                     <Stack horizontal
@@ -718,6 +720,7 @@ export const NewPropertyModal: React.FC<Props> = ({ showNewPropertyModal, distin
 
 
                 </div>
+
             </Modal>
         </div>
     );

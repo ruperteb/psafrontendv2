@@ -352,6 +352,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
 
   return (
     <Stack
+    id="main_stack"
       horizontalAlign="center"
       verticalAlign="start"
       
@@ -361,6 +362,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
           margin: '0 auto',
           textAlign: 'center',
           color: '#605e5c',
+          overflowY: "hidden"
           /*   backgroundColor: "#b18c481a;" */
           /* marginTop: "100px" */
         }
