@@ -167,9 +167,9 @@ const styles = StyleSheet.create({
         fontFamily: "SegoeUI",
         fontWeight: "bold",
         color: "black",
-        width: 125,
+        /* width: 125, */
         paddingLeft: 10,
-        paddingRight: 10,
+        /* paddingRight: 5, */
         paddingTop: 1.5,
     },
     propertyText: {
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
-        width: 90,
+        width: 95,
     },
     premisesDetailsContainer: {
         display: "flex",
@@ -419,7 +419,7 @@ const PropertyListScheduleNoImages: React.FC<Props> = ({ selectedPropertyList, e
 
             </View>
             <View fixed style={[styles.detailsSection, {marginTop: 10}]}>
-                <View style={{width: 120}}>
+                <View style={{width: 125}}>
                 </View>
                 <View style={styles.premisesDetailsContainer}>
                     <View style={styles.premisesHeadings}>

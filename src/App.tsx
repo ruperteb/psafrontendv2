@@ -23,6 +23,7 @@ import SavedListsPanel from "./components/SavedListsPanel"
 import FilterModal from "./components/FilterModal"
 import {Cloudinary} from "cloudinary-core"
 import { PDFViewer, PDFDownloadLink, Document, Page } from '@react-pdf/renderer';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 const CLOUD_NAME = process.env.REACT_APP_CLOUD_NAME;
 
@@ -75,6 +76,8 @@ const {
   loading: filterLoading,
   error: filterError
 } = useQuery<Query>(GET_FILTER_VARIABLES);
+
+
 
 console.log(filterData)
 
@@ -315,9 +318,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
   
 
 
-  if (propertyLoading) return <Loading></Loading>;
-  if (navigationLoading) return <Loading></Loading>;
-  if (propertyError) return <h1>ERROR</h1>;
+  
 
   var navigationState: NavigationState = {
     showNewPropertyModal: false,
@@ -344,9 +345,27 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
 
   }
 
+  var scrollBarWidth = /* document.body.offsetWidth - document.body.clientWidth */ 17;
+  console.log(window.innerWidth, document.body.clientWidth )
+
+  React.useEffect(()  => {
+
+    if(navigationState.showSelectedPropertyPanel === true || navigationState.showManageLandlordsPanel === true || navigationState.showSavedListsPanel === true /* || navigationState.showSelectedPropertyListPanel === true */ ) {
+        document.body.classList.add('selectedPropertyModal')
+        document.body.style.marginRight = `${scrollBarWidth}px`;
+    } else {
+      document.body.classList.remove('selectedPropertyModal')
+      document.body.style.marginRight = `${0}px`;
+   }
+    
+  
+  },[navigationState.showSelectedPropertyPanel, navigationState.showManageLandlordsPanel, navigationState.showSavedListsPanel, /* navigationState.showSelectedPropertyListPanel, */ scrollBarWidth]);
+
   
 
-
+  if (propertyLoading) return <Loading></Loading>;
+  if (navigationLoading) return <Loading></Loading>;
+  if (propertyError) return <h1>ERROR</h1>;
 
 
 

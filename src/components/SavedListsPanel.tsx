@@ -133,7 +133,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
       paddingRight: 20,
       
     },
-    /* scrollableContent: { overflowY: "hidden"} */
+    scrollableContent: { overflowY: "scroll"}
 
   }
 
@@ -156,7 +156,7 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
 
   const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300 } };
 
-  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 300, height: 44 } };
+  const searchBoxStyles: Partial<ISearchBoxStyles> = { root: {height: 44 } };
 
   const styles = mergeStyleSets({
 
@@ -250,7 +250,8 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
         isOpen={showSavedListsPanel}
         onDismiss={handlePanelDismiss}
         isBlocking={false}
-        type={PanelType.smallFixedFar}
+        type={PanelType.custom}
+        customWidth={`450px`}
         onRenderNavigationContent={onRenderNavigationContent}
         /* customWidth={panelType === PanelType.custom || panelType === PanelType.customNear ? '888px' : undefined} */
         closeButtonAriaLabel="Close"

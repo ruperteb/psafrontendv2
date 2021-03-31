@@ -1,0 +1,3 @@
+.selectedPropertyListPanel .ms-Panel-scrollableContent::-webkit-scrollbar {
+    display: none;
+}

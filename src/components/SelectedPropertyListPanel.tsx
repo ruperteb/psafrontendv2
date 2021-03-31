@@ -67,13 +67,15 @@ interface Props {
 
 const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelectedPropertyListPanel, propertyIdList = [] }) => {
 
+
+
     const {
         data: pdfVariables,
         loading: pdfLoading,
         error: pdfError
     } = useQuery<Query>(GET_PDF_VARIABLES);
 
-console.log(pdfVariables)
+    console.log(pdfVariables)
 
     const {
         data: propertyListData,
@@ -397,6 +399,7 @@ console.log(pdfVariables)
         headerText: { fontSize: 24, marginLeft: 5 },
 
 
+
     }
 
     const layerStyles: IStyleFunctionOrObject<ILayerStyleProps, ILayerStyles> = {
@@ -588,9 +591,16 @@ console.log(pdfVariables)
     );
 
 
-    var selectedPropertyList: SelectedPropertyList = propertyListData?.multiProperty!
 
 
+    const [selectedPropertyList, setSelectedPropertyList] = React.useState<SelectedPropertyList>([])
+
+    React.useEffect(() => {
+        if (propertyListData?.multiProperty) {
+            setSelectedPropertyList(propertyListData?.multiProperty)
+        }
+
+    }, [propertyListData?.multiProperty])
 
 
 
@@ -659,6 +669,7 @@ console.log(pdfVariables)
                 onRenderFooterContent={onRenderFooterContent}
                 isFooterAtBottom={true}
                 id="SelectedPropertyListPanel"
+                className="selectedPropertyListPanel"
             >
 
                 <Stack verticalFill styles={{
@@ -672,7 +683,7 @@ console.log(pdfVariables)
                 }}>
 
 
-                    {selectedPropertyList !== undefined ? propertyList : <div>loading</div>}
+                    {propertyList}
 
 
                 </Stack>
@@ -796,7 +807,7 @@ console.log(pdfVariables)
                                                 onChange={onChangeCustomTitle}
                                                 styles={textFieldStylesCustomTitle}
                                                 multiline rows={2}
-                                                
+
                                             />
 
                                         </Stack>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { createRef } from "react"
 import { Image, ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { Checkbox, ICheckboxProps } from 'office-ui-fabric-react/lib/Checkbox';
@@ -12,6 +13,10 @@ import { TooltipHost, ITooltipHostStyles, ITooltipHostStyleProps, } from 'office
 import { useId } from '@uifabric/react-hooks';
 import { getTheme } from '@fluentui/react';
 import { navigationState } from "../reactivevariables/reactivevariables"
+
+import FlipMove from 'react-flip-move';
+import AnimatedListItem from "./AnimatedListItem"
+
 const calloutProps = { gapSpace: 0 };
 // The TooltipHost root uses display: inline by default.
 // If that's causing sizing issues or tooltip positioning issues, try overriding to inline-block.
@@ -27,7 +32,7 @@ interface Props {
 
 export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty }) => {
 
-   
+
 
     const tooltipNetRentalId = useId('NetRental');
     const tooltipOpCostsId = useId('NetRental');
@@ -50,10 +55,10 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
     var floorSortedPremises = indexSortedPremises.slice().sort((a, b) => {
         var floorA = a.floor!.toUpperCase();
         var floorB = b.floor!.toUpperCase();
-        if (floorA < floorB && a.premisesIndex=== b.premisesIndex) {
+        if (floorA < floorB && a.premisesIndex === b.premisesIndex) {
             return -1;
         }
-        if (floorA > floorB && a.premisesIndex=== b.premisesIndex) {
+        if (floorA > floorB && a.premisesIndex === b.premisesIndex) {
             return 1;
         }
         return 0;
@@ -61,8 +66,8 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
 
 
     const tableCellStyles: ITextStyles = { root: { alignSelf: "start", fontSize: "14px", padding: 5, marginTop: "auto !important", marginBottom: "auto", width: 45, /* fontStyle : "italic", */ fontWeight: 600, } }
-    const tableCellTenantStyles: ITextStyles = { root: {height: 19, marginTop: "9.5px !important", marginBottom:9.5 , alignSelf: "start", fontSize: "14px", padding: 5,   /* fontStyle : "italic", */ fontWeight: 600, } }
-    const tableCellNotesStyles: ITextStyles = { root: {height: 19, marginTop: "auto !important", marginBottom:18 , alignSelf: "start", fontSize: "14px", padding: 5,   /* fontStyle : "italic", */ fontWeight: 600, } }
+    const tableCellTenantStyles: ITextStyles = { root: { height: 19, marginTop: "9.5px !important", marginBottom: 9.5, alignSelf: "start", fontSize: "14px", padding: 5,   /* fontStyle : "italic", */ fontWeight: 600, } }
+    const tableCellNotesStyles: ITextStyles = { root: { height: 19, marginTop: "auto !important", marginBottom: 18, alignSelf: "start", fontSize: "14px", padding: 5,   /* fontStyle : "italic", */ fontWeight: 600, } }
     const tableHeadingStyles: ITextStyles = { root: { fontSize: "18px", paddingTop: 5, fontWeight: 600, } }
     const tableCellBelowStyles: ITextStyles = { root: { alignSelf: "start", fontSize: "10px", padding: 0, marginTop: "auto !important", marginBottom: "auto", width: 50, } }
     const theme = getTheme();
@@ -239,7 +244,7 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
                     }}>
                         <Text styles={tableHeadingStyles}>Tenant Details</Text>
                         <div style={{ display: "flex", flexFlow: "row" }}>
-                            <Text styles={tableCellTenantStyles} style={{ width: 125, height: 19, marginTop: "9.5px !important", marginBottom:9.5 }}>Tenant Name</Text>
+                            <Text styles={tableCellTenantStyles} style={{ width: 125, height: 19, marginTop: "9.5px !important", marginBottom: 9.5 }}>Tenant Name</Text>
                             <Text styles={tableCellTenantStyles} style={{ width: 100 }}>Lease Expiry </Text>
                         </div>
                     </div>
@@ -247,14 +252,15 @@ export const PremisesList: React.FunctionComponent<Props> = ({ singleProperty })
                 </Stack>
             </Stack>
 
-
-            {floorSortedPremises.map(premises => {
-
-                return (
-                    <PremisesListItem key={premises?.premisesId} premises={premises!} propertyId={singleProperty?.propertyId!}> </PremisesListItem>
-                )
-
-            })}
+            <FlipMove enterAnimation={"elevator"} /* style={flipMoveStyles} */>
+                {floorSortedPremises.map(premises => {
+                    return (
+                        <AnimatedListItem key={premises?.premisesId} ref={createRef()}>
+                            <PremisesListItem key={premises?.premisesId} premises={premises!} propertyId={singleProperty?.propertyId!}> </PremisesListItem>
+                        </AnimatedListItem>
+                    )
+                })}
+            </FlipMove>
 
         </div>
 

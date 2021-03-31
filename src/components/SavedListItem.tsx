@@ -658,8 +658,9 @@ console.log(height)
                 root: {
                   /* width: 580, */
                   display: "flex",
-                  maxHeight: height,
-                  overflowY: "auto"
+                  /* height: height, */
+                  
+                  /* overflowY: "auto" */
                   /*  flexFlow: "row wrap" */
 
                 }
@@ -668,7 +669,7 @@ console.log(height)
                 {sortedPropertyList?.map((property) => {
                   return (
 
-                    <Stack styles={{ root: { marginLeft: 20, marginTop: "10px !important", alignItems: "center" } }} horizontal>
+                    <Stack styles={{ root: { marginLeft: 50, marginTop: "10px !important", alignItems: "center" } }} horizontal>
 
                       <Text styles={boldStyle} style={propertyHeadingStyles}>{property.propertyName} </Text>
 

@@ -17,4 +17,9 @@ body.ms-Fabric--isFocusHidden {
   overflow-y: scroll !important;
 }
 
+body.selectedPropertyModal {
+
+  overflow-y: hidden !important;
+}
+
 
