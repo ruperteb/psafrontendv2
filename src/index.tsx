@@ -2,13 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-import App from './App';
+import AppRouter from './AppRouter';
+import ApolloWrapper from "./ApolloWrapper"
 import { Customizer, mergeStyles } from 'office-ui-fabric-react';
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { AUTH_TOKEN } from './constants'
 import { resolvers, typeDefs } from './resolvers';
 
-import {
+/* import {
   ApolloClient,
   InMemoryCache,
   gql,
@@ -16,10 +18,10 @@ import {
   ApolloProvider,
   ApolloLink,
   HttpLink, useQuery
-} from '@apollo/client';
+} from '@apollo/client'; */
 
 
-import { cache } from './cache/cache';
+/* import { cache } from './cache/cache';
 
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,
@@ -29,17 +31,15 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
     headers: {
       authorization: localStorage.getItem('token'),
     },
-   /*  fetchOptions: {
-      mode: 'no-cors',
-    }, */
+    
   }),
- 
+
   typeDefs,
   resolvers: {},
 
 
-  
-});
+
+}); */
 
 
 
@@ -57,9 +57,16 @@ mergeStyles({
 
 ReactDOM.render(
   <React.StrictMode>
-  <ApolloProvider client={client}>
-    <App />
-    </ApolloProvider>
+    <Auth0Provider
+      domain={process.env.REACT_APP_AUTH0_DOMAIN!}
+      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID!}
+      audience={process.env.REACT_APP_AUDIENCE}
+      redirectUri={`${window.location.origin}/main`}
+    >
+      <ApolloWrapper>
+        <AppRouter />
+      </ApolloWrapper>
+    </Auth0Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

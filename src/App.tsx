@@ -365,7 +365,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
 
   if (propertyLoading) return <Loading></Loading>;
   if (navigationLoading) return <Loading></Loading>;
-  if (propertyError) return <h1>ERROR</h1>;
+  if (propertyError) return <Loading></Loading>;
 
 
 

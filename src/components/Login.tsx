@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { TextField, ITextFieldStyles } from 'office-ui-fabric-react/lib/TextField';
 import { Image, IImageProps, ImageFit } from 'office-ui-fabric-react/lib/Image';
 import HeaderImage from "../assets/EBLogoHeader.png"
@@ -30,7 +31,9 @@ const imageProps: IImageProps = {
   imageFit: ImageFit.contain,
 };
 
-export const Loading: React.FC = memo(() => {
+const Login = () => {
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  if (!isAuthenticated) { loginWithRedirect() }
 
 
   return (
@@ -89,11 +92,7 @@ export const Loading: React.FC = memo(() => {
       </Stack>
 
     </Stack>
-
   )
+};
 
-
-
-})
-
-export default Loading
+export default Login;

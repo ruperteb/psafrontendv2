@@ -19,7 +19,10 @@ import {
   useTransform
 } from "framer-motion";
 
+import { useAuth0 } from "@auth0/auth0-react";
+
 const addIcon: IIconProps = { iconName: 'Add' };
+const signOutIcon: IIconProps = { iconName: 'SignOut' };
 
 const filterIcon: IIconProps = { iconName: 'Filter' };
 const checkListIcon: IIconProps = { iconName: 'CheckList' };
@@ -68,7 +71,7 @@ interface Props {
 export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, showSelectedPropertyListPanel, showSavedListsPanel }) => {
   initializeIcons();
 
-
+  const { logout } = useAuth0()
 
   const handleLinkClick = (item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) => {
     if (item === undefined) {
@@ -195,6 +198,20 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
           setLoginCallback(true)
 
         }}></DefaultButton> */}
+
+        </Stack>
+
+        <Stack styles={stackStyles} horizontal style={{  right: "9em", position: "absolute", marginTop:10 }}>
+        <CommandBarButton
+            iconProps={signOutIcon}
+            text="Logout"
+            onClick={() => logout({ returnTo: window.location.origin })}
+            styles={commandBarStyles}
+            style={{ width: 110, height: 44 }}
+          // Set split=true to render a SplitButton instead of a regular button with a menu
+          // split={true}
+
+          />
 
         </Stack>
 
