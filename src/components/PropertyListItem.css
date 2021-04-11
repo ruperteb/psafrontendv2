@@ -1,8 +1,24 @@
 
-#card:hover > .ms-Checkbox{
+#card:hover .ms-Checkbox{
     visibility:visible;
+    
 }
 
-#card:hover > .ms-Button{
+#card:hover .ms-Checkbox-checkbox{
+   
+    background-color: white;
+}
+
+.is-checked .ms-Checkbox-checkbox {
+   
+    background-color: rgb(0, 120, 212) !important
+}
+
+#card:hover .ms-Button{
+   
+    /* background-color: #ff0000c4; */
+}
+
+#card:hover .ms-Button{
     visibility:visible;
 }

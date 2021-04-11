@@ -222,7 +222,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
                         const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: propertyId } })
 
                         const updatedProperty = data.updateProperty!;
-                        console.log(updatedProperty)
+                     
                         if (getExistingProperty)
                             cache.writeQuery<Query>({
                                 query: GET_SINGLE_PROPERTY,
@@ -477,7 +477,7 @@ export const ImageSlider: React.FC<Props> = ({ propertyId }) => {
         }
     }
 
-    console.log(getImageName())
+    
 
     function _getMenu(props: IContextualMenuProps): JSX.Element {
         // Customize contextual menu with menuAs

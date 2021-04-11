@@ -15,7 +15,6 @@ import Login from "./components/Login"
 export default function AppRouter() {
 
     const { isAuthenticated } = useAuth0();
-    console.log(isAuthenticated)
 
     return (
         <Router>

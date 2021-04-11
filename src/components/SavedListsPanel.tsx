@@ -205,7 +205,6 @@ const SavedListsPanel: React.FunctionComponent<Props> = ({ showSavedListsPanel, 
     }, [setPropertyListSearch])
 
 
-  console.log(propertyListSearch)
 
   const searchSortedPropertyLists = propertyLists?.filter(propertyList => {
     if (propertyList !== null && propertyList !== undefined) {

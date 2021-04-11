@@ -153,14 +153,6 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
 
     }
 
-
-
-    console.log(filterData)
-
-
-
-
-
     const hideFilterModal = () => {
 
         navigationState({ ...navigationState(), showFilterModal: false })
@@ -456,9 +448,6 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
     ];
 
 
-
-    console.log(distinctSuburbsFilterOptions)
-
     const suburbRef: any = React.useRef()
     const regionRef: any = React.useRef()
     const provinceRef: any = React.useRef()
@@ -586,14 +575,14 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
                             />
                         </Stack>
 
-                        <Stack horizontal>
+                        
 
                             <Stack verticalFill
                                 styles={{
                                     root: {
                                         color: '#605e5c',
                                         marginLeft: "0px",
-                                        width: "60%",
+                                       
                                         marginTop: "5px !important"
                                     }
                                 }}>
@@ -618,9 +607,9 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
                                 styles={{
                                     root: {
                                         color: '#605e5c',
-                                        marginLeft: "auto !important",
-                                        marginRight: 0,
-                                        width: "35%",
+                                        marginLeft: "0px",
+                                        
+                                       
                                         marginTop: "5px !important"
                                     }
                                 }}>
@@ -641,7 +630,7 @@ export const FilterModal: React.FC<Props> = ({ showFilterModal, distinctSuburbsF
                                 />
                             </Stack>
 
-                        </Stack>
+                        
 
                         <Stack styles={{ root: { marginTop: "10px !important" } }}>
 

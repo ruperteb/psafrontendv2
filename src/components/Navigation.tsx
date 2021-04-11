@@ -137,14 +137,6 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
 
   const [isTop, setIsTop] = React.useState(false);
 
-  /* React.useEffect(() => {
-
-    if(scrollY.get()>0) {
-      setIsTop(false)
-    }
-    else{ setIsTop(true)} 
-
-  },[scrollY]) */
 
   React.useEffect(() => {
 
@@ -158,10 +150,6 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
 
   }, [scrollY, scroll])
 
-
-
-  console.log(isTop)
-  console.log(scroll)
 
   const getHeaderTop = () => {
     if (isTop === true) {
@@ -181,7 +169,7 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
   return (
     <div>
 
-      <motion.div layout style={{ top: getHeaderTop(), left: 0, position: "fixed", zIndex:1 }} >
+      <motion.div layout style={{ top: getHeaderTop(), left: 0, position: "fixed", zIndex: 1 }} >
 
         <Stack styles={headerStackStyles} horizontal>
           <Image
@@ -201,89 +189,84 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
 
         </Stack>
 
-        <Stack styles={stackStyles} horizontal style={{  right: "9em", position: "absolute", marginTop:10 }}>
-        <CommandBarButton
-            iconProps={signOutIcon}
-            text="Logout"
-            onClick={() => logout({ returnTo: window.location.origin })}
-            styles={commandBarStyles}
-            style={{ width: 110, height: 44 }}
-          // Set split=true to render a SplitButton instead of a regular button with a menu
-          // split={true}
+        <div style={{ backgroundColor: "rgb(239 224 197)", paddingTop: 10, paddingBottom: 10 }}>
 
-          />
+          <Stack horizontalAlign={"center"} horizontal gap={15} styles={stackStyles} >
+            <CommandBarButton
+              iconProps={addIcon}
+              text="New Property"
+              onClick={() => navigationState({ ...navigationState(), showNewPropertyModal: true })}
+              styles={commandBarStyles}
+              style={{ width: 110 }}
+            // Set split=true to render a SplitButton instead of a regular button with a menu
+            // split={true}
 
-        </Stack>
-
-      
-
-        <div style={{backgroundColor: "rgb(239 224 197)", paddingTop: 10, paddingBottom: 10}}>
-
-        <Stack horizontalAlign={"center"} horizontal gap={15} styles={stackStyles} >
-          <CommandBarButton
-            iconProps={addIcon}
-            text="New Property"
-            onClick={() => navigationState({ ...navigationState(), showNewPropertyModal: true })}
-            styles={commandBarStyles}
-            style={{ width: 110 }}
-          // Set split=true to render a SplitButton instead of a regular button with a menu
-          // split={true}
-
-          />
+            />
 
 
-          <CommandBarButton
-            iconProps={filterIcon}
-            text="Filter"
-            onClick={() => navigationState({ ...navigationState(), showFilterModal: true })}
-            styles={commandBarStyles}
-            style={{ width: 90 }}
-          // Set split=true to render a SplitButton instead of a regular button with a menu
-          // split={true}
+            <CommandBarButton
+              iconProps={filterIcon}
+              text="Filter"
+              onClick={() => navigationState({ ...navigationState(), showFilterModal: true })}
+              styles={commandBarStyles}
+              style={{ width: 90 }}
+            // Set split=true to render a SplitButton instead of a regular button with a menu
+            // split={true}
 
-          />
+            />
 
-          <SearchBox
-            styles={searchBoxStyles}
-            placeholder="Search"
-            onEscape={ev => {
-              console.log('Custom onEscape Called');
-            }}
-            onClear={ev => {
-              console.log('Custom onClear Called');
-            }}
-            onChange={onChangeSearch}
-            onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
-          />
+            <SearchBox
+              styles={searchBoxStyles}
+              placeholder="Search"
+              onEscape={ev => {
+                console.log('Custom onEscape Called');
+              }}
+              onClear={ev => {
+                console.log('Custom onClear Called');
+              }}
+              onChange={onChangeSearch}
+              onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
+            />
 
-          {/* <Toggle inlineLabel styles={toggleStyles} label="Selected Properties" checked={showSelectedPropertyListPanel} onChange={onChangeSelectedPropertyListToggle} /> */}
+            {/* <Toggle inlineLabel styles={toggleStyles} label="Selected Properties" checked={showSelectedPropertyListPanel} onChange={onChangeSelectedPropertyListToggle} /> */}
 
-          <CommandBarButton
-            iconProps={checkListIcon}
-            text="Selected Properties"
-            onClick={handleSelectedPropertiesClick}
-            styles={commandBarStyles}
-            style={{ width: 120 }}
-          // Set split=true to render a SplitButton instead of a regular button with a menu
-          // split={true}
+            <CommandBarButton
+              iconProps={checkListIcon}
+              text="Selected Properties"
+              onClick={handleSelectedPropertiesClick}
+              styles={commandBarStyles}
+              style={{ width: 120 }}
+            // Set split=true to render a SplitButton instead of a regular button with a menu
+            // split={true}
 
-          />
-          <CommandBarButton
-            iconProps={listIcon}
-            text="Manage Lists"
-            onClick={handleManageListsClick}
-            styles={commandBarStyles}
-            style={{ width: 110 }}
-          // Set split=true to render a SplitButton instead of a regular button with a menu
-          // split={true}
+            />
+            <CommandBarButton
+              iconProps={listIcon}
+              text="Manage Lists"
+              onClick={handleManageListsClick}
+              styles={commandBarStyles}
+              style={{ width: 110 }}
+            // Set split=true to render a SplitButton instead of a regular button with a menu
+            // split={true}
 
-          />
+            />
 
-        </Stack >
+            <CommandBarButton
+              iconProps={signOutIcon}
+              text="Logout"
+              onClick={() => logout({ returnTo: window.location.origin })}
+              styles={commandBarStyles}
+              style={{ width: 110, height: 44, marginRight: 25 }}
+            // Set split=true to render a SplitButton instead of a regular button with a menu
+            // split={true}
+
+            />
+
+          </Stack >
 
         </div>
 
-        
+
 
       </motion.div>
 

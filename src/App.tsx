@@ -78,14 +78,9 @@ const {
 } = useQuery<Query>(GET_FILTER_VARIABLES);
 
 
-
-console.log(filterData)
-
 var propertyIdList = propertyListData?.selectedPropertyList?.map((property) => {
   return property.propertyId
 })
-
-console.log(suburbData?.distinctSuburbs)
 
   /* if(suburbData !== undefined) */
   const suburbWC = suburbData?.distinctSuburbs!.filter((suburb) => {
@@ -316,10 +311,6 @@ const {
 
 var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
   
-
-
-  
-
   var navigationState: NavigationState = {
     showNewPropertyModal: false,
     showUpdatePropertyModal:  false,
@@ -346,8 +337,7 @@ var propertyLists: SavedPropertyList[] = propertyListsData?.propertyLists!
   }
 
   var scrollBarWidth = /* document.body.offsetWidth - document.body.clientWidth */ 17;
-  console.log(window.innerWidth, document.body.clientWidth )
-
+  
   React.useEffect(()  => {
 
     if(navigationState.showSelectedPropertyPanel === true || navigationState.showManageLandlordsPanel === true || navigationState.showSavedListsPanel === true /* || navigationState.showSelectedPropertyListPanel === true */ ) {

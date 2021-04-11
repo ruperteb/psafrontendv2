@@ -25,10 +25,6 @@ const ApolloWrapper: React.FC<Props> = ({ children }) => {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [bearerToken, setBearerToken] = useState("")
 
-    console.log(getAccessTokenSilently())
-    console.log(bearerToken)
-    console.log(isAuthenticated)
-
     useEffect(() => {
         const getToken = async () => {
 

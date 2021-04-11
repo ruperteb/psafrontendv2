@@ -230,9 +230,6 @@ const ManageLandlordsPanel: React.FunctionComponent<Props> = ({ showManageLandlo
     setLandlordSearch(newValue)
   },[setLandlordSearch])
 
-  console.log(landLordsList)
-  console.log(landlordSearch)
-
   const searchSortedlandlords = landLordsList?.filter(landlord => {
     if (landlord !== null && landlord !== undefined) {
       if (landlord?.landlordName !== null && landlord?.landlordName !== undefined) {

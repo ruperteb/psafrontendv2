@@ -44,7 +44,7 @@ export const Map: React.FC<Props> = ({ coordinatesArray, propertyId, contactId }
                 const getExistingProperty = cache.readQuery<Query>({ query: GET_SINGLE_PROPERTY, variables: { propertyId: propertyId } })
 
                 const updatedProperty = data.updateProperty!;
-                console.log(updatedProperty)
+                
                 if (getExistingProperty)
                     cache.writeQuery<Query>({
                         query: GET_SINGLE_PROPERTY,
@@ -60,8 +60,6 @@ export const Map: React.FC<Props> = ({ coordinatesArray, propertyId, contactId }
 
     var latitude = -33.973564350686324
     var longitude = 18.456012615707248
-
-    console.log(coordinatesArray)
 
     if (coordinatesArray !== undefined && coordinatesArray !== null && isNaN(Number(coordinatesArray[0])) === false && isNaN(Number(coordinatesArray[1])) === false) {
         latitude = Number(coordinatesArray[0])

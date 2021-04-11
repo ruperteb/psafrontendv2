@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createRef} from "react"
+import { createRef } from "react"
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Image, ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
@@ -9,8 +9,11 @@ import { useQuery } from '@apollo/client';
 import { selectedPropertyList } from "../reactivevariables/reactivevariables"
 import { GET_FILTER_VARIABLES } from "../gql/gql"
 import PropertyListItem from "./PropertyListItem"
+import PropertyListItemImages from "./PropertyListItemImages"
 import FlipMove from 'react-flip-move';
 import AnimatedListItem from "./AnimatedListItem"
+import LazyLoad from 'react-lazyload';
+import { forceCheck } from 'react-lazyload';
 
 
 
@@ -26,8 +29,6 @@ export const PropertyList: React.FunctionComponent<Props> = ({ propertyData, sea
     loading: filterLoading,
     error: filterError
   } = useQuery<Query>(GET_FILTER_VARIABLES);
-
-  console.log(filterData?.filterVariables)
 
   const getVacantGLA = (property: Property) => {
     var vacantGLA = 0
@@ -148,16 +149,23 @@ export const PropertyList: React.FunctionComponent<Props> = ({ propertyData, sea
 
   return (
     <div style={{ marginTop: 180, zIndex: 0 }}>
-      <FlipMove enterAnimation={"elevator"} style={flipMoveStyles}>
-      {searchSortedProperties.map(property => {return (
-        <AnimatedListItem key={property?.propertyId} ref={createRef()}>
-        
-          <PropertyListItem key={property?.propertyId} property={property!}> </PropertyListItem>
-       
-        </AnimatedListItem>
-         )
-      })}
-      
+      <FlipMove enterAnimation={"elevator"} /* onFinish={forceCheck} */ style={flipMoveStyles}>
+        {searchSortedProperties.map(property => {
+          return (
+
+           
+
+              <AnimatedListItem key={property?.propertyId} ref={createRef()}>
+
+                <PropertyListItemImages key={property?.propertyId} property={property!}> </PropertyListItemImages>
+
+              </AnimatedListItem>
+
+            
+
+          )
+        })}
+
       </FlipMove>
 
     </div>

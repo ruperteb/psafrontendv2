@@ -75,7 +75,6 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
         error: pdfError
     } = useQuery<Query>(GET_PDF_VARIABLES);
 
-    console.log(pdfVariables)
 
     const {
         data: propertyListData,
@@ -130,10 +129,6 @@ const SelectedPropertyListPanel: React.FunctionComponent<Props> = ({ showSelecte
 
     }
 
-    console.log(pdfVariables?.pdfVariables?.enquiryName)
-
-
-    console.log(enquiryName)
 
     const onChangeEnquiryName = React.useCallback(
         (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {

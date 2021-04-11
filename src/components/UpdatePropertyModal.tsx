@@ -59,7 +59,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
         navigationState({ ...navigationState(), showUpdatePropertyModal: false })
     }
 
-    
+
 
 
     const [updatedProperty, setUpdateProperty] = React.useState(propertyData);
@@ -74,7 +74,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
         {
             landlordId: propertyData.contact?.landlordName?.landlordId!,
             landlordName: propertyData.contact?.landlordName?.landlordName!,
-            landlordData: { 
+            landlordData: {
                 landlordId: propertyData.contact?.landlordName?.landlordId!,
                 landlordName: propertyData.contact?.landlordName?.landlordName!,
                 contactsList: propertyData.contact?.landlordName?.contactsList!
@@ -94,9 +94,9 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
         {
             contactId: propertyData.contact?.contactId! | 0,
             contactName: propertyData.contact?.name!,
-            contactData: { 
+            contactData: {
                 contactId: propertyData.contact?.contactId!,
-                name: propertyData.contact?.name!, 
+                name: propertyData.contact?.name!,
                 email: propertyData.contact?.email!,
                 mobileNo: propertyData.contact?.mobileNo!,
                 officeNo: propertyData.contact?.officeNo!,
@@ -151,11 +151,8 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                     province: data.updateProperty.province,
                     region: data.updateProperty.region,
                     notes: data.updateProperty.notes,
-                    contact:  data.updateProperty.contact
+                    contact: data.updateProperty.contact
                 }
-
-
-
 
                 if (existingProperty)
                     cache.writeQuery<Query>({
@@ -163,6 +160,31 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                         variables: { propertyId: propertyId },
                         data: { singleProperty: updatedProperty }
                     });
+
+                const getExistingProperties = cache.readQuery<Query>({ query: GET_PROPERTIES });
+                const existingProperties = getExistingProperties ? getExistingProperties.properties : [];
+                const filteredProperties = existingProperties?.filter((property)=> {
+                    return property.propertyId !== propertyId
+                }) 
+
+                const combinedProperties = [updatedProperty, ...filteredProperties!]
+
+                if (existingProperties)
+                    cache.writeQuery<Query>({
+                        query: GET_PROPERTIES,
+                        data: { properties: combinedProperties.sort((a, b) => {
+                            var nameA = a.propertyName!.toUpperCase();
+                            var nameB = b.propertyName!.toUpperCase();
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+                            return 0;
+                        }) }
+                    });
+
             }
 
 
@@ -197,7 +219,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
     const textFieldLandlordEmailStyles: Partial<ITextFieldStyles> = { root: { width: "100%", marginRight: 20, marginTop: "20px !important" } };
 
-    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: {zIndex: 55000} };
+    const modalStyles: Partial<IModalStyles> = { main: { position: "absolute", top: 150 }, layer: { zIndex: 55000 } };
 
     const buttonStyles = { root: { width: 100, marginRight: "auto !important", marginBottom: "auto", marginTop: "60px !important", marginLeft: "auto !important", height: 40 } };
 
@@ -229,7 +251,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
     const propertyProvinceOptions = [
 
         { key: 'WC', text: 'WC' },
-        { key: 'Gau', text: 'GAU' },
+        { key: 'GAU', text: 'GAU' },
         { key: 'KZN', text: 'KZN' },
         { key: 'Other', text: 'Other Provinces' },
 
@@ -312,7 +334,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
         [selectedLandlord],
     );
 
-   
+
 
     const contactsFormatted = selectedLandlord.landlordData?.contactsList?.map((contact) => {
         return { key: contact.name!, text: contact.name!, data: contact }
@@ -332,7 +354,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                 contactId: option?.data.contactId,
                 contactData: option?.data
             });
-           
+
         },
         [selectedLandlord],
     );
@@ -566,7 +588,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
 
                             <Stack horizontal>
 
-                                <Stack styles={{root: {width: "70%"}}} verticalFill>
+                                <Stack styles={{ root: { width: "70%" } }} verticalFill>
 
                                     <TextField
                                         underlined
@@ -652,7 +674,7 @@ export const UpdatePropertyModal: React.FC<Props> = ({ showUpdatePropertyModal, 
                 titleAriaId={titleId}
                 isOpen={showUpdatePropertyModal}
                 onDismiss={hideUpdatePropertyModal}
-               /*  isBlocking={true} */
+                /*  isBlocking={true} */
                 containerClassName={contentStyles.container}
             /* dragOptions={dragOptions} */
             >
@@ -717,7 +739,7 @@ const contentStyles = mergeStyleSets({
         display: 'flex',
         flexFlow: 'column nowrap',
         alignItems: 'stretch',
-        
+
 
     },
 
