@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.6",
-    "@auth0/auth0-react": "^1.4.0",
+    "@auth0/auth0-react": "^1.6.0",
     "@fluentui/react": "^7.155.2",
     "@react-pdf/renderer": "^1.6.12",
     "@testing-library/jest-dom": "^5.11.6",
