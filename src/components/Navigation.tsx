@@ -1,133 +1,213 @@
-import React from 'react';
+import React, { useContext } from "react";
 
-import { Pivot, PivotItem, IPivotStyles } from 'office-ui-fabric-react/lib/Pivot';
-import { SearchBox, ISearchBoxStyles, } from 'office-ui-fabric-react/lib/SearchBox';
-import { Image, IImageProps, ImageFit } from 'office-ui-fabric-react/lib/Image';
+import {
+  Pivot,
+  PivotItem,
+  IPivotStyles,
+} from "office-ui-fabric-react/lib/Pivot";
+import {
+  SearchBox,
+  ISearchBoxStyles,
+} from "office-ui-fabric-react/lib/SearchBox";
+import { Image, IImageProps, ImageFit } from "office-ui-fabric-react/lib/Image";
 
-import { CommandBarButton, IContextualMenuProps, IIconProps, Stack, IStackStyles, initializeIcons, Toggle, IToggleStyles, DefaultButton, IButtonStyles, BaseButton, Button } from 'office-ui-fabric-react';
+import {
+  CommandBarButton,
+  IContextualMenuProps,
+  IIconProps,
+  Stack,
+  IStackStyles,
+  initializeIcons,
+  Toggle,
+  IToggleStyles,
+  DefaultButton,
+  IButtonStyles,
+  BaseButton,
+  Button,
+} from "office-ui-fabric-react";
 
 import { isLoggedInVar } from "../cache/cache";
-import HeaderImage from "../assets/EBLogoHeader.png"
+import HeaderImage from "../assets/EBLogoHeader.png";
 
-import { navigationState } from "../reactivevariables/reactivevariables"
-import { NavigationState } from "../schematypes/schematypes"
+import { navigationState } from "../reactivevariables/reactivevariables";
+import { NavigationState } from "../schematypes/schematypes";
 
 import {
   motion,
   useViewportScroll,
   useSpring,
-  useTransform
+  useTransform,
 } from "framer-motion";
 
-import { useAuth0 } from "@auth0/auth0-react";
+/* import { useAuth0 } from "@auth0/auth0-react"; */
+import { AuthContext } from "../AuthContext";
 
-const addIcon: IIconProps = { iconName: 'Add' };
-const signOutIcon: IIconProps = { iconName: 'SignOut' };
+const addIcon: IIconProps = { iconName: "Add" };
+const signOutIcon: IIconProps = { iconName: "SignOut" };
 
-const filterIcon: IIconProps = { iconName: 'Filter' };
-const checkListIcon: IIconProps = { iconName: 'CheckList' };
-const listIcon: IIconProps = { iconName: 'List' };
+const filterIcon: IIconProps = { iconName: "Filter" };
+const checkListIcon: IIconProps = { iconName: "CheckList" };
+const listIcon: IIconProps = { iconName: "List" };
 
 const pivotStyles: Partial<IPivotStyles> = {
-  root: { /* width: "100vw", backgroundColor: "#20314b", marginBottom: "10px" */ },
+  root: {
+    /* width: "100vw", backgroundColor: "#20314b", marginBottom: "10px" */
+  },
   link: {
     selectors: {
-      '&:hover': {
-        backgroundColor: 'rgba(52, 90, 214, 0.14);',
-      }
-    }
+      "&:hover": {
+        backgroundColor: "rgba(52, 90, 214, 0.14);",
+      },
+    },
   },
   linkIsSelected: {
     selectors: {
-      '&:hover': {
-        backgroundColor: 'rgba(52, 90, 214, 0.14);',
-      }
-    }
-  }
+      "&:hover": {
+        backgroundColor: "rgba(52, 90, 214, 0.14);",
+      },
+    },
+  },
 };
-const headerStackStyles: Partial<IStackStyles> = { root: { width: "100vw", backgroundColor: "#20314b", marginBottom: 0 } };
-const headerImageStyles: Partial<IStackStyles> = { root: { marginLeft: "37.5%", marginRight: "auto" } };
+const headerStackStyles: Partial<IStackStyles> = {
+  root: { width: "100vw", backgroundColor: "#20314b", marginBottom: 0 },
+};
+const headerImageStyles: Partial<IStackStyles> = {
+  root: { marginLeft: "37.5%", marginRight: "auto" },
+};
 const stackStyles: Partial<IStackStyles> = { root: { height: 44 } };
-const searchBoxStyles: Partial<ISearchBoxStyles> = { root: { width: 300, height: 44 } };
-const toggleStyles: Partial<IToggleStyles> = { container: { marginTop: 5 }, label: { marginLeft: 4 } };
-const commandBarStyles: Partial<IButtonStyles> = { root: { border: "1px solid rgb(161, 159, 157);", padding: 15 }, icon: { fontSize: 24 } };
-const signoutIcon: IIconProps = { iconName: 'SignOut' };
+const searchBoxStyles: Partial<ISearchBoxStyles> = {
+  root: { width: 300, height: 44 },
+};
+const toggleStyles: Partial<IToggleStyles> = {
+  container: { marginTop: 5 },
+  label: { marginLeft: 4 },
+};
+const commandBarStyles: Partial<IButtonStyles> = {
+  root: { border: "1px solid rgb(161, 159, 157);", padding: 15 },
+  icon: { fontSize: 24 },
+};
+const signoutIcon: IIconProps = { iconName: "SignOut" };
 
 const getTabId = (itemKey: string | undefined) => {
   return `NavigationPivot_${itemKey}`;
 };
 
-
-
 interface Props {
-
-  selectedPropertyType: string | undefined,
-  setSearch: React.Dispatch<React.SetStateAction<string | undefined>>,
-  showSelectedPropertyListPanel: boolean,
-  showSavedListsPanel: boolean,
-
+  selectedPropertyType: string | undefined;
+  setSearch: React.Dispatch<React.SetStateAction<string | undefined>>;
+  showSelectedPropertyListPanel: boolean;
+  showSavedListsPanel: boolean;
 }
 
-export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, showSelectedPropertyListPanel, showSavedListsPanel }) => {
+export const Navigation: React.FC<Props> = ({
+  selectedPropertyType,
+  setSearch,
+  showSelectedPropertyListPanel,
+  showSavedListsPanel,
+}) => {
   initializeIcons();
 
-  const { logout } = useAuth0()
+  const { setAuthorised, setToken } = useContext(AuthContext);
 
-  const handleLinkClick = (item?: PivotItem, ev?: React.MouseEvent<HTMLElement>) => {
-    if (item === undefined) {
-      navigationState(
-        {
-          ...navigationState(),
-          selectedPropertyType: "",
-
-        }
-      )
-    } else {
-
-      navigationState({ ...navigationState(), selectedPropertyType: item.props.itemKey! })
-    }
-
+  /* const { logout } = useAuth0() */
+  const handleLogout = () => {
+    setAuthorised(false);
+    setToken(undefined);
   };
 
-  const onChangeSelectedPropertyListToggle = React.useCallback((ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
-    if (showSelectedPropertyListPanel === false) {
-      navigationState({ ...navigationState(), showSelectedPropertyListPanel: true })
-
+  const handleLinkClick = (
+    item?: PivotItem,
+    ev?: React.MouseEvent<HTMLElement>
+  ) => {
+    if (item === undefined) {
+      navigationState({
+        ...navigationState(),
+        selectedPropertyType: "",
+      });
     } else {
-      navigationState({ ...navigationState(), showSelectedPropertyListPanel: false })
+      navigationState({
+        ...navigationState(),
+        selectedPropertyType: item.props.itemKey!,
+      });
     }
+  };
 
-  }, [showSelectedPropertyListPanel])
+  const onChangeSelectedPropertyListToggle = React.useCallback(
+    (ev: React.MouseEvent<HTMLElement>, checked: boolean | undefined) => {
+      if (showSelectedPropertyListPanel === false) {
+        navigationState({
+          ...navigationState(),
+          showSelectedPropertyListPanel: true,
+        });
+      } else {
+        navigationState({
+          ...navigationState(),
+          showSelectedPropertyListPanel: false,
+        });
+      }
+    },
+    [showSelectedPropertyListPanel]
+  );
 
   const onChangeSearch = React.useCallback(
     (event?: React.ChangeEvent<HTMLInputElement>, newValue?: string) => {
+      setSearch(newValue);
+    },
+    [setSearch]
+  );
 
-      setSearch(newValue)
-    }, [setSearch])
+  const handleSelectedPropertiesClick = React.useCallback(
+    (
+      event: React.MouseEvent<
+        | HTMLDivElement
+        | HTMLAnchorElement
+        | HTMLButtonElement
+        | BaseButton
+        | Button
+        | HTMLSpanElement,
+        MouseEvent
+      >
+    ) => {
+      if (showSelectedPropertyListPanel === false) {
+        navigationState({ ...navigationState(), showSavedListsPanel: false });
+        navigationState({
+          ...navigationState(),
+          showSelectedPropertyListPanel: true,
+        });
+      } else {
+        navigationState({
+          ...navigationState(),
+          showSelectedPropertyListPanel: false,
+        });
+      }
+    },
+    [showSelectedPropertyListPanel]
+  );
 
-
-  const handleSelectedPropertiesClick = React.useCallback((event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button | HTMLSpanElement, MouseEvent>) => {
-    if (showSelectedPropertyListPanel === false) {
-      navigationState({ ...navigationState(), showSavedListsPanel: false })
-      navigationState({ ...navigationState(), showSelectedPropertyListPanel: true })
-
-    } else {
-      navigationState({ ...navigationState(), showSelectedPropertyListPanel: false })
-    }
-
-  }, [showSelectedPropertyListPanel])
-
-  const handleManageListsClick = React.useCallback((event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement | BaseButton | Button | HTMLSpanElement, MouseEvent>) => {
-    if (showSavedListsPanel === false) {
-      navigationState({ ...navigationState(), showSelectedPropertyListPanel: false })
-      navigationState({ ...navigationState(), showSavedListsPanel: true })
-
-    } else {
-      navigationState({ ...navigationState(), showSavedListsPanel: false })
-    }
-
-  }, [showSavedListsPanel])
-
+  const handleManageListsClick = React.useCallback(
+    (
+      event: React.MouseEvent<
+        | HTMLDivElement
+        | HTMLAnchorElement
+        | HTMLButtonElement
+        | BaseButton
+        | Button
+        | HTMLSpanElement,
+        MouseEvent
+      >
+    ) => {
+      if (showSavedListsPanel === false) {
+        navigationState({
+          ...navigationState(),
+          showSelectedPropertyListPanel: false,
+        });
+        navigationState({ ...navigationState(), showSavedListsPanel: true });
+      } else {
+        navigationState({ ...navigationState(), showSavedListsPanel: false });
+      }
+    },
+    [showSavedListsPanel]
+  );
 
   //Note: need to set body height to auto
 
@@ -137,44 +217,39 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
 
   const [isTop, setIsTop] = React.useState(false);
 
-
   React.useEffect(() => {
-
-    scrollY.onChange((latestY) =>
-      setScroll(latestY)
-    )
+    scrollY.onChange((latestY) => setScroll(latestY));
 
     if (scroll <= 50) {
-      setIsTop(true)
-    } else setIsTop(false)
-
-  }, [scrollY, scroll])
-
+      setIsTop(true);
+    } else setIsTop(false);
+  }, [scrollY, scroll]);
 
   const getHeaderTop = () => {
     if (isTop === true) {
-      return 0
-    } else return -100
-
-  }
-
+      return 0;
+    } else return -100;
+  };
 
   const imageProps: IImageProps = {
     src: HeaderImage,
     imageFit: ImageFit.contain,
   };
 
-  const primaryButtonStyles: Partial<IButtonStyles> = { root: { width: 100, marginTop: 30, marginRight: 30 } };
+  const primaryButtonStyles: Partial<IButtonStyles> = {
+    root: { width: 100, marginTop: 30, marginRight: 30 },
+  };
 
   return (
     <div>
-
-      <motion.div layout style={{ top: getHeaderTop(), left: 0, position: "fixed", zIndex: 1 }} >
-
+      <motion.div
+        layout
+        style={{ top: getHeaderTop(), left: 0, position: "fixed", zIndex: 1 }}
+      >
         <Stack styles={headerStackStyles} horizontal>
           <Image
             {...imageProps}
-            alt='Header Image'
+            alt="Header Image"
             width={400}
             height={100}
             styles={headerImageStyles}
@@ -186,46 +261,61 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
           setLoginCallback(true)
 
         }}></DefaultButton> */}
-
         </Stack>
 
-        <div style={{ backgroundColor: "rgb(239 224 197)", paddingTop: 10, paddingBottom: 10 }}>
-
-          <Stack horizontalAlign={"center"} horizontal gap={15} styles={stackStyles} >
+        <div
+          style={{
+            backgroundColor: "rgb(239 224 197)",
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          <Stack
+            horizontalAlign={"center"}
+            horizontal
+            gap={15}
+            styles={stackStyles}
+          >
             <CommandBarButton
               iconProps={addIcon}
               text="New Property"
-              onClick={() => navigationState({ ...navigationState(), showNewPropertyModal: true })}
+              onClick={() =>
+                navigationState({
+                  ...navigationState(),
+                  showNewPropertyModal: true,
+                })
+              }
               styles={commandBarStyles}
               style={{ width: 110 }}
-            // Set split=true to render a SplitButton instead of a regular button with a menu
-            // split={true}
-
+              // Set split=true to render a SplitButton instead of a regular button with a menu
+              // split={true}
             />
-
 
             <CommandBarButton
               iconProps={filterIcon}
               text="Filter"
-              onClick={() => navigationState({ ...navigationState(), showFilterModal: true })}
+              onClick={() =>
+                navigationState({ ...navigationState(), showFilterModal: true })
+              }
               styles={commandBarStyles}
               style={{ width: 90 }}
-            // Set split=true to render a SplitButton instead of a regular button with a menu
-            // split={true}
-
+              // Set split=true to render a SplitButton instead of a regular button with a menu
+              // split={true}
             />
 
             <SearchBox
               styles={searchBoxStyles}
               placeholder="Search"
-              onEscape={ev => {
-                console.log('Custom onEscape Called');
+              onEscape={(ev) => {
+                console.log("Custom onEscape Called");
               }}
-              onClear={ev => {
-                console.log('Custom onClear Called');
+              onClear={(ev) => {
+                console.log("Custom onClear Called");
               }}
               onChange={onChangeSearch}
-              onSearch={newValue => console.log('SearchBox onSearch fired: ' + newValue)}
+              onSearch={(newValue) =>
+                console.log("SearchBox onSearch fired: " + newValue)
+              }
             />
 
             {/* <Toggle inlineLabel styles={toggleStyles} label="Selected Properties" checked={showSelectedPropertyListPanel} onChange={onChangeSelectedPropertyListToggle} /> */}
@@ -236,9 +326,8 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
               onClick={handleSelectedPropertiesClick}
               styles={commandBarStyles}
               style={{ width: 120 }}
-            // Set split=true to render a SplitButton instead of a regular button with a menu
-            // split={true}
-
+              // Set split=true to render a SplitButton instead of a regular button with a menu
+              // split={true}
             />
             <CommandBarButton
               iconProps={listIcon}
@@ -246,33 +335,23 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
               onClick={handleManageListsClick}
               styles={commandBarStyles}
               style={{ width: 110 }}
-            // Set split=true to render a SplitButton instead of a regular button with a menu
-            // split={true}
-
+              // Set split=true to render a SplitButton instead of a regular button with a menu
+              // split={true}
             />
 
             <CommandBarButton
               iconProps={signOutIcon}
               text="Logout"
-              onClick={() => logout({ returnTo: window.location.origin })}
+              /* onClick={() => logout({ returnTo: window.location.origin })} */
+              onClick={() => handleLogout()}
               styles={commandBarStyles}
               style={{ width: 110, height: 44, marginRight: 25 }}
-            // Set split=true to render a SplitButton instead of a regular button with a menu
-            // split={true}
-
+              // Set split=true to render a SplitButton instead of a regular button with a menu
+              // split={true}
             />
-
-          </Stack >
-
+          </Stack>
         </div>
-
-
-
       </motion.div>
-
-
-
-
 
       {/* <Pivot
         aria-label="Navigation Pivot"
@@ -295,4 +374,4 @@ export const Navigation: React.FC<Props> = ({ selectedPropertyType, setSearch, s
   );
 };
 
-export default Navigation
+export default Navigation;
